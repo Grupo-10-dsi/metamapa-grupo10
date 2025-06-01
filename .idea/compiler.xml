@@ -2,12 +2,13 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="estatica" />
         <module name="dinamica" />
+        <module name="estatica" />
         <module name="proxy" />
       </profile>
     </annotationProcessing>
@@ -16,6 +17,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="dinamica" options="-parameters" />
       <module name="estatica" options="-parameters" />
+      <module name="metamapa" options="-parameters" />
       <module name="proxy" options="-parameters" />
     </option>
   </component>
