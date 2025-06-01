@@ -1,11 +1,13 @@
 package ar.edu.utn.frba.ddsi.estatica.models.repositories;
 
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
+import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public class HechosRepository implements IHechosRepository{
 
     private List<Hecho> hechos;

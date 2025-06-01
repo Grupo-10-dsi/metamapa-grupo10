@@ -13,6 +13,10 @@ public class HechosServices implements IHechosServices{
         this.hechosRepository = hechosRepository;
     }
 
-// Obtener todos los hechos
-public List<Hecho> ObtenerHechos() {return this.hechosRepository.findAll();}
+
+    @Override
+    public List<Hecho> obtenerHechos() {
+
+        return this.hechosRepository.findAll();
+    }
 }

@@ -12,7 +12,7 @@
     <artifactId>estatica</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>estatica</name>
-    <description>estatica</description>
+    <description>Fuente estatica del proyecto</description>
     <url/>
     <licenses>
         <license/>
@@ -33,6 +33,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.7.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

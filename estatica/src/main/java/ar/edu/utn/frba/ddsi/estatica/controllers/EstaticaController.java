@@ -18,8 +18,8 @@ public class EstaticaController {
     }
 
     @GetMapping
-    public ResponseEntity<?> obtenerHechos() {
-        return ResponseEntity.ok(hechosServices.findAll());
+    public ResponseEntity<?> ObtenerHechos() {
+        return ResponseEntity.ok(hechosServices.obtenerHechos());
     }
 
 
