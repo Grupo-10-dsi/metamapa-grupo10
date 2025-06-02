@@ -3,6 +3,9 @@ package ar.edu.utn.frba.ddsi.estatica.models.repositories;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.*;
 
 @Repository
