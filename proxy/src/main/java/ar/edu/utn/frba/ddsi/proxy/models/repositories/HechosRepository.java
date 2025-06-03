@@ -2,20 +2,30 @@ package ar.edu.utn.frba.ddsi.proxy.models.repositories;
 
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.conexion.Conexion;
+import jakarta.annotation.PostConstruct;
 
-import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 public class HechosRepository {
-    private List<Hecho> hechos;
-    private final Map<String, Conexion> conexiones = Map.of(
-            // Aquí se pueden agregar las conexiones a los distintos servicios
-            // Ejemplo: new URL("http://example.com"), new ConexionEjemplo()
-    );
 
-    public List<Hecho> findByURL(String nombre) {
-        return this.conexiones.get(nombre).obtenerHechos();
+    private final Map<String, Conexion> conexiones = Map.of();
+    private Map<String, List<Hecho>> hechos = Map.of();
+
+
+    @PostConstruct
+    public void obtenerHechos() {
+
+        for (String nombre : conexiones.keySet()) {
+            Conexion conexion = conexiones.get(nombre);
+            List<Hecho> hechosDeConexion = conexion.obtenerHechos();
+            if (hechosDeConexion != null && !hechosDeConexion.isEmpty()) {
+                this.hechos.put(nombre, hechosDeConexion);
+            }
+        };
+    }
+
+    public List<Hecho> findByName(String nombre) {
+        return this.hechos.get(nombre);
     }
 }
