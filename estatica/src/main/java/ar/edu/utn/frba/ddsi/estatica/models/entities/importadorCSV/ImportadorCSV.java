@@ -2,6 +2,7 @@ package ar.edu.utn.frba.ddsi.estatica.models.entities.importadorCSV;
 
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.HechoCSV;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Ubicacion;
 import com.opencsv.exceptions.CsvValidationException;
 
@@ -34,9 +35,15 @@ public class ImportadorCSV {
         Double longitud = Double.parseDouble(fila[4].trim());
         LocalDate fechaAcontecimiento = LocalDate.parse(fila[5].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
+        HechoCSV hechoCSV = new HechoCSV(titulo, descripcion, new Categoria(categoria), new Ubicacion(latitud, longitud), fechaAcontecimiento);
 
-        Hecho hecho = new Hecho(titulo, descripcion, new Categoria(categoria), new Ubicacion(latitud, longitud), fechaAcontecimiento);
-        return hecho;
+        return new Hecho(
+                hechoCSV.getTitulo(),
+                hechoCSV.getDescripcion(),
+                hechoCSV.getCategoria(),
+                hechoCSV.getUbicacion(),
+                hechoCSV.getFechaAcontecimiento()
+        );
     }
 
     public List<Hecho> findOrUpdateByTitulo(Hecho hechoImportado, List<Hecho> hechos) {

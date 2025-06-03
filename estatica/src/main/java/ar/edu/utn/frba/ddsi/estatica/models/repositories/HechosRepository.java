@@ -77,10 +77,9 @@ public class HechosRepository {
 
         if (hechosImportados.isEmpty()) {
             System.out.println("No se encontraron hechos en el archivo: " + nombreArchivo);
-            return hechosImportados;
         } else {
             System.out.println("Se importaron " + hechosImportados.size() + " hechos desde el archivo: " + nombreArchivo);
-            return hechosImportados;
         }
+        return hechosImportados;
     }
 }

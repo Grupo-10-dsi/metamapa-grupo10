@@ -11,9 +11,6 @@ import lombok.Setter;
 @Getter
 public class Hecho {
 
-    public UUID getId() {
-        return id;
-    }
 
     private final UUID id;
     private String titulo;
