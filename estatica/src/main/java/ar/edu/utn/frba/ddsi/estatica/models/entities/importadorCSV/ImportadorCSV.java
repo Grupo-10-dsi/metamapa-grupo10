@@ -14,12 +14,14 @@ import java.util.List;
 public class ImportadorCSV {
     private static LectorCSV lector = new LectorCSV();
 
-    public List<Hecho> importarHechosDeCSV(String nombreArchivo) throws IOException, CsvValidationException {
+
+    public List<Hecho> importarCSV(String nombreArchivo) throws IOException, CsvValidationException {
         List<String[]> filas = lector.leerCSV(nombreArchivo);
         List<Hecho> hechosImportados = new ArrayList<>();
+
         for (String[] fila : filas) {
-            Hecho hecho = this.obtenerHechoPorFila(fila);
-            hechosImportados.add(hecho);
+            Hecho hechoImportado = this.obtenerHechoPorFila(fila);
+            hechosImportados = this.findOrUpdateByTitulo(hechoImportado, hechosImportados);
         }
         return hechosImportados;
     }
@@ -32,7 +34,31 @@ public class ImportadorCSV {
         Double longitud = Double.parseDouble(fila[4].trim());
         LocalDate fechaAcontecimiento = LocalDate.parse(fila[5].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
+
         Hecho hecho = new Hecho(titulo, descripcion, new Categoria(categoria), new Ubicacion(latitud, longitud), fechaAcontecimiento);
         return hecho;
+    }
+
+    public List<Hecho> findOrUpdateByTitulo(Hecho hechoImportado, List<Hecho> hechos) {
+        boolean encontrado = false;
+
+        for (Hecho hecho : hechos) {
+            if (hecho.getTitulo().equals(hechoImportado.getTitulo())) {
+                // Actualizar el hecho existente con los nuevos datos
+                hecho.setDescripcion(hechoImportado.getDescripcion());
+                hecho.setCategoria(hechoImportado.getCategoria());
+                hecho.setUbicacion(hechoImportado.getUbicacion());
+                hecho.setFechaAcontecimiento(hechoImportado.getFechaAcontecimiento());
+                encontrado = true;
+                break;
+            }
+        }
+
+        // Si no se encontró, añadir el nuevo hecho
+        if (!encontrado) {
+            hechos.add(hechoImportado);
+        }
+
+        return hechos;
     }
 }

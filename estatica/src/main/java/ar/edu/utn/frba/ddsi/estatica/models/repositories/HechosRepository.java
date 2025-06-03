@@ -73,7 +73,7 @@ public class HechosRepository {
 
     public List<Hecho> importarHechosDesdeCSV(String nombreArchivo) throws IOException, CsvValidationException {
         ImportadorCSV importador = new ImportadorCSV();
-        List<Hecho> hechosImportados = importador.importarHechosDeCSV(nombreArchivo);
+        List<Hecho> hechosImportados = importador.importarCSV(nombreArchivo);
 
         if (hechosImportados.isEmpty()) {
             System.out.println("No se encontraron hechos en el archivo: " + nombreArchivo);
