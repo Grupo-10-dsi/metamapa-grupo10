@@ -3,7 +3,6 @@ package ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.multimedia.Formato;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Setter
 
 public class HechoMultimedia extends Hecho {
-    private List<Formato> contenidoMultimedia;
+    private List<String> contenidoMultimedia;
 
     public HechoMultimedia(String titulo,
                            String descripcion,
@@ -22,9 +21,10 @@ public class HechoMultimedia extends Hecho {
                            LocalDateTime fechaCarga,
                            List<Etiqueta> etiquetas,
                            Contribuyente contribuyente,
-                           List<Formato> contenidoMultimedia) {
+                           List<String> contenidoMultimedia,
+                           boolean esAnonimo) {
 
-        super(titulo, descripcion, categoria, ubicacion, fechaAcontecimiento, fechaCarga,etiquetas, contribuyente);
+        super(titulo, descripcion, categoria, ubicacion, fechaAcontecimiento, fechaCarga,etiquetas, contribuyente, esAnonimo);
 
         this.contenidoMultimedia = contenidoMultimedia;
     }

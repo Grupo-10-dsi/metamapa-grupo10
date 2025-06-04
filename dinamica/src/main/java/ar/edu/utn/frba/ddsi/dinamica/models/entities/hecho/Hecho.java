@@ -7,11 +7,13 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 
 public abstract class Hecho {
+    private UUID id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
@@ -22,9 +24,11 @@ public abstract class Hecho {
     private boolean estaOculto;
     private List<Etiqueta> etiquetas;
     private Contribuyente contribuyente;
+    private boolean esAnonimo;
 
     public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
-                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
+                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, Contribuyente contribuyente, boolean esAnonimo) {
+        this.id = UUID.randomUUID();
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;
@@ -35,6 +39,7 @@ public abstract class Hecho {
         this.estaOculto = false;
         this.etiquetas = etiquetas;
         this.contribuyente = contribuyente;
+        this.esAnonimo = esAnonimo;
     }
 }
 
