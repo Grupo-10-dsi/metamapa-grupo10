@@ -4,7 +4,7 @@ public class Anonimo extends Contribuyente {
 
     private static Anonimo instance;
 
-    public static final Anonimo getInstance() {
+    public static Anonimo getInstance() {
         if (instance == null) {
             instance = new Anonimo();
         }
