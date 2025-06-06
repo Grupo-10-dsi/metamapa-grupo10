@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class HechosRepository {
 
-    private final Map<String, Conexion> conexiones = Map.of();
+    private Map<String, Conexion> conexiones = Map.of();
     private Map<String, List<Hecho>> hechos = Map.of();
 
 
@@ -23,7 +23,7 @@ public class HechosRepository {
             if (hechosDeConexion != null && !hechosDeConexion.isEmpty()) {
                 this.hechos.put(nombre, hechosDeConexion);
             }
-        };
+        }
     }
 
     public List<Hecho> findByName(String nombre) {
