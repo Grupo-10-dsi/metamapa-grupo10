@@ -19,8 +19,8 @@ public class DinamicaController {
     }
 
     @PostMapping("/hechos")
-    public void subirHecho(@RequestBody Object hechoDTO) {
-        dinamicaService.crearHecho(hechoDTO);
+    public UUID subirHecho(@RequestBody Object hechoDTO) {
+        return dinamicaService.crearHecho(hechoDTO);
     }
 
     @PutMapping("/hechos/{id}")
@@ -30,8 +30,8 @@ public class DinamicaController {
 
 
     @PostMapping("/solicitudes")
-    public void subirSolicitud(@RequestBody SolicitudDTO solicitudDTO) {
-        dinamicaService.crearSolicitudEliminacion(solicitudDTO);
+    public UUID subirSolicitud(@RequestBody SolicitudDTO solicitudDTO) {
+        return dinamicaService.crearSolicitudEliminacion(solicitudDTO);
     }
 
     @PutMapping("/solicitudes/{id}")

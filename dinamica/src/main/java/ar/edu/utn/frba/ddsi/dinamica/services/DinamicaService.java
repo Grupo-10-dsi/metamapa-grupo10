@@ -26,18 +26,18 @@ public class DinamicaService {
 
     // <---------------------------------- CREACION DE HECHOS ---------------------------------->
 
-    public void crearHecho(Object hechoDTO) {
+    public UUID crearHecho(Object hechoDTO) {
         if (hechoDTO instanceof HechoTextualDTO) {
-            crearHechoTextual((HechoTextualDTO) hechoDTO);
+            return crearHechoTextual((HechoTextualDTO) hechoDTO);
         } else if (hechoDTO instanceof HechoMultimediaDTO) {
-            crearHechoMultimedia((HechoMultimediaDTO) hechoDTO);
+            return crearHechoMultimedia((HechoMultimediaDTO) hechoDTO);
         } else {
             throw new IllegalArgumentException("Tipo de hecho no soportado");
         }
     }
 
 
-    private void crearHechoTextual(HechoTextualDTO hechoDTO) {
+    private UUID crearHechoTextual(HechoTextualDTO hechoDTO) {
         HechoTextual hecho = new HechoTextual(
             hechoDTO.getTitulo(),
             hechoDTO.getDescripcion(),
@@ -50,9 +50,11 @@ public class DinamicaService {
         );
 
         hechosRepository.save(hecho);
+
+        return hecho.getId();
     }
 
-    private void crearHechoMultimedia(HechoMultimediaDTO hechoDTO) {
+    private UUID crearHechoMultimedia(HechoMultimediaDTO hechoDTO) {
 
         HechoMultimedia hecho = new HechoMultimedia(
             hechoDTO.getTitulo(),
@@ -66,6 +68,8 @@ public class DinamicaService {
         );
 
         hechosRepository.save(hecho);
+
+        return hecho.getId();
     }
 
     // <---------------------------------- ACTUALIZACION DE HECHOS ---------------------------------->
@@ -135,7 +139,7 @@ public class DinamicaService {
         }
     }
 
-    public void crearSolicitudEliminacion(SolicitudDTO solicitud) {
+    public UUID crearSolicitudEliminacion(SolicitudDTO solicitud) {
 
         SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion(
             solicitud.getId(),
@@ -158,6 +162,8 @@ public class DinamicaService {
         }
 
         solicitudesRepository.save(nuevaSolicitudEliminacion);
+
+        return nuevaSolicitudEliminacion.getId();
     }
 
     public void modificarEstadoSolicitud(UUID id, Estado_Solicitud nuevoEstado) {
