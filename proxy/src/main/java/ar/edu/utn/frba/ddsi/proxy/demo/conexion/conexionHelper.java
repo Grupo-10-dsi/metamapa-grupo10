@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.proxy.models.entities.conexion;
+package ar.edu.utn.frba.ddsi.proxy.demo.conexion;
 
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Categoria;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;

@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.ddsi.proxy.models.repositories;
 
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
-import ar.edu.utn.frba.ddsi.proxy.models.entities.conexion.Conexion;
-import ar.edu.utn.frba.ddsi.proxy.models.entities.conexion.conexionHelper;
+import ar.edu.utn.frba.ddsi.proxy.demo.conexion.Conexion;
+import ar.edu.utn.frba.ddsi.proxy.demo.conexion.conexionHelper;
 import jakarta.annotation.PostConstruct;
 
 import java.util.List;

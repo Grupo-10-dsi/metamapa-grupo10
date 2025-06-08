@@ -1,11 +1,7 @@
-package ar.edu.utn.frba.ddsi.proxy.models.entities.conexion;
-
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
+package ar.edu.utn.frba.ddsi.proxy.demo.conexion;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
