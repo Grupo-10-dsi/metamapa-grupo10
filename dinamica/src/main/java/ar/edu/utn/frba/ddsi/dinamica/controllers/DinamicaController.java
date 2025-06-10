@@ -1,10 +1,15 @@
 package ar.edu.utn.frba.ddsi.dinamica.controllers;
 
+
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.SolicitudDTO;
+import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.dinamica.services.DinamicaService;
 
+
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import java.util.UUID;
 
@@ -19,7 +24,7 @@ public class DinamicaController {
     }
 
     @PostMapping("/hechos")
-    public UUID subirHecho(@RequestBody Object hechoDTO) {
+    public Hecho subirHecho(@RequestBody Object hechoDTO){
         return dinamicaService.crearHecho(hechoDTO);
     }
 
@@ -38,6 +43,13 @@ public class DinamicaController {
     public void modificarSolicitud(@PathVariable UUID id, @RequestBody Estado_Solicitud nuevoEstado) {
         dinamicaService.modificarEstadoSolicitud(id, nuevoEstado);
     }
+
+    @GetMapping("/hechos")
+    public List<Hecho> obtenerHechos() {
+        return dinamicaService.encontrarHechos();
+    }
+
+
 
 
 }

@@ -1,6 +1,14 @@
 package ar.edu.utn.frba.ddsi.dinamica.models.entities.personas;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.UUID;
+
+@Getter
+@Setter
+@NoArgsConstructor
 
 public class Registrado extends Contribuyente {
 

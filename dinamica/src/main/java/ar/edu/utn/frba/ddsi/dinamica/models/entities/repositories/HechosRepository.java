@@ -29,4 +29,8 @@ public class HechosRepository {
         }
         return null;
     }
+
+    public List<Hecho> findAll() {
+        return hechos;
+    }
 }

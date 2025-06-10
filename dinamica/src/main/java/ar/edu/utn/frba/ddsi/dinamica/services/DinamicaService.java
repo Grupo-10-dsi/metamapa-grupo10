@@ -8,10 +8,16 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.HechoMultimedia;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.HechoTextual;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.repositories.HechosRepository;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Estado_Solicitud;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
+
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.repositories.SolicitudesRepository;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -26,18 +32,48 @@ public class DinamicaService {
 
     // <---------------------------------- CREACION DE HECHOS ---------------------------------->
 
-    public UUID crearHecho(Object hechoDTO) {
-        if (hechoDTO instanceof HechoTextualDTO) {
-            return crearHechoTextual((HechoTextualDTO) hechoDTO);
-        } else if (hechoDTO instanceof HechoMultimediaDTO) {
-            return crearHechoMultimedia((HechoMultimediaDTO) hechoDTO);
-        } else {
-            throw new IllegalArgumentException("Tipo de hecho no soportado");
+    public Hecho crearHecho(Object hechoDTO) {
+        System.out.println(hechoDTO);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        try {
+            // Convertir el objeto a un mapa
+            Map<String, Object> hechoMap = mapper.convertValue(hechoDTO, Map.class);
+
+            // Verificar campos comunes obligatorios
+            String[] camposObligatorios = {"titulo", "descripcion", "categoria", "ubicacion",
+                    "fechaAcontecimiento", "contribuyente", "etiquetas"};
+
+            for (String campo : camposObligatorios) {
+                if (hechoMap.get(campo) == null) {
+                    throw new IllegalArgumentException("Campo obligatorio faltante: " + campo);
+                }
+            }
+
+            // Verificar el tipo específico de hecho
+            if (hechoMap.containsKey("cuerpo")) {
+                System.out.println("Creando hecho textual");
+                HechoTextualDTO dto = mapper.convertValue(hechoDTO, HechoTextualDTO.class);
+                return crearHechoTextual(dto);
+            } else if (hechoMap.containsKey("contenidoMultimedia")) {
+                System.out.println("Creando hecho multimedia");
+                HechoMultimediaDTO dto = mapper.convertValue(hechoDTO, HechoMultimediaDTO.class);
+                return crearHechoMultimedia(dto);
+            } else {
+                throw new IllegalArgumentException("Tipo de hecho no identificado: falta campo 'cuerpo' o 'contenidoMultimedia'");
+            }
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error al procesar el DTO: " + e.getMessage());
         }
     }
 
 
-    private UUID crearHechoTextual(HechoTextualDTO hechoDTO) {
+
+    private Hecho crearHechoTextual(HechoTextualDTO hechoDTO) {
         HechoTextual hecho = new HechoTextual(
             hechoDTO.getTitulo(),
             hechoDTO.getDescripcion(),
@@ -51,10 +87,10 @@ public class DinamicaService {
 
         hechosRepository.save(hecho);
 
-        return hecho.getId();
+        return hecho;
     }
 
-    private UUID crearHechoMultimedia(HechoMultimediaDTO hechoDTO) {
+    private Hecho crearHechoMultimedia(HechoMultimediaDTO hechoDTO) {
 
         HechoMultimedia hecho = new HechoMultimedia(
             hechoDTO.getTitulo(),
@@ -69,7 +105,7 @@ public class DinamicaService {
 
         hechosRepository.save(hecho);
 
-        return hecho.getId();
+        return hecho;
     }
 
     // <---------------------------------- ACTUALIZACION DE HECHOS ---------------------------------->
@@ -202,6 +238,11 @@ public class DinamicaService {
         if (hechoActualizado == null) {
             throw new RuntimeException("No se pudo ocultar el hecho con ID: " + idHecho);
         }
+    }
+
+
+    public List<Hecho> encontrarHechos() {
+        return hechosRepository.findAll();
     }
 }
 
