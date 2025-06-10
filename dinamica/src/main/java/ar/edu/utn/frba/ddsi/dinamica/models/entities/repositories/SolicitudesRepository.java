@@ -15,6 +15,11 @@ public class SolicitudesRepository {
         solicitudes.add(nuevaSolicitud);
     }
 
+
+    public List<SolicitudEliminacion> findAll(){
+        return solicitudes;
+    }
+
     public SolicitudEliminacion findById(UUID id) {
         return solicitudes.stream()
                 .filter(solicitud -> solicitud.getId().equals(id))

@@ -244,6 +244,10 @@ public class DinamicaService {
     public List<Hecho> encontrarHechos() {
         return hechosRepository.findAll();
     }
+
+    public List<SolicitudEliminacion> encontrarSolicitudes() {
+        return solicitudesRepository.findAll();
+    }
 }
 
 

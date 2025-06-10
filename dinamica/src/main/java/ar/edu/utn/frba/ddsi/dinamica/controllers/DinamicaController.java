@@ -4,6 +4,7 @@ package ar.edu.utn.frba.ddsi.dinamica.controllers;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Estado_Solicitud;
+import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.dinamica.services.DinamicaService;
 
 
@@ -23,6 +24,12 @@ public class DinamicaController {
         this.dinamicaService = dinamicaService;
     }
 
+    @GetMapping("/hechos")
+    public List<Hecho> obtenerHechos() {
+        return dinamicaService.encontrarHechos();
+    }
+
+
     @PostMapping("/hechos")
     public Hecho subirHecho(@RequestBody Object hechoDTO){
         return dinamicaService.crearHecho(hechoDTO);
@@ -33,6 +40,10 @@ public class DinamicaController {
         dinamicaService.actualizarHecho(id, hechoDTO);
     }
 
+    @GetMapping("/solicitudes")
+    public List<SolicitudEliminacion> obtenerSolicitudes() {
+        return dinamicaService.encontrarSolicitudes();
+    }
 
     @PostMapping("/solicitudes")
     public UUID subirSolicitud(@RequestBody SolicitudDTO solicitudDTO) {
@@ -44,10 +55,7 @@ public class DinamicaController {
         dinamicaService.modificarEstadoSolicitud(id, nuevoEstado);
     }
 
-    @GetMapping("/hechos")
-    public List<Hecho> obtenerHechos() {
-        return dinamicaService.encontrarHechos();
-    }
+
 
 
 
