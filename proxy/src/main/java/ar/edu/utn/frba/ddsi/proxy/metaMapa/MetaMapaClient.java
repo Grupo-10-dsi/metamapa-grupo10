@@ -31,7 +31,7 @@ public class MetaMapaClient {
     public List<Hecho> obtenerHechosPorColeccion(FiltroRequest filtro, String identificador) {
 
         String uri = filtro.aplicarFiltroARequest(UriComponentsBuilder
-                .fromPath("/colecciones/"+ identificador + "/hechos"));
+                .fromPath("/colecciones/" + identificador + "/hechos"));
         return webClient.get()
                 .uri(uri)
                 .retrieve()
@@ -39,4 +39,5 @@ public class MetaMapaClient {
                 .collectList()
                 .block();
     }
+
 }

@@ -16,7 +16,8 @@ public class conexionHelper {
     private static final conexionHelper instancia = new conexionHelper();
 
     // Constructor privado
-    private conexionHelper() {}
+    private conexionHelper() {
+    }
 
     public static conexionHelper getInstance() {
         return instancia;
@@ -26,7 +27,7 @@ public class conexionHelper {
         ArrayList<Hecho> hechos = new ArrayList<>();
         LocalDate fechaHaceUnaHora = LocalDateTime.now().minusHours(1).toLocalDate();
         Map<String, Object> hechoDescompuesto = conexion.siguienteHecho(conexion.url(), fechaHaceUnaHora);
-        while(hechoDescompuesto != null) {
+        while (hechoDescompuesto != null) {
             hechos.add(convertirHecho(hechoDescompuesto));
             hechoDescompuesto = conexion.siguienteHecho(conexion.url(), LocalDate.now());
         }

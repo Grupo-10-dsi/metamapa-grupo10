@@ -7,6 +7,7 @@ public class Categoria {
     public Categoria(String detalle) {
         this.detalle = detalle;
     }
+
     public String getDetalle() {
         return detalle;
     }

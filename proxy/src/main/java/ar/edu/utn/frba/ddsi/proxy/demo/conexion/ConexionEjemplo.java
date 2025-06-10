@@ -8,6 +8,7 @@ import java.util.Map;
 public class ConexionEjemplo implements Conexion {
 
     private URL url;
+
     @Override
     public Map<String, Object> siguienteHecho(URL url, LocalDate fechaUltimaConsulta) {
         // Implementación de ejemplo que retorna un mapa vacío
