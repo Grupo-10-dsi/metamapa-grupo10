@@ -1,5 +1,10 @@
 package ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Ubicacion {
     private Double latitud;
     private Double longitud;
@@ -8,4 +13,6 @@ public class Ubicacion {
         this.latitud = latitud;
         this.longitud = longitud;
     }
+
+    public Ubicacion() {}
 }
