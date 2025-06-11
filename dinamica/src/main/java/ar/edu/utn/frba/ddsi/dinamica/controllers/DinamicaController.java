@@ -25,11 +25,27 @@ public class DinamicaController {
         this.dinamicaService = dinamicaService;
     }
 
+    // En DinamicaController.java
     @GetMapping("/hechos")
-    public List<Hecho> obtenerHechos() {
-        return dinamicaService.encontrarHechos();
+    public List<Hecho> obtenerHechos(
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String fecha_reporte_desde,
+            @RequestParam(required = false) String fecha_reporte_hasta,
+            @RequestParam(required = false) String fecha_acontecimiento_desde,
+            @RequestParam(required = false) String fecha_acontecimiento_hasta,
+            @RequestParam(required = false) Double latitud,
+            @RequestParam(required = false) Double longitud
+    ) {
+        return dinamicaService.encontrarHechosFiltrados(
+                categoria,
+                fecha_reporte_desde,
+                fecha_reporte_hasta,
+                fecha_acontecimiento_desde,
+                fecha_acontecimiento_hasta,
+                latitud,
+                longitud
+        );
     }
-
 
     @PostMapping("/hechos")
     public Hecho subirHecho(@RequestBody Object hechoDTO){
