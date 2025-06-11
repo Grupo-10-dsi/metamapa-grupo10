@@ -14,16 +14,20 @@ import java.util.UUID;
 
 @Service
 public class HechosServices {
-    private HechosRepository HechosRepository;
+    private final HechosRepository hechosRepository;
     private MetaMapaClient instanciaMetaMapa;
 
+    public HechosServices(HechosRepository hechosRepository) {
+        this.hechosRepository = hechosRepository;
+    }
+
     public List<Hecho> obtenerHechos(String nombre) {
-        return this.HechosRepository.findByName(nombre);
+        return this.hechosRepository.findByName(nombre);
     }
 
     @Scheduled(fixedRate = 60 * 60 * 1000) // cada 1 hora
     public void actualizarHechosPeriodicamente() {
-        HechosRepository.obtenerHechos();
+        this.hechosRepository.obtenerHechos();
     }
 
     public List<Hecho> obtenerHechosMetaMapa(FiltroRequest query) {

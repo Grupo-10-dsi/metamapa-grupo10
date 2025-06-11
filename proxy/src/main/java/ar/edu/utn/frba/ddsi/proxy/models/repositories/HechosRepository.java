@@ -4,10 +4,11 @@ import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.demo.conexion.Conexion;
 import ar.edu.utn.frba.ddsi.proxy.demo.conexion.conexionHelper;
 import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public class HechosRepository {
 
     private Map<String, Conexion> conexiones = Map.of();

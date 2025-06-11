@@ -75,4 +75,4 @@ public class ProxyController {
     public SolicitudEliminacion crearSolicitudEliminacion(@RequestParam UUID idHecho, @RequestParam String justificacion) {
         return hechosServices.crearSolicitudDeEliminacion(idHecho, justificacion);
     }
-
+}
