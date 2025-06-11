@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.repositories.SolicitudesRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class DinamicaService {
@@ -263,8 +265,44 @@ public class DinamicaService {
     }
 
 
-    public List<Hecho> encontrarHechos() {
-        return hechosRepository.findAll();
+    public List<Hecho> encontrarHechosFiltrados(
+            String categoria,
+            String fechaReporteDesde,
+            String fechaReporteHasta,
+            String fechaAcontecimientoDesde,
+            String fechaAcontecimientoHasta,
+            Double latitud,
+            Double longitud
+    ) {
+        return hechosRepository.findAll().stream()
+                .filter(hecho -> categoria == null ||
+                        (hecho.getCategoria() != null && categoria.equalsIgnoreCase(hecho.getCategoria().getDetalle())))
+                .filter(hecho -> {
+                    if (fechaReporteDesde == null && fechaReporteHasta == null) return true;
+                    if (hecho.getFechaCarga() == null) return false;
+                    boolean desde = fechaReporteDesde == null ||
+                            !hecho.getFechaCarga().isBefore(LocalDateTime.parse(fechaReporteDesde));
+                    boolean hasta = fechaReporteHasta == null ||
+                            !hecho.getFechaCarga().isAfter(LocalDateTime.parse(fechaReporteHasta));
+                    return desde && hasta;
+                })
+                .filter(hecho -> {
+                    if (fechaAcontecimientoDesde == null && fechaAcontecimientoHasta == null) return true;
+                    if (hecho.getFechaAcontecimiento() == null) return false;
+                    boolean desde = fechaAcontecimientoDesde == null ||
+                            !hecho.getFechaAcontecimiento().isBefore(LocalDateTime.parse(fechaAcontecimientoDesde));
+                    boolean hasta = fechaAcontecimientoHasta == null ||
+                            !hecho.getFechaAcontecimiento().isAfter(LocalDateTime.parse(fechaAcontecimientoHasta));
+                    return desde && hasta;
+                })
+                .filter(hecho -> {
+                    if (latitud == null && longitud == null) return true;
+                    if (hecho.getUbicacion() == null) return false;
+                    boolean latOk = latitud == null || hecho.getUbicacion().getLatitud().equals(latitud);
+                    boolean lonOk = longitud == null || hecho.getUbicacion().getLongitud().equals(longitud);
+                    return latOk && lonOk;
+                })
+                .collect(Collectors.toList());
     }
 
     public List<SolicitudEliminacion> encontrarSolicitudes() {
