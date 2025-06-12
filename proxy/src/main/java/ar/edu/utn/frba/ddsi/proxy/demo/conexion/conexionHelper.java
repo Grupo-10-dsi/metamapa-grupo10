@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.ddsi.proxy.demo.conexion;
 
-import Categoria;
+import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Categoria;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Origen_Fuente;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Ubicacion;
