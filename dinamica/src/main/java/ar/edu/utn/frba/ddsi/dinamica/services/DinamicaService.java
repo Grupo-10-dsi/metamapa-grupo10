@@ -11,8 +11,7 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Registrado;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.repositories.HechosRepository;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Estado_Solicitud;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.stereotype.Service;
 
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.SolicitudEliminacion;
@@ -20,7 +19,6 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.repositories.SolicitudesRep
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,7 +48,7 @@ public class DinamicaService {
 
         hechosRepository.save(hecho);
 
-        return hecho;
+        return hecho.getId();
     }
 
     public Hecho crearHechoMultimedia(HechoDTO hechoDTO) {
@@ -171,7 +169,7 @@ public class DinamicaService {
         return nuevaSolicitudEliminacion.getId();
     }
 
-    public void modificarEstadoSolicitud(UUID id, Estado_Solicitud nuevoEstado) {
+    public SolicitudEliminacion modificarEstadoSolicitud(UUID id, Estado_Solicitud nuevoEstado) {
 
         SolicitudEliminacion solicitudAEditar = solicitudesRepository.findById(id);
 
@@ -190,6 +188,8 @@ public class DinamicaService {
         if(nuevoEstado == Estado_Solicitud.ACEPTADA) {
             this.ocultarHecho(solicitudAEditar.getIdHecho());
         }
+
+        return solicitudActualizada;
 
     }
 

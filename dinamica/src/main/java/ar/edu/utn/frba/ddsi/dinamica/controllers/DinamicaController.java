@@ -11,7 +11,6 @@ import ar.edu.utn.frba.ddsi.dinamica.services.DinamicaService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,26 +51,10 @@ public class DinamicaController {
 
     @PostMapping("/hechos")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    public Hecho subirHecho(@RequestBody HechoDTO hechoDTO) {
+    public UUID subirHecho(@RequestBody HechoDTO hechoDTO) {
 
         verificarCamposHecho(hechoDTO);
-
-        switch (hechoDTO.getTipo().toLowerCase()) {
-            case "textual":
-                if( hechoDTO.getCuerpo() == null) {
-                    throw new IllegalArgumentException("El campo 'cuerpo' es obligatorio para hechos de tipo 'textual'");
-                }
-                return dinamicaService.crearHechoTextual(hechoDTO);
-
-            case "multimedia":
-                if( hechoDTO.getContenidoMultimedia() == null) {
-                    throw new IllegalArgumentException("El campo 'contenidoMultimedia' es obligatorio para hechos de tipo 'multimedia'");
-                }
-                return dinamicaService.crearHechoMultimedia(hechoDTO);
-
-            default:
-                throw new IllegalArgumentException("Tipo de hecho no soportado: " + hechoDTO.getTipo());
-        }
+        return dinamicaService.crearHecho(hechoDTO);
 
     }
 
@@ -99,15 +82,31 @@ public class DinamicaController {
         try {
             Map<String, Object> hechoMap = mapper.convertValue(hechoDTO, Map.class);
 
-            String[] camposObligatorios = {"titulo", "descripcion", "categoria", "ubicacion",
-                    "fechaAcontecimiento", "etiquetas"};
+        String[] camposObligatorios = {"titulo", "descripcion", "categoria", "ubicacion",
+                "fechaAcontecimiento", "etiquetas"};
 
-            for (String campo : camposObligatorios) {
-                if (hechoMap.get(campo) == null) {
-                    throw new IllegalArgumentException("Campo obligatorio faltante: " + campo);
-                }
+        for (String campo : camposObligatorios) {
+            if (hechoMap.get(campo) == null) {
+                throw new IllegalArgumentException("Campo obligatorio faltante: " + campo);
             }
+        }
 
+        switch (hechoDTO.getTipo().toLowerCase()) {
+            case "textual":
+                if( hechoDTO.getCuerpo() == null) {
+                    throw new IllegalArgumentException("El campo 'cuerpo' es obligatorio para hechos de tipo 'textual'");
+                }
+                break;
+
+            case "multimedia":
+                if( hechoDTO.getContenidoMultimedia() == null) {
+                    throw new IllegalArgumentException("El campo 'contenidoMultimedia' es obligatorio para hechos de tipo 'multimedia'");
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Tipo de hecho no soportado: " + hechoDTO.getTipo());
+        }
 
         } catch (IllegalArgumentException e) {
             throw e;
@@ -125,22 +124,7 @@ public class DinamicaController {
     }
 
     @PutMapping("/solicitudes/{id}")
-    public void modificarSolicitud(@PathVariable UUID id, @RequestBody Estado_Solicitud nuevoEstado) {
-        dinamicaService.modificarEstadoSolicitud(id, nuevoEstado);
+    public SolicitudEliminacion modificarSolicitud(@PathVariable UUID id, @RequestBody Estado_Solicitud nuevoEstado) {
+        return dinamicaService.modificarEstadoSolicitud(id, nuevoEstado);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e) {
-        // Manejo de excepciones genérico
-        return ResponseEntity
-                .badRequest()
-                .body(e.getMessage());
-    }
-
-
-
-
-
-
-
 }
