@@ -9,11 +9,14 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Solici
 import ar.edu.utn.frba.ddsi.dinamica.services.DinamicaService;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/api/dinamica")
@@ -51,17 +54,25 @@ public class DinamicaController {
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Hecho subirHecho(@RequestBody HechoDTO hechoDTO) {
 
+        verificarCamposHecho(hechoDTO);
+
         switch (hechoDTO.getTipo().toLowerCase()) {
             case "textual":
+                if( hechoDTO.getCuerpo() == null) {
+                    throw new IllegalArgumentException("El campo 'cuerpo' es obligatorio para hechos de tipo 'textual'");
+                }
                 return dinamicaService.crearHechoTextual(hechoDTO);
 
             case "multimedia":
+                if( hechoDTO.getContenidoMultimedia() == null) {
+                    throw new IllegalArgumentException("El campo 'contenidoMultimedia' es obligatorio para hechos de tipo 'multimedia'");
+                }
                 return dinamicaService.crearHechoMultimedia(hechoDTO);
 
             default:
                 throw new IllegalArgumentException("Tipo de hecho no soportado: " + hechoDTO.getTipo());
         }
-        // return dinamicaService.crearHecho(hechoDTO);
+
     }
 
     @PutMapping("/hechos/{id}")
@@ -69,12 +80,37 @@ public class DinamicaController {
         switch (hechoDTO.getTipo().toLowerCase()) {
             case "textual":
                 dinamicaService.actualizarHechoTextual(id, hechoDTO);
+                break;
 
             case "multimedia":
                 dinamicaService.actualizarHechoMultimedia(id, hechoDTO);
+                break;
 
             default:
                 throw new IllegalArgumentException("Tipo de hecho no soportado: " + hechoDTO.getTipo());
+        }
+    }
+
+
+    public void verificarCamposHecho(HechoDTO hechoDTO) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        try {
+            Map<String, Object> hechoMap = mapper.convertValue(hechoDTO, Map.class);
+
+            String[] camposObligatorios = {"titulo", "descripcion", "categoria", "ubicacion",
+                    "fechaAcontecimiento", "etiquetas"};
+
+            for (String campo : camposObligatorios) {
+                if (hechoMap.get(campo) == null) {
+                    throw new IllegalArgumentException("Campo obligatorio faltante: " + campo);
+                }
+            }
+
+
+        } catch (IllegalArgumentException e) {
+            throw e;
         }
     }
 

@@ -95,7 +95,7 @@ public class DinamicaService {
                 throw new IllegalArgumentException("Hecho no encontrado con ID: " + id);
             }
 
-
+            System.out.println(hechoAEditar);
             HechoTextual hechoTextualEditar = (HechoTextual) hechoAEditar;
 
 
@@ -106,7 +106,7 @@ public class DinamicaService {
                 hechoTextualEditar.setUbicacion(hechoDTO.getUbicacion());
                 hechoTextualEditar.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento());
                 hechoTextualEditar.setEtiquetas(hechoDTO.getEtiquetas());
-                hechoTextualEditar.setContribuyente(hechoDTO.getRegistrado());
+                hechoTextualEditar.setContribuyente(determinarContribuyente(hechoDTO));
                 hechoTextualEditar.setCuerpo(hechoDTO.getCuerpo());
 
                 hechosRepository.findByIdAndUpdate(id, hechoTextualEditar);
@@ -133,7 +133,7 @@ public class DinamicaService {
             hechoMultimediaEditar.setUbicacion(hechoDTO.getUbicacion());
             hechoMultimediaEditar.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento());
             hechoMultimediaEditar.setEtiquetas(hechoDTO.getEtiquetas());
-            hechoMultimediaEditar.setContribuyente(hechoDTO.getRegistrado());
+            hechoMultimediaEditar.setContribuyente(determinarContribuyente(hechoDTO));
             hechoMultimediaEditar.setContenidoMultimedia(hechoDTO.getContenidoMultimedia());
 
             hechosRepository.findByIdAndUpdate(id, hechoMultimediaEditar);

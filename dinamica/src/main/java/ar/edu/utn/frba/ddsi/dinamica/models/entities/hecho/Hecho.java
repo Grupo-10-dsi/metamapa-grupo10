@@ -25,7 +25,6 @@ public abstract class Hecho {
     private boolean estaOculto;
     private List<Etiqueta> etiquetas;
     private Contribuyente contribuyente;
-    private boolean esAnonimo;
 
     public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
                  LocalDateTime fechaAcontecimiento, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
@@ -40,7 +39,6 @@ public abstract class Hecho {
         this.estaOculto = false;
         this.etiquetas = etiquetas;
         this.contribuyente = contribuyente;
-        //this.esAnonimo = contribuyente.esAnonimo();
     }
 
     public boolean esEditable() {

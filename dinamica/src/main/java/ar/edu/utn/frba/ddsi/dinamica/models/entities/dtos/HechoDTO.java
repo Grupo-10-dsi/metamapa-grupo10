@@ -25,9 +25,6 @@ public class HechoDTO {
     private Categoria categoria;
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
-
-
-
     private Registrado registrado;
     private List<Etiqueta> etiquetas;
     private List<String> contenidoMultimedia;
