@@ -19,14 +19,13 @@ import java.util.UUID;
 @Service
 public class HechosServices {
     private final HechosRepository hechosRepository;
-    private static List <MetaMapaClient> instanciasMetaMapa = new ArrayList<>();
+    private static List<MetaMapaClient> instanciasMetaMapa = new ArrayList<>();
 
     @PostConstruct
     public void inicializarInstancias() {
-        this.instanciasMetaMapa.add(new MetaMapaClient("http//localhost:8081"));
-        //this.instanciasMetaMapa.add(new MetaMapaClient("http//localhost:8082"));
+        this.instanciasMetaMapa.add(new MetaMapaClient("http://localhost:8081"));
+        this.instanciasMetaMapa.add(new MetaMapaClient("http://localhost:8082"));
     }
-    private final MetaMapaClient instanciaMetaMapa3 = new MetaMapaClient("http://localhost:8083");
 
     public HechosServices(HechosRepository hechosRepository) {
         this.hechosRepository = hechosRepository;
@@ -40,7 +39,6 @@ public class HechosServices {
         }
         return hechos;
     }
-
 
     @Scheduled(fixedRate = 60 * 60 * 1000)  //cada 1 hora
     public void actualizarHechosPeriodicamente() {
