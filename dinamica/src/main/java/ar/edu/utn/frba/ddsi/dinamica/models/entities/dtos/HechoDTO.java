@@ -3,7 +3,6 @@ package ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Etiqueta;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Ubicacion;
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
 
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Registrado;
 import lombok.Getter;
