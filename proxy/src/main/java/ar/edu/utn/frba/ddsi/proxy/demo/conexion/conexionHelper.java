@@ -1,9 +1,9 @@
 package ar.edu.utn.frba.ddsi.proxy.demo.conexion;
 
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Categoria;
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Origen_Fuente;
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Ubicacion;
+import Categoria;
+import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Hecho;
+import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Origen_Fuente;
+import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Ubicacion;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

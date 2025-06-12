@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.ddsi.proxy.metaMapa;
 
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
+import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.solicitudes.SolicitudEliminacion;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -3,7 +3,7 @@ package ar.edu.utn.frba.ddsi.proxy.service;
 
 import ar.edu.utn.frba.ddsi.proxy.metaMapa.FiltroRequest;
 import ar.edu.utn.frba.ddsi.proxy.metaMapa.MetaMapaClient;
-import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
+import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.solicitudes.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.proxy.models.repositories.HechosRepository;
 import org.springframework.scheduling.annotation.Scheduled;

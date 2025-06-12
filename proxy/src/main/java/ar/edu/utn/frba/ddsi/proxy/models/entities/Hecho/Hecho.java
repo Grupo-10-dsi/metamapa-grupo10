@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.proxy.models.entities;
+package ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
