@@ -125,6 +125,7 @@ public class DinamicaController {
     }
 
     @PostMapping("/solicitudes")
+    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public UUID subirSolicitud(@RequestBody SolicitudDTO solicitudDTO) {
         return dinamicaService.crearSolicitudEliminacion(solicitudDTO);
     }

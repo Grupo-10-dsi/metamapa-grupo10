@@ -98,10 +98,10 @@ public class DinamicaService {
             throw new RuntimeException("El hecho no es editable");
         }
 
-        Hecho NuevoHecho = hechoFromDTO(hechoDTO);
-        NuevoHecho.setId(id);
+        Hecho nuevoHecho = hechoFromDTO(hechoDTO);
+        nuevoHecho.setId(id);
 
-        return hechosRepository.findByIdAndUpdate(id, NuevoHecho);
+        return hechosRepository.findByIdAndUpdate(id, nuevoHecho);
     }
 
     // <---------------------------------- GESTION DE SOLICITUDES DE ELIMINACION ---------------------------------->
@@ -109,7 +109,7 @@ public class DinamicaService {
     public UUID crearSolicitudEliminacion(SolicitudDTO solicitud) {
 
         SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion(
-            solicitud.getId(),
+            solicitud.getIdHecho(),
             solicitud.getJustificacion()
         );
 

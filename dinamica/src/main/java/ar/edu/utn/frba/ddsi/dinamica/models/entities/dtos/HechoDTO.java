@@ -7,6 +7,7 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
 
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Registrado;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 
 public class HechoDTO {
     private String tipo;
