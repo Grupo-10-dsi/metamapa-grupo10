@@ -28,6 +28,11 @@ public class DinamicaController {
         this.dinamicaService = dinamicaService;
     }
 
+    /**
+     * Permite obtener una lista de hechos filtrados por los parametros. Los parametros se pasa
+     * como param en una request GET y son opcionales. Si no se pasa ningun parametro,
+     * se devuelven todos los hechos.
+     **/
     @GetMapping("/hechos")
     public List<Hecho> obtenerHechos(
             @RequestParam(required = false) String categoria,
@@ -49,6 +54,11 @@ public class DinamicaController {
         );
     }
 
+    /**
+    * Permite la creacion de hecho pasando como cuerpo un hecho
+    * con todos los campos requeridos (salvo contribuyente, que si es null
+     * se asume como anonimo). Devuelve el ID del hecho creado.
+    **/
     @PostMapping("/hechos")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public UUID subirHecho(@RequestBody HechoDTO hechoDTO) {
@@ -58,29 +68,28 @@ public class DinamicaController {
 
     }
 
+    /**
+     * Permite la modificacion de hecho pasando como cuerpo un hecho
+     * con todos los campos requeridos (salvo contribuyente, que si es null
+     * se asume como anonimo). Devuelve el nuevo hecho con la actualizacion.
+     **/
     @PutMapping("/hechos/{id}")
-    public void modificarHecho(@PathVariable UUID id, @RequestBody HechoDTO hechoDTO) {
-        switch (hechoDTO.getTipo().toLowerCase()) {
-            case "textual":
-                dinamicaService.actualizarHechoTextual(id, hechoDTO);
-                break;
+    public Hecho modificarHecho(@PathVariable UUID id, @RequestBody HechoDTO hechoDTO) {
 
-            case "multimedia":
-                dinamicaService.actualizarHechoMultimedia(id, hechoDTO);
-                break;
+        verificarCamposHecho(hechoDTO);
 
-            default:
-                throw new IllegalArgumentException("Tipo de hecho no soportado: " + hechoDTO.getTipo());
-        }
+        return dinamicaService.actualizarHecho(id, hechoDTO);
     }
 
-
-    public void verificarCamposHecho(HechoDTO hechoDTO) {
+    /**
+     * Verifica que los campos obligatorios del HechoDTO esten presentes
+     * y lanza una excepcion si alguno falta. Ademas, verifica los campos segun el tipo de hecho.
+     **/
+    private void verificarCamposHecho(HechoDTO hechoDTO) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
-        try {
-            Map<String, Object> hechoMap = mapper.convertValue(hechoDTO, Map.class);
+        Map<String, Object> hechoMap = mapper.convertValue(hechoDTO, Map.class);
 
         String[] camposObligatorios = {"titulo", "descripcion", "categoria", "ubicacion",
                 "fechaAcontecimiento", "etiquetas"};
@@ -108,9 +117,6 @@ public class DinamicaController {
                 throw new IllegalArgumentException("Tipo de hecho no soportado: " + hechoDTO.getTipo());
         }
 
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
     }
 
     @GetMapping("/solicitudes")

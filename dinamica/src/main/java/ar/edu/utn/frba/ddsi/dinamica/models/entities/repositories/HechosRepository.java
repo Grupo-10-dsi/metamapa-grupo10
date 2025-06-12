@@ -23,6 +23,7 @@ public class HechosRepository {
     public Hecho findByIdAndUpdate(UUID id, Hecho updatedHecho) {
         Hecho existingHecho = findById(id);
         if (existingHecho != null) {
+            // Logica sin base de datos
             int index = hechos.indexOf(existingHecho);
             hechos.set(index, updatedHecho);
             return updatedHecho;
