@@ -6,18 +6,27 @@ import ar.edu.utn.frba.ddsi.proxy.metaMapa.MetaMapaClient;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.solicitudes.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.proxy.models.repositories.HechosRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class HechosServices {
     private final HechosRepository hechosRepository;
-    private final MetaMapaClient instanciaMetaMapa = new MetaMapaClient("http://localhost:8081");
+    private static List <MetaMapaClient> instanciasMetaMapa = new ArrayList<>();
+
+    @PostConstruct
+    public void inicializarInstancias() {
+        this.instanciasMetaMapa.add(new MetaMapaClient("http//localhost:8081"));
+        //this.instanciasMetaMapa.add(new MetaMapaClient("http//localhost:8082"));
+    }
+    private final MetaMapaClient instanciaMetaMapa3 = new MetaMapaClient("http://localhost:8083");
 
     public HechosServices(HechosRepository hechosRepository) {
         this.hechosRepository = hechosRepository;
@@ -32,20 +41,26 @@ public class HechosServices {
         return hechos;
     }
 
+
     @Scheduled(fixedRate = 60 * 60 * 1000)  //cada 1 hora
     public void actualizarHechosPeriodicamente() {
         this.hechosRepository.obtenerHechos();
     }
 
     public List<Hecho> obtenerHechosMetaMapa(FiltroRequest query) {
-        return this.instanciaMetaMapa.obtenerHechos(query);
+        return instanciasMetaMapa.stream()
+                .flatMap(instanciaMetaMapa -> instanciaMetaMapa.obtenerHechos(query).stream())
+                .toList();
     }
 
     public List<Hecho> obtenerHechosPorColeccion(FiltroRequest query, String handle) {
-        return this.instanciaMetaMapa.obtenerHechosPorColeccion(query, handle);
+        return instanciasMetaMapa.stream()
+                .flatMap(instanciaMetaMapa -> instanciaMetaMapa.obtenerHechosPorColeccion(query, handle).stream())
+                .toList();
     }
 
     public SolicitudEliminacion crearSolicitudDeEliminacion(UUID idHecho, String justificacion) {
-        return this.instanciaMetaMapa.crearSolicitudDeEliminacion(idHecho, justificacion);
+        // Faltaria logica para distinguir entre las instancias de MetaMapa
+        return this.instanciasMetaMapa.get(0).crearSolicitudDeEliminacion(idHecho, justificacion);
     }
 }
