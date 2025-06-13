@@ -19,7 +19,7 @@ public class EstaticaController {
     }
 
     @GetMapping("/hechos")
-    public List<Hecho> ObtenerHechos() {
+    public List<Hecho> listarHechos() {
         return hechosServices.obtenerHechos();
     }
 
