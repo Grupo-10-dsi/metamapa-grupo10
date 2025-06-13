@@ -91,7 +91,7 @@ public class DinamicaController {
 
         Map<String, Object> hechoMap = mapper.convertValue(hechoDTO, Map.class);
 
-        String[] camposObligatorios = {"titulo", "descripcion", "categoria", "ubicacion",
+        String[] camposObligatorios = {"tipo", "titulo", "descripcion", "categoria", "ubicacion",
                 "fechaAcontecimiento", "etiquetas"};
 
         for (String campo : camposObligatorios) {
