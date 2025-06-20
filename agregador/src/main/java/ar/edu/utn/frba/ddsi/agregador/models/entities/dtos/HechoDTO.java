@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.models.entities.dtos;
+package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
 
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Etiqueta;

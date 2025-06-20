@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.models.entities.hecho;
+package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 
 
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;

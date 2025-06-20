@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.models.entities.dtos;
+package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

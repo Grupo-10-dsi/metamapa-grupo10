@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.controllers;
+package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
 import ar.edu.utn.frba.ddsi.models.entities.dtos.HechoDTO;

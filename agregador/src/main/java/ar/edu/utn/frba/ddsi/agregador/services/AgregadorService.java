@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.services;
+package ar.edu.utn.frba.ddsi.agregador.services;
 
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
