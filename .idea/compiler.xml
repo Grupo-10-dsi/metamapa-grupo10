@@ -13,6 +13,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="agregador" target="17" />
       <module name="cliente-simulation" target="17" />
     </bytecodeTargetLevel>
   </component>

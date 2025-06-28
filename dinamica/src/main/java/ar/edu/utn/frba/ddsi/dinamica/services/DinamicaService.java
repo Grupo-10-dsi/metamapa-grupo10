@@ -44,7 +44,7 @@ public class DinamicaService {
     }
 
 
-    public Contribuyente determinarContribuyente(HechoDTO hechoDTO) {
+    private Contribuyente determinarContribuyente(HechoDTO hechoDTO) {
         if (hechoDTO.getRegistrado() != null) {
             return new Registrado(
                 hechoDTO.getRegistrado().getNombre(),
