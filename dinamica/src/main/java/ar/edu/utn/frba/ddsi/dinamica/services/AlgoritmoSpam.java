@@ -25,7 +25,8 @@ public class AlgoritmoSpam {
                 .mapToDouble(Map.Entry::getValue)
                 .sum();
 
-        return puntaje > 0.15;
+        System.out.println(puntaje);
+        return puntaje > 3;
     }
 
     private Map<String, Double> calcularTFIDF(String texto) {

@@ -7,10 +7,12 @@ import java.util.stream.Collectors;
 
 public interface DetectorDeSpam {
 
-    //public final AlgoritmoSpam algoritmoSpam = ;
+    public final AlgoritmoSpam algoritmoSpam = new AlgoritmoSpam(
+            LectorCorpus.leerCorpus("corpus.txt")
+    );
     
     public static boolean esSpam(String texto) {
-         return true;
+         return algoritmoSpam.esTextoSpam(texto);
     }
     
 

@@ -117,9 +117,9 @@ public class DinamicaService {
             nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.RECHAZADA);
         }
 
-        if (!nuevaSolicitudEliminacion.esCorrecta()) {
-            throw new IllegalArgumentException("La justificación debe tener al menos 500 caracteres.");
-        }
+//        if (!nuevaSolicitudEliminacion.esCorrecta()) {
+//            throw new IllegalArgumentException("La justificación debe tener al menos 500 caracteres.");
+//        }
 
         // Verifico si el hecho existe
         Hecho hechoAeliminar = hechosRepository.findById(nuevaSolicitudEliminacion.getIdHecho());
