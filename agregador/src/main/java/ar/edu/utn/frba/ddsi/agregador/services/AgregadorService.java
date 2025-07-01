@@ -36,7 +36,7 @@ public class AgregadorService {
 
     // TODO: Implementar métodos para crear, obtener, eliminar y modificar colecciones
     public Coleccion crearColeccion(Coleccion coleccion){
-        if (!this.coleccionRepository.estaRepetida(coleccion){
+        if (!coleccionRepository.estaRepetida(coleccion){
             return this.coleccionRepository.createCollection(coleccion);
         }
     }

@@ -2,7 +2,6 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador.Importador;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador.estatica.ImportadorEstatica;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

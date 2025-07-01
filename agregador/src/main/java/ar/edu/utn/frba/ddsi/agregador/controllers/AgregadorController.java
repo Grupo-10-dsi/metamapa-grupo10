@@ -2,7 +2,6 @@ package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
