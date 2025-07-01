@@ -7,6 +7,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -32,6 +33,36 @@ public class AgregadorController {
      * se devuelven todos los hechos.
      * get ("http://localhost:8080/agregador/hechos?categoria=robo&fecha_reporte_desde=2023-01-08")""
      **/
+
+    // Endopoints para colecciones made by ranico1 :)
+
+    @PostMapping("/colecciones")
+    public Coleccion crearColeccion(@RequestBody Coleccion coleccion) { // ? No debe retornar un DTO?
+        return this.agregadorService.crearColeccion(coleccion);
+    }
+
+    @GetMapping("/colecciones/{id}")
+    public Coleccion obtenerColeccion(@PathVariable UUID id){
+        return this.agregadorService.obtenerColeccion(id);
+    }
+
+    @DeleteMapping("/colecciones/{id}")
+    public Coleccion eliminarColeccion(@PathVariable UUID id) {
+        return this.agregadorService.eliminarColeccionPorId(id);
+    }
+
+    @PutMapping("/colecciones/{id}")
+    public Coleccion modificarColeccion(@PathVariable UUID id, @RequestBody Coleccion coleccion) {
+        return this.agregadorService.modificarColeccion(id, coleccion);
+    }
+
+
+
+
+
+
+
+
     @GetMapping("/hechos")
     public List<Hecho> obtenerHechos(
             @RequestParam(required = false) String categoria,
@@ -129,12 +160,6 @@ public class AgregadorController {
         return agregadorService.encontrarSolicitudes();
     }
 
-    // En teoria los hechos/solicitudes solo se suben a las fuentes, no en el agregador
-//    @PostMapping("/solicitudes")
-//    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-//    public UUID subirSolicitud(@RequestBody SolicitudDTO solicitudDTO) {
-//        return agregadorService.crearSolicitudEliminacion(solicitudDTO);
-//    }
 
     @PutMapping("/solicitudes/{id}")
     public SolicitudEliminacion modificarSolicitud(@PathVariable UUID id, @RequestBody Estado_Solicitud nuevoEstado) {

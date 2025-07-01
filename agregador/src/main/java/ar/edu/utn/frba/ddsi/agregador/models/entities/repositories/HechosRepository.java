@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador.Importador;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador.estatica.ImportadorEstatica;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,6 +13,9 @@ import java.util.UUID;
 public class HechosRepository {
 
     private final List<Hecho> hechos = new ArrayList<>();
+    //TODO: Ver como es la demo
+    List<String> urls = List.of("estatica/hechos", "dinamica/hechos", "proxy/metamapa/hechos");
+    private final Importador importador= new Importador(urls);
 
     public void save(Hecho hecho) {
         hechos.add(hecho);
@@ -33,5 +38,10 @@ public class HechosRepository {
 
     public List<Hecho> findAll() {
         return hechos;
+    }
+
+    public List<Hecho> importarHechosDesdeFuentes() {
+        return importador.importarHechos();
+
     }
 }

@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import org.springframework.stereotype.Repository;
 
@@ -10,28 +11,46 @@ import java.util.UUID;
 @Repository
 public class ColeccionRepository {
 
-    private final List<Hecho> hechos = new ArrayList<>();
+    private final List<Coleccion> colecciones = new ArrayList<>();
 
-    public void save(Hecho hecho) {
-        hechos.add(hecho);
+//    public void save(Hecho hecho) {
+//        colecciones.add(hecho);
+//    }
+
+    public Coleccion createCollection(Coleccion coleccion) {
+        colecciones.add(coleccion);
+        return coleccion;
     }
 
-    public Hecho findById(UUID id) {
-        return hechos.stream().filter(hecho -> hecho.getId().equals(id)).findFirst().orElse(null);
+    public Coleccion findById(UUID id) {
+        return colecciones.stream().filter(coleccion -> coleccion.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public Hecho findByIdAndUpdate(UUID id, Hecho updatedHecho) {
-        Hecho existingHecho = findById(id);
-        if (existingHecho != null) {
+    public Coleccion findByIdAndUpdate(UUID id, Coleccion updatedColeccion) {
+        Coleccion existingColeccion = findById(id);
+        if (existingColeccion != null) {
             // Logica sin base de datos
-            int index = hechos.indexOf(existingHecho);
-            hechos.set(index, updatedHecho);
-            return updatedHecho;
+            int index = colecciones.indexOf(existingColeccion);
+            colecciones.set(index, updatedColeccion);
+            return updatedColeccion;
         }
         return null;
     }
 
-    public List<Hecho> findAll() {
-        return hechos;
+    public List<Coleccion> findAll() {
+        return colecciones;
+    }
+
+    public Coleccion findAndDelete(UUID id) {
+        Coleccion coleccionEncontrada = findById(id);
+
+        if (coleccionEncontrada != null) {
+            colecciones.remove(coleccionEncontrada);
+            return coleccionEncontrada;
+        }
+
+        return null; //TODO: IMPLEMENTAR
     }
 }
+
+

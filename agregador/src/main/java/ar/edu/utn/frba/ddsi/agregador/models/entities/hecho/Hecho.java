@@ -1,10 +1,11 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 
 
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -13,30 +14,29 @@ import java.util.UUID;
 @Getter
 @Setter
 
-public abstract class Hecho {
+public class Hecho {
     private UUID id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
     private Ubicacion ubicacion;
-    private LocalDateTime fechaAcontecimiento;
+    private LocalDate fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private Origen_Fuente origen;
+    private Origen_Fuente origenFuente;
     private boolean estaOculto;
     private List<Etiqueta> etiquetas;
     private Contribuyente contribuyente;
 
-    public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
-                 LocalDateTime fechaAcontecimiento, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
-        this.id = UUID.randomUUID();
+    public Hecho(UUID id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
+                 LocalDate fechaAcontecimiento, LocalDateTime fechaCarga, Origen_Fuente origenFuente, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
+        this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;
         this.ubicacion = ubicacion;
         this.fechaAcontecimiento = fechaAcontecimiento;
-        this.fechaCarga = LocalDateTime.now();
-        this.origen = Origen_Fuente.DINAMICA;
-        this.estaOculto = false;
+        this.fechaCarga = fechaCarga;
+        this.origenFuente = origenFuente;
         this.etiquetas = etiquetas;
         this.contribuyente = contribuyente;
     }
