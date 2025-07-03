@@ -14,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 
-public class Hecho {
+public abstract class Hecho {
     private UUID id;
     private String titulo;
     private String descripcion;
@@ -23,7 +23,6 @@ public class Hecho {
     private LocalDate fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private Origen_Fuente origenFuente;
-    private boolean estaOculto;
     private List<Etiqueta> etiquetas;
     private Contribuyente contribuyente;
 

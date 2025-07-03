@@ -3,7 +3,7 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.adaptador.Adaptador;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.adaptador.Conversor;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class Importador {
 
     protected WebClient webClient;
-    private final Adaptador adaptador = new Adaptador();
+    private final Conversor adaptador = new Conversor();
     private final List<String> urls;
 
     public Importador(List<String> urls) {

@@ -27,10 +27,10 @@ public class HechoDTO {
     private Ubicacion ubicacion;
     private LocalDate fechaAcontecimiento;
     private LocalDateTime fechaCarga;
+    private Origen_Fuente origenFuente;
     private List<Etiqueta> etiquetas;
     private List<String> contenidoMultimedia;
     private String cuerpo;
-    private Origen_Fuente origenFuente;
     private Contribuyente contribuyente;
 
     public HechoDTO(UUID id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDate fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, List<String> contenidoMultimedia, String cuerpo, Origen_Fuente origenFuente, Contribuyente contribuyente) {
