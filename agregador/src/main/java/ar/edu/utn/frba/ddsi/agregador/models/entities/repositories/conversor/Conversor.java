@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.adaptador;
+package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.conversor;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;

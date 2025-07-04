@@ -16,7 +16,7 @@ public class ColeccionRepository {
 //        colecciones.add(hecho);
 //    }
 
-    public Coleccion createCollection(Coleccion coleccion) {
+    public Coleccion save(Coleccion coleccion) {
         colecciones.add(coleccion);
         return coleccion;
     }

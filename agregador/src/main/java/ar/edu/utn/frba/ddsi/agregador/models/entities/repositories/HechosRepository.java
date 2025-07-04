@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador.Importador;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,36 +13,52 @@ import java.util.UUID;
 @Repository
 public class HechosRepository {
 
-    private final List<Hecho> hechos = new ArrayList<>();
-    //TODO: Ver como es la demo
-    List<String> urls = List.of("estatica/hechos", "dinamica/hechos", "proxy/metamapa/hechos");
-    private final Importador importador= new Importador(urls);
+    /**
+     * Por ahora las fuentes se hardcodean aca. Eventualmente se
+     * vera si se pueden agregar/sacar usando requests.
+     */
+    private final List<Fuente> fuentes = List.of(
+            new Fuente("https://dinamica", "Dinamica"),
+            new Fuente("https://estatica", "Estatica"),
+            new Fuente("https://proxy", "Proxy")
+    );
 
-    public void save(Hecho hecho) {
-        hechos.add(hecho);
-    }
+    private final Importador importador= new Importador();
+
 
     public Hecho findById(UUID id) {
-        return hechos.stream().filter(hecho -> hecho.getId().equals(id)).findFirst().orElse(null);
+
+        // Implementacion sin base de datos
+        return fuentes.stream()
+                .flatMap(fuente -> fuente.getHechos().stream())
+                .filter(hecho -> hecho.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
     }
 
     public Hecho findByIdAndUpdate(UUID id, Hecho updatedHecho) {
         Hecho existingHecho = findById(id);
         if (existingHecho != null) {
             // Logica sin base de datos
-            int index = hechos.indexOf(existingHecho);
-            hechos.set(index, updatedHecho);
-            return updatedHecho;
+
         }
         return null;
     }
 
     public List<Hecho> findAll() {
-        return hechos;
+        return fuentes.stream().flatMap(fuente -> fuente.getHechos().stream())
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     }
 
-    public List<Hecho> importarHechosDesdeFuentes() {
-        return importador.importarHechos();
+    public void importarHechosDesdeFuentes() {
+        fuentes.forEach(importador::importarHechos);
 
+    }
+
+    public List<Fuente> findFuentes(List<String> urls) {
+        return fuentes.stream()
+                .filter(fuente -> urls.contains(fuente.getUrl()))
+                .toList();
     }
 }
