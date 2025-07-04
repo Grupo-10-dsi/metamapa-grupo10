@@ -7,8 +7,8 @@ import java.util.List;
 @Getter
 public class Fuente {
     private List<Hecho> hechos = List.of();
-    private String url;
-    private String nombre;
+    private final String url;
+    private final String nombre;
 
     public Fuente(String url, String nombre) {
         this.url = url;

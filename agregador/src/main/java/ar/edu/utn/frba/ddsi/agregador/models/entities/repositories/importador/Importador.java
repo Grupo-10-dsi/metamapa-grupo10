@@ -3,12 +3,10 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.importador;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.conversor.Conversor;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Importador {

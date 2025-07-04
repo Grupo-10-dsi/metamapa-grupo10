@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class CriterioCategoria implements CriterioPertenencia{
-    private Categoria categoria;
+    private final Categoria categoria;
 
     public CriterioCategoria(Categoria categoria) {
         this.categoria = categoria;

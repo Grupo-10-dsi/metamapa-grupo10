@@ -69,26 +69,19 @@ public class AgregadorService {
     }
 
     public CriterioPertenencia criterioFromDTO(CriterioDTO criterioDTO) {
-        switch (criterioDTO.getTipo()) {
-            case "titulo":
-                return new CriterioTitulo(criterioDTO.getValor());
-            case "descripcion":
-                return new CriterioDescripcion(criterioDTO.getValor());
-            case "categoria":
-                return new CriterioCategoria(new Categoria(criterioDTO.getValor()));
-            case "fechaAcontecimientoDesde":
-                return new CriterioFechaDesde(LocalDate.parse(criterioDTO.getValor()));
-            case "fechaAcontecimientoHasta":
-                return new CriterioFechaHasta(LocalDate.parse(criterioDTO.getValor()));
-            case "ubicacion": //chequear
-                return new CriterioUbicacion(new Ubicacion(
-                        Double.parseDouble(criterioDTO.getValor().split(",")[0]),
-                        Double.parseDouble(criterioDTO.getValor().split(",")[1])
-                ));
-
-            default:
-                throw new IllegalArgumentException("Tipo de criterio desconocido: " + criterioDTO.getTipo());
-        }
+        return switch (criterioDTO.getTipo()) {
+            case "titulo" -> new CriterioTitulo(criterioDTO.getValor());
+            case "descripcion" -> new CriterioDescripcion(criterioDTO.getValor());
+            case "categoria" -> new CriterioCategoria(new Categoria(criterioDTO.getValor()));
+            case "fechaAcontecimientoDesde" -> new CriterioFechaDesde(LocalDate.parse(criterioDTO.getValor()));
+            case "fechaAcontecimientoHasta" -> new CriterioFechaHasta(LocalDate.parse(criterioDTO.getValor()));
+            case "ubicacion" -> //chequear
+                    new CriterioUbicacion(new Ubicacion(
+                            Double.parseDouble(criterioDTO.getValor().split(",")[0]),
+                            Double.parseDouble(criterioDTO.getValor().split(",")[1])
+                    ));
+            default -> throw new IllegalArgumentException("Tipo de criterio desconocido: " + criterioDTO.getTipo());
+        };
     }
 
     public List<Coleccion> obtenerColecciones() {

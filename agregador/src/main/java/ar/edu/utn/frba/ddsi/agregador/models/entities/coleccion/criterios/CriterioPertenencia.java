@@ -4,7 +4,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 
 public interface CriterioPertenencia {
 
-    public boolean cumpleConCriterio(Hecho hecho);
+    boolean cumpleConCriterio(Hecho hecho);
 }
 
 

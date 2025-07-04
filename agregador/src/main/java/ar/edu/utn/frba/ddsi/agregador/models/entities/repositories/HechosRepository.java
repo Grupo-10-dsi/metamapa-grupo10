@@ -41,9 +41,17 @@ public class HechosRepository {
         Hecho existingHecho = findById(id);
         if (existingHecho != null) {
             // Logica sin base de datos
+            fuentes.forEach(fuente -> {
+                List<Hecho> hechos = fuente.getHechos();
+                int index = hechos.indexOf(existingHecho);
+                if (index != -1) {
+                    hechos.set(index, updatedHecho);
+                    fuente.setHechos(hechos);
+                }
+            });
 
         }
-        return null;
+        return updatedHecho;
     }
 
     public List<Hecho> findAll() {

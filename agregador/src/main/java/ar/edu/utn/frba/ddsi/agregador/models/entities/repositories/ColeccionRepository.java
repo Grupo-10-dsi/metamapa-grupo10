@@ -16,9 +16,8 @@ public class ColeccionRepository {
 //        colecciones.add(hecho);
 //    }
 
-    public Coleccion save(Coleccion coleccion) {
+    public void save(Coleccion coleccion) {
         colecciones.add(coleccion);
-        return coleccion;
     }
 
     public Coleccion findById(UUID id) {

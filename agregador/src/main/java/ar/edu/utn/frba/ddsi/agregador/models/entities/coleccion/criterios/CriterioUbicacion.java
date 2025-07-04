@@ -4,7 +4,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 
 public class CriterioUbicacion implements CriterioPertenencia{
-    private Ubicacion ubicacion;
+    private final Ubicacion ubicacion;
 
     public CriterioUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;

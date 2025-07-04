@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class CriterioDescripcion implements CriterioPertenencia{
-    private String descripcion;
+    private final String descripcion;
 
     public CriterioDescripcion(String descripcion) {
         this.descripcion = descripcion;
