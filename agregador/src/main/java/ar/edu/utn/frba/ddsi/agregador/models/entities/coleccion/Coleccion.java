@@ -62,11 +62,11 @@ public class Coleccion {
 //        return true; //TODO: IMPLEMENTAR ESTO
 //    }
 
-    public void aplivarVerificacionAlgoritmoPorDefecto() {
-        this.fuentes.stream()
-                .flatMap(fuente -> fuente.getHechos().stream())
-                .forEach(hecho -> hecho.setVerificado(true));
-    }
+//    public void aplivarVerificacionAlgoritmoPorDefecto() {
+//        this.fuentes.stream()
+//                .flatMap(fuente -> fuente.getHechos().stream())
+//                .forEach(hecho -> hecho.setVerificado(true));
+//    }
 
     // aplicarVerifiacionAlgoritmo
     /*
