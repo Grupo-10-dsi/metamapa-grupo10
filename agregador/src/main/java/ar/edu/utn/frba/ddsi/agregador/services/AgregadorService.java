@@ -115,7 +115,7 @@ public class AgregadorService {
         return switch (algoritmo) {
             case MULTIPLES_MENCIONES -> 2.0;
             case MAYORIA_SIMPLE -> Math.floor(this.hechosRepository.countFuentes() / 2.0);
-            case ABSOLUTA -> this.hechosRepository.countFuentes();
+            case ABSOLUTA -> Math.ceil(this.hechosRepository.countFuentes());
             default -> 1.0;
         };
     }
@@ -136,7 +136,7 @@ public class AgregadorService {
         Coleccion coleccionEditada = new Coleccion(
                 coleccionDTO.getTitulo(),
                 coleccionDTO.getDescripcion(),
-                coleccionDTO.getAlgoritmo_consenso().orElse(null),
+                coleccionDTO.getAlgoritmo_consenso(),
                 fuentes,
                 criterios
         );

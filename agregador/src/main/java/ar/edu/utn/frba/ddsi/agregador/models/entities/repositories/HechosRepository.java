@@ -70,7 +70,7 @@ public class HechosRepository {
                 .toList();
     }
 
-    public Double countFuentes() {
+    public Long countFuentes() {
         return fuentes.stream().count();
     }
 }
