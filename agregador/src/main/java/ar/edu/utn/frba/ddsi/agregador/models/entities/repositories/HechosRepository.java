@@ -64,6 +64,22 @@ public class HechosRepository {
 
     }
 
+    // Ahora el tema es que hacemos con los hechos clasificados. Pisamos los de las fuentes?
+    // Si pisamos los de las fuentes, podríamos hacer lo siguiente:
+    public void actualizarHechosClasificadoFuentes(List<Hecho> hechosClasificados) {
+        for (Fuente fuente : fuentes) {
+            List<Hecho> hechosActualizados = new ArrayList<>();
+            for (Hecho hecho : fuente.getHechos()) {
+                Hecho hechoActualizado = hechosClasificados.stream()
+                        .filter(hc -> hc.getId().equals(hecho.getId()))
+                        .findFirst()
+                        .orElse(hecho);
+                hechosActualizados.add(hechoActualizado);
+            }
+            fuente.setHechos(hechosActualizados);
+        }
+    }
+
     public List<Fuente> findFuentes(List<String> urls) {
         return fuentes.stream()
                 .filter(fuente -> urls.contains(fuente.getUrl()))

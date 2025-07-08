@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.HechosRepository;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.ColeccionRepository;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.SolicitudesRepository;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.clasificador.Clasificador;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
@@ -33,11 +34,13 @@ public class AgregadorService {
     private final HechosRepository hechosRepository;
     private final SolicitudesRepository solicitudesRepository;
     private final ColeccionRepository coleccionRepository;
+    private final Clasificador clasificador;
 
-    public AgregadorService(HechosRepository hechosRepository, SolicitudesRepository solicitudesRepository, ColeccionRepository coleccionRepository) {
+    public AgregadorService(HechosRepository hechosRepository, SolicitudesRepository solicitudesRepository, ColeccionRepository coleccionRepository, Clasificador clasificador) {
         this.hechosRepository = hechosRepository;
         this.solicitudesRepository = solicitudesRepository;
         this.coleccionRepository = coleccionRepository;
+        this.clasificador =  clasificador;
     }
 
     @Scheduled(fixedRate = 60 * 60 * 1000)
@@ -46,9 +49,10 @@ public class AgregadorService {
     }
 
     @Scheduled(cron = "0 0 3 * * *")
-    public void aplicarAlgoritmosDeConsenso() {
-
-        
+    public void clasificarHechos() {
+        List<Hecho> hechos = hechosRepository.findAll();
+        List<Hecho> hechosClasificados = clasificador.clasificarHechosPorMenciones(hechos);
+        hechosRepository.actualizarHechosClasificadoFuentes(hechosClasificados);
     }
 
     // <----------------- COLECCIONES ----------------->
@@ -258,6 +262,7 @@ public class AgregadorService {
                 })
                 .collect(Collectors.toList());
     }
+
 }
 
 
