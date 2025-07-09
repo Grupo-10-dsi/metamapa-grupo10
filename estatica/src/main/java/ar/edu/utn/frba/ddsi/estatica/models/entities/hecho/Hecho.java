@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.ddsi.estatica.models.entities.hecho;
 
-import java.time.LocalDate; //Fecha sin hora
 import java.time.LocalDateTime; //Fecha con hora
 import java.util.UUID;
 
@@ -17,11 +16,11 @@ public class Hecho {
     private String descripcion;
     private Categoria categoria;
     private Ubicacion ubicacion;
-    private LocalDate fechaAcontecimiento;
+    private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaImportacion;
     private Origen_Fuente origenFuente;
 
-    public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDate fechaAcontecimiento) {
+    public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDateTime fechaAcontecimiento) {
         this.id = UUID.randomUUID();
         this.titulo = titulo;
         this.descripcion = descripcion;

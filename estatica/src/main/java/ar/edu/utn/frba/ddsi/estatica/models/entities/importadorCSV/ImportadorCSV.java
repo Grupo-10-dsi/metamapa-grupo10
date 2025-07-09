@@ -8,12 +8,13 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImportadorCSV {
-    private static LectorCSV lector = new LectorCSV();
+    private static final LectorCSV lector = new LectorCSV();
 
 
     public List<Hecho> importarCSV(String nombreArchivo) throws IOException, CsvValidationException {
@@ -33,7 +34,9 @@ public class ImportadorCSV {
         String categoria = fila[2].trim();
         Double latitud = Double.parseDouble(fila[3].trim());
         Double longitud = Double.parseDouble(fila[4].trim());
-        LocalDate fechaAcontecimiento = LocalDate.parse(fila[5].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate fechaAcontecimientoCSV = LocalDate.parse(fila[5].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDateTime fechaAcontecimiento = fechaAcontecimientoCSV.atStartOfDay();
+
 
         HechoCSV hechoCSV = new HechoCSV(titulo, descripcion, new Categoria(categoria), new Ubicacion(latitud, longitud), fechaAcontecimiento);
 

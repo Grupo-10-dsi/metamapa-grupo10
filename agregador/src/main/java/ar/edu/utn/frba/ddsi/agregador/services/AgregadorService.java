@@ -12,7 +12,6 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
-import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -142,7 +140,8 @@ public class AgregadorService {
 
     public Coleccion obtenerColeccion(UUID id){ return this.coleccionRepository.findById(id);}
 
-    public Coleccion eliminarColeccionPorId(UUID id) { return this.coleccionRepository.findAndDelete(id);}
+
+    public void eliminarColeccionPorId(UUID id) { this.coleccionRepository.findAndDelete(id);}
 
     public Coleccion actualizarColeccion(UUID id, ColeccionDTO coleccionDTO) {
 
@@ -253,11 +252,11 @@ public class AgregadorService {
                         (hecho.getCategoria() != null && categoria.equalsIgnoreCase(hecho.getCategoria().getDetalle())))
                 .filter(hecho -> {
                     if (fechaReporteDesde == null && fechaReporteHasta == null) return true;
-                    if (hecho.getFechaCarga() == null) return false;
+                    if (hecho.getFechaImportacion() == null) return false;
                     boolean desde = fechaReporteDesde == null ||
-                            !hecho.getFechaCarga().isBefore(LocalDateTime.parse(fechaReporteDesde));
+                            !hecho.getFechaImportacion().isBefore(LocalDateTime.parse(fechaReporteDesde));
                     boolean hasta = fechaReporteHasta == null ||
-                            !hecho.getFechaCarga().isAfter(LocalDateTime.parse(fechaReporteHasta));
+                            !hecho.getFechaImportacion().isAfter(LocalDateTime.parse(fechaReporteHasta));
                     return desde && hasta;
                 })
                 .filter(hecho -> {
@@ -277,6 +276,11 @@ public class AgregadorService {
                     return latOk && lonOk;
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    public List<Hecho> obtenerTodosLosHechos() {
+        return this.hechosRepository.findAll();
     }
 
 }

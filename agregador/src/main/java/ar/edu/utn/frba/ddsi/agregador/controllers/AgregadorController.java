@@ -2,6 +2,7 @@ package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Algoritmo_Consenso;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ActualizacionColeccionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
@@ -10,7 +11,6 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estad
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
-import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -80,8 +80,16 @@ public class AgregadorController {
 
      //Endpoint para modificar algoritmo de consenso de una coleccion
     @PatchMapping("/colecciones/{id}")
-    public Coleccion modificarAlgoritmoConsenso(@PathVariable UUID id, @RequestBody Algoritmo_Consenso nuevoAlgoritmo) {
-       return this.agregadorService.modificarAlgoritmoConsenso(id, nuevoAlgoritmo);
+    public Coleccion modificarAlgoritmoConsenso(@PathVariable UUID id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
+
+        if(actualizacionColeccion.getAlgoritmo() != null) {
+            return this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo());
+        } else if (actualizacionColeccion.getUrls_fuente() != null) {
+            return this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
+        } else {
+            throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
+        }
+
     }
 
 
@@ -143,6 +151,12 @@ public class AgregadorController {
     @GetMapping("/init")
     public void init() {
         this.agregadorService.consultarHechosPorPrimeraVez();
+    }
+
+
+    @GetMapping("/hechos")
+    public List<Hecho> obtenerTodosLosHechos() {
+        return this.agregadorService.obtenerTodosLosHechos();
     }
 
 // ucraniano
