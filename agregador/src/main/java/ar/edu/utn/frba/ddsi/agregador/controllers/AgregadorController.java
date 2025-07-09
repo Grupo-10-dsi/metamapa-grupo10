@@ -136,8 +136,8 @@ public class AgregadorController {
 
     // Endpoint para generar solicitudes de eliminacion de hechos le pega metamapa
     @PostMapping("/solicitudes/{id}")
-    public SolicitudEliminacion generarSolicitudEliminacion(@PathVariable UUID id, @RequestBody SolicitudDTO solicitudEliminacion) {
-        return agregadorService.generarSolicitudEliminacion(id, solicitudEliminacion);
+    public SolicitudEliminacion generarSolicitudEliminacion(@RequestBody SolicitudDTO solicitudEliminacion) {
+        return agregadorService.crearSolicitudEliminacion(solicitudEliminacion);
     }
 
 // ucraniano

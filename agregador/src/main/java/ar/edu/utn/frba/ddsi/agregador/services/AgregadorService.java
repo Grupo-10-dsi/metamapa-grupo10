@@ -228,7 +228,7 @@ public class AgregadorService {
 
     }
 
-    public SolicitudEliminacion generarSolicitudEliminacion(UUID id, SolicitudDTO solicitudDTO) {
+    public SolicitudEliminacion crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
             SolicitudEliminacion nuevaSolicitud = new SolicitudEliminacion(
                     solicitudDTO.getIdHecho(),
                     solicitudDTO.getJustificacion()
