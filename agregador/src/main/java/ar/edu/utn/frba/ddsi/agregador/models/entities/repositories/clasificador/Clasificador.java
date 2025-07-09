@@ -12,12 +12,16 @@ public class Clasificador {
     }
     // Verifica si dos hechos son iguales comparando todos sus atributos
     public static boolean hechosIguales(Hecho hecho1, Hecho hecho2) {
-        return Objects.equals(hecho1.getTitulo(), hecho2.getTitulo())
-                    && Objects.equals(hecho1.getDescripcion(), hecho2.getDescripcion())
-                    && Objects.equals(hecho1.getCategoria(), hecho2.getCategoria())
-                    && Objects.equals(hecho1.getUbicacion(), hecho2.getUbicacion())
-                    && Objects.equals(hecho1.getFechaAcontecimiento(), hecho2.getFechaAcontecimiento())
-                    && Objects.equals(hecho1.getEtiquetas(), hecho2.getEtiquetas());
+        boolean titulosIguales = Objects.equals(hecho1.getTitulo(), hecho2.getTitulo());
+        boolean descripcionesIguales = Objects.equals(hecho1.getDescripcion(), hecho2.getDescripcion());
+        boolean categoriasIguales = Objects.equals(hecho1.getCategoria().getDetalle(), hecho2.getCategoria().getDetalle());
+        boolean latitudesIguales = Objects.equals(hecho1.getUbicacion().getLatitud(), hecho2.getUbicacion().getLatitud());
+        boolean longitudesIguales = Objects.equals(hecho1.getUbicacion().getLongitud(), hecho2.getUbicacion().getLongitud());
+        boolean fechasIguales = Objects.equals(hecho1.getFechaAcontecimiento(), hecho2.getFechaAcontecimiento());
+        boolean etiquetasIguales = Objects.equals(hecho1.getEtiquetas(), hecho2.getEtiquetas());
+
+        return titulosIguales && descripcionesIguales && categoriasIguales
+                && latitudesIguales && longitudesIguales && fechasIguales && etiquetasIguales;
     }
 
     // Clasifica los hechos uniendo el título y la descripción, podemos modificarlo en un futuro
@@ -30,11 +34,13 @@ public class Clasificador {
     }
 
     public static int compararHechos(Hecho hecho, List<Fuente> fuentesRestantes) {
-        int cantidadMenciones = 0;
+        int cantidadMenciones = 1;
         for (Fuente fuente : fuentesRestantes) {
             cantidadMenciones += (int) fuente.getHechos().stream()
                     .filter(h -> hechosIguales(h, hecho))
                     .count();
+
+
         }
         return cantidadMenciones;
     }

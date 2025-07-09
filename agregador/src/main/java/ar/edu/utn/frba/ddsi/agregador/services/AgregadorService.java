@@ -53,7 +53,7 @@ public class AgregadorService {
 
     @Scheduled(cron = "0 0 3 * * *")
     public void clasificarHechos() {
-
+        System.out.println("hola");
         List<Fuente> fuentes = hechosRepository.findAllFuentes();
 
         for (Fuente fuente : fuentes) {

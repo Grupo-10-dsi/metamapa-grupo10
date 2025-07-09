@@ -20,8 +20,8 @@ public class HechosRepository {
      */
     @Setter
     private List<Fuente> fuentes = List.of(
-            new Fuente("http://localhost:8082/api/dinamica/hechos", "Dinamica")
-            //new Fuente("http://localhost:8080/api/estatica/hechos", "Estatica")
+            new Fuente("http://localhost:8082/api/dinamica/hechos", "Dinamica"),
+            new Fuente("http://localhost:8081/api/estatica/hechos", "Estatica")
             //new Fuente("http://localhost:8080/api/proxy", "Proxy")
     );
 
