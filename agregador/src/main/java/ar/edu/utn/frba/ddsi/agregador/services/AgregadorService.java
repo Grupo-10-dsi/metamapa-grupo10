@@ -42,7 +42,7 @@ public class AgregadorService {
         this.coleccionRepository = coleccionRepository;
     }
 
-    @PostConstruct
+
     public void consultarHechosPorPrimeraVez() {
         hechosRepository.importarHechosDesdeFuentes(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
         this.clasificarHechos();
@@ -105,8 +105,8 @@ public class AgregadorService {
             case "titulo" -> new CriterioTitulo(criterioDTO.getValor());
             case "descripcion" -> new CriterioDescripcion(criterioDTO.getValor());
             case "categoria" -> new CriterioCategoria(new Categoria(criterioDTO.getValor()));
-            case "fechaAcontecimientoDesde" -> new CriterioFechaDesde(LocalDate.parse(criterioDTO.getValor()));
-            case "fechaAcontecimientoHasta" -> new CriterioFechaHasta(LocalDate.parse(criterioDTO.getValor()));
+            case "fechaAcontecimientoDesde" -> new CriterioFechaDesde(LocalDateTime.parse(criterioDTO.getValor()));
+            case "fechaAcontecimientoHasta" -> new CriterioFechaHasta(LocalDateTime.parse(criterioDTO.getValor()));
             case "ubicacion" -> //chequear
                     new CriterioUbicacion(new Ubicacion(
                             Double.parseDouble(criterioDTO.getValor().split(",")[0]),
