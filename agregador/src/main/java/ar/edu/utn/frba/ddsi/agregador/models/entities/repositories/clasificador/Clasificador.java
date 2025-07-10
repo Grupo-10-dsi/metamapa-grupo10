@@ -20,6 +20,7 @@ public class Clasificador {
         boolean fechasIguales = Objects.equals(hecho1.getFechaAcontecimiento(), hecho2.getFechaAcontecimiento());
         boolean etiquetasIguales = Objects.equals(hecho1.getEtiquetas(), hecho2.getEtiquetas());
 
+
         return titulosIguales && descripcionesIguales && categoriasIguales
                 && latitudesIguales && longitudesIguales && fechasIguales && etiquetasIguales;
     }

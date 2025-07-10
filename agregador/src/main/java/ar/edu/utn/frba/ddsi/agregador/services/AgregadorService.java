@@ -12,6 +12,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
+import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -40,20 +41,31 @@ public class AgregadorService {
         this.coleccionRepository = coleccionRepository;
     }
 
-
+    /**
+     * Gestiona la consulta de hechos por primera vez al iniciar el sistema y,
+     * los clasifica inmediatamente.
+     */
+    @PostConstruct
     public void consultarHechosPorPrimeraVez() {
-        hechosRepository.importarHechosDesdeFuentes(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
+        System.out.print("Se ejecuta el PostConstruct");
+        this.consultarHechosPeriodicamente();
         this.clasificarHechos();
     }
 
+    /**
+     * Cada una hora, se ejecuta este metodo para consultar los hechos de las fuentes.
+     */
     @Scheduled(fixedRate = 60 * 60 * 1000)
     public void consultarHechosPeriodicamente() {
         hechosRepository.importarHechosDesdeFuentes(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
     }
 
+    /**
+     * Todos los dias a las 3 AM, se ejecuta este metodo para clasificar los hechos
+     * ya importados de las fuentes.
+     */
     @Scheduled(cron = "0 0 3 * * *")
     public void clasificarHechos() {
-        System.out.println("hola");
         List<Fuente> fuentes = hechosRepository.findAllFuentes();
 
         for (Fuente fuente : fuentes) {
@@ -72,6 +84,10 @@ public class AgregadorService {
     // <----------------- COLECCIONES ----------------->
     // TODO: Implementar manejo de errores y validaciones
 
+    /**
+     * Crea una nueva colección a partir del DTO recibido.
+     * Si se crea correctamente, devuelve el ID de la colección creada.
+     */
     public UUID crearColeccion(ColeccionDTO coleccionDTO){
 
         List<Fuente> fuentes = this.hechosRepository.findFuentes(coleccionDTO.getUrls_fuente());
@@ -98,6 +114,10 @@ public class AgregadorService {
         return nuevaColeccion.getId();
     }
 
+    /**
+     * Convierte un CriterioDTO a un CriterioPertenencia.
+     * Utiliza un switch para determinar el tipo de criterio y crear la instancia correspondiente.
+     */
     public CriterioPertenencia criterioFromDTO(CriterioDTO criterioDTO) {
         return switch (criterioDTO.getTipo()) {
             case "titulo" -> new CriterioTitulo(criterioDTO.getValor());
@@ -114,6 +134,9 @@ public class AgregadorService {
         };
     }
 
+    /**
+     * Busca todas las colecciones en el repositorio.
+     */
     public List<Coleccion> obtenerColecciones() {
         return this.coleccionRepository.findAll();
     }
@@ -129,6 +152,10 @@ public class AgregadorService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Calcula la cantidad de menciones necesarias para que un hecho sea considerado consensuado
+     * según el algoritmo de consenso especificado.
+     */
     private Double mencionesNecesarias(Algoritmo_Consenso algoritmo) {
         return switch (algoritmo) {
             case MULTIPLES_MENCIONES -> 2.0;
@@ -138,11 +165,19 @@ public class AgregadorService {
         };
     }
 
+    /**
+     * Busca una colección por su ID.
+     */
     public Coleccion obtenerColeccion(UUID id){ return this.coleccionRepository.findById(id);}
 
-
+    /**
+     * Elimina una colección por su ID.
+     */
     public void eliminarColeccionPorId(UUID id) { this.coleccionRepository.findAndDelete(id);}
 
+    /**
+     * Actualiza una colección existente con los datos del DTO proporcionado.
+     */
     public Coleccion actualizarColeccion(UUID id, ColeccionDTO coleccionDTO) {
 
         List<CriterioPertenencia> criterios = coleccionDTO.getCriterios().stream()
@@ -150,7 +185,6 @@ public class AgregadorService {
                 .toList();
 
         List<Fuente> fuentes = this.hechosRepository.findFuentes(coleccionDTO.getUrls_fuente());
-
 
         Coleccion coleccionEditada = new Coleccion(
                 coleccionDTO.getTitulo(),
@@ -163,6 +197,9 @@ public class AgregadorService {
         return this.coleccionRepository.findByIdAndUpdate(id, coleccionEditada);
     }
 
+    /**
+     * Modifica el algoritmo de consenso de una colección existente a partir de su ID.
+     */
     public Coleccion modificarAlgoritmoConsenso(UUID id, Algoritmo_Consenso nuevoAlgoritmo){
         Coleccion coleccionAModificadar = this.coleccionRepository.findById(id);
         if (coleccionAModificadar == null) {
@@ -172,6 +209,10 @@ public class AgregadorService {
         return this.coleccionRepository.findByIdAndUpdate(id, coleccionAModificadar);
     }
 
+    /**
+     * Modifica la lista de fuentes de una colección existente a partir de su ID.
+     * Recibe una lista de URLs (string) de fuentes y actualiza la colección con las fuentes encontradas.
+     */
     public Coleccion modificarListaDeFuentes(UUID id, List<String> urls_fuente) {
         Coleccion coleccionAModificadar = this.coleccionRepository.findById(id);
         if (coleccionAModificadar == null) {
@@ -191,7 +232,6 @@ public class AgregadorService {
             Filtro filtros
     ) {
 
-
         Coleccion coleccion = this.coleccionRepository.findById(id);
 
         if (coleccion == null) {
@@ -201,10 +241,7 @@ public class AgregadorService {
         List<Hecho> hechos = coleccion.mostrarHechos();
 
         return this.hechosFiltrados(hechos, filtros);
-
-
     }
-
 
 
     public SolicitudEliminacion modificarEstadoSolicitud(UUID id, Estado_Solicitud nuevoEstado) {
@@ -247,10 +284,12 @@ public class AgregadorService {
         Double latitud = filtros.getLatitud();
         Double longitud = filtros.getLongitud();
 
+
         return hechos.stream()
                 .filter(hecho -> categoria == null ||
                         (hecho.getCategoria() != null && categoria.equalsIgnoreCase(hecho.getCategoria().getDetalle())))
                 .filter(hecho -> {
+
                     if (fechaReporteDesde == null && fechaReporteHasta == null) return true;
                     if (hecho.getFechaCarga() == null) return false;
                     boolean desde = fechaReporteDesde == null ||

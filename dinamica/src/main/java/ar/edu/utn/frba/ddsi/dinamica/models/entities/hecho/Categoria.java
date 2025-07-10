@@ -12,5 +12,4 @@ public class Categoria {
         this.detalle = detalle;
     }
 
-    public Categoria() {}
 }

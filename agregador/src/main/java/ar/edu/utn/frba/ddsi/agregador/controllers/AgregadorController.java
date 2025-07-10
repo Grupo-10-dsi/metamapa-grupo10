@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Algoritmo_Consenso;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ActualizacionColeccionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
@@ -82,8 +81,8 @@ public class AgregadorController {
     @PatchMapping("/colecciones/{id}")
     public Coleccion modificarAlgoritmoConsenso(@PathVariable UUID id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
 
-        if(actualizacionColeccion.getAlgoritmo() != null) {
-            return this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo());
+        if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
+            return this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
         } else if (actualizacionColeccion.getUrls_fuente() != null) {
             return this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
         } else {
@@ -119,11 +118,11 @@ public class AgregadorController {
                 @RequestParam String tipoNavegacion) {
 
         var filtros = new Filtro(
+                categoria,
                 fecha_reporte_desde,
                 fecha_reporte_hasta,
                 fecha_acontecimiento_desde,
                 fecha_acontecimiento_hasta,
-                categoria,
                 latitud,
                 longitud
         );
@@ -159,19 +158,5 @@ public class AgregadorController {
         return this.agregadorService.obtenerTodosLosHechos();
     }
 
-// ucraniano
-    /*
-    private final WebClient webClient;
-
-    @PostMapping("/hechos")
-    public Mono<ResponseEntity<Void>> redirigirEndpoint(@RequestBody HechoDTO hechoDTO) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
-        return webClient.post()
-                .uri("/dinamica/hechos")
-                .bodyValue(hechoDTO)
-                .retrieve()
-                .toBodilessEntity();
-    }
-    */
 }
 

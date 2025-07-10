@@ -13,7 +13,6 @@ public class Conversor {
     public Conversor() {}
 
     public Hecho convertirHecho(HechoDTO hechoDTO) {
-        System.out.println(hechoDTO);
         Hecho hecho = creacionHecho(hechoDTO);
         // Caso fuente estática
         if (hecho.getOrigenFuente() == Origen_Fuente.ESTATICA) {
