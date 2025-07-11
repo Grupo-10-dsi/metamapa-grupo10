@@ -35,6 +35,7 @@ public class DinamicaController {
      **/
     @GetMapping("/hechos")
     public List<Hecho> obtenerHechos(
+            @RequestParam(required = false) String ultimaConsulta,
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String fecha_reporte_desde,
             @RequestParam(required = false) String fecha_reporte_hasta,
@@ -44,6 +45,7 @@ public class DinamicaController {
             @RequestParam(required = false) Double longitud
     ) {
         return dinamicaService.encontrarHechosFiltrados(
+                ultimaConsulta,
                 categoria,
                 fecha_reporte_desde,
                 fecha_reporte_hasta,

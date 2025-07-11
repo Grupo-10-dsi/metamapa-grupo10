@@ -3,10 +3,11 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 @Getter
 public class Fuente {
-    private List<Hecho> hechos = List.of();
+    private List<Hecho> hechos = new ArrayList<>();
     private final String url;
     private final String nombre;
 
@@ -15,8 +16,12 @@ public class Fuente {
         this.nombre = nombre;
     }
 
-    public void setHechos(List<Hecho> hechos) {
-        this.hechos = hechos;
+    public void agregarHechos(List<Hecho> nuevosHechos) {
+        this.hechos.addAll(nuevosHechos);
+    }
+
+    public void setHechos(List<Hecho> nuevosHechos) {
+        this.hechos = nuevosHechos;
     }
 
 }

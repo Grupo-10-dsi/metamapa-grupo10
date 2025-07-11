@@ -134,7 +134,7 @@ public class AgregadorController {
         if(tipoNavegacion.equals("irrestricta")) {
             return this.agregadorService.encontrarHechosPorColeccion(id, filtros);
         } else if (tipoNavegacion.equals("curada")) {
-            return this.agregadorService.obtenerHechosCurados(id);
+            return this.agregadorService.obtenerHechosCurados(id, filtros);
         } else {
             throw new IllegalArgumentException("Tipo de navegacion no soportado: " + tipoNavegacion);
         }
@@ -145,11 +145,6 @@ public class AgregadorController {
     @PostMapping("/solicitudes/{id}")
     public SolicitudEliminacion generarSolicitudEliminacion(@RequestBody SolicitudDTO solicitudEliminacion) {
         return agregadorService.crearSolicitudEliminacion(solicitudEliminacion);
-    }
-
-    @GetMapping("/init")
-    public void init() {
-        this.agregadorService.consultarHechosPorPrimeraVez();
     }
 
 

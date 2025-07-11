@@ -6,13 +6,14 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.repositories.conversor.Con
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
+import java.net.URI;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Importador {
 
-    private LocalDate ultimaConsulta;
+    private LocalDateTime ultimaConsulta;
     protected WebClient webClient;
     private final Conversor adaptador = new Conversor();
 
@@ -24,34 +25,33 @@ public class Importador {
     }
 
     public void importarHechos(Fuente fuente) {
-        //String uri = aplicarFiltros(fuente.getUrl());
-        String uri = fuente.getUrl();
+        URI uri = aplicarUltimaConsulta(fuente.getUrl());
+        System.out.println(uri);
         List<HechoDTO> hechos = webClient.get()
                 .uri(uri)
                 .retrieve()
                 .bodyToFlux(HechoDTO.class)
                 .collectList()
                 .block();
-
         if (hechos != null) {
-            fuente.setHechos(hechos.stream().map(adaptador::convertirHecho).toList());
-        }
+            fuente.agregarHechos(hechos.stream().map(adaptador::convertirHecho).toList());
+        };
 
-        this.ultimaConsulta = LocalDate.now();
+        this.ultimaConsulta = LocalDateTime.now();
+        System.out.print("Ultima consulta: ");
+        System.out.println(ultimaConsulta);
     }
 
-    public String aplicarFiltros(String url){
-        if( this.ultimaConsulta == null) { //Para la primera vez que consultamos
-            return url;
+    public URI aplicarUltimaConsulta(String url){
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+
+        if (ultimaConsulta != null) {
+            String ultimaConsultaString = this.ultimaConsulta.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+            builder.queryParam("ultimaConsulta", ultimaConsultaString);
         }
 
-        String ultimaConsultaString = this.ultimaConsulta.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-        return UriComponentsBuilder
-                .fromPath(url)
-                .queryParam("ultimaConsulta", ultimaConsultaString)
-                .build()
-                .toUriString();
+        return builder.build().toUri();
     }
 }
 

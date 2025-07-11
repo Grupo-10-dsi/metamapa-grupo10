@@ -175,6 +175,7 @@ public class DinamicaService {
 
 
     public List<Hecho> encontrarHechosFiltrados(
+            String ultimaConsulta,
             String categoria,
             String fechaReporteDesde,
             String fechaReporteHasta,
@@ -182,7 +183,9 @@ public class DinamicaService {
             String fechaAcontecimientoHasta,
             Double latitud,
             Double longitud
-    ) {
+    )
+    {
+        System.out.println("Consulta desde dinamica:" + ultimaConsulta);
         return hechosRepository.findAll().stream()
                 .filter(hecho -> categoria == null ||
                         (hecho.getCategoria() != null && categoria.equalsIgnoreCase(hecho.getCategoria().getDetalle())))
@@ -210,6 +213,11 @@ public class DinamicaService {
                     boolean latOk = latitud == null || hecho.getUbicacion().getLatitud().equals(latitud);
                     boolean lonOk = longitud == null || hecho.getUbicacion().getLongitud().equals(longitud);
                     return latOk && lonOk;
+                })
+                .filter(hecho -> {
+                    if (ultimaConsulta == null) return true;
+                    System.out.println(ultimaConsulta);
+                    return hecho.getFechaCarga().isAfter(LocalDateTime.parse(ultimaConsulta));
                 })
                 .collect(Collectors.toList());
     }

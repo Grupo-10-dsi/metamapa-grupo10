@@ -47,7 +47,7 @@ public class AgregadorService {
      */
     @PostConstruct
     public void consultarHechosPorPrimeraVez() {
-        System.out.print("Se ejecuta el PostConstruct");
+        //System.out.print("Se ejecuta el PostConstruct");
         this.consultarHechosPeriodicamente();
         this.clasificarHechos();
     }
@@ -55,8 +55,9 @@ public class AgregadorService {
     /**
      * Cada una hora, se ejecuta este metodo para consultar los hechos de las fuentes.
      */
-    @Scheduled(fixedRate = 60 * 60 * 1000)
+    @Scheduled(fixedRate = 60 * 60 * 1000, initialDelay = 30000)
     public void consultarHechosPeriodicamente() {
+        System.out.println("Consultando hechos de las fuentes...");
         hechosRepository.importarHechosDesdeFuentes(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
     }
 
@@ -141,15 +142,32 @@ public class AgregadorService {
         return this.coleccionRepository.findAll();
     }
 
-    public List<Hecho> obtenerHechosCurados(UUID id) {
+    public List<Hecho> obtenerHechosCurados(UUID id, Filtro filtros) {
         Coleccion coleccion = this.coleccionRepository.findById(id);
         if (coleccion == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
         }
-        return coleccion.getFuentes().stream()
-                .flatMap(fuente -> fuente.getHechos().stream())
+        List<Hecho> hechos =  coleccion.mostrarHechos().stream()
                 .filter(hecho -> hecho.consensuado(this.mencionesNecesarias(coleccion.getAlgoritmo_consenso())))
                 .collect(Collectors.toList());
+
+        return this.hechosFiltrados(hechos, filtros);
+    }
+
+    public List<Hecho> encontrarHechosPorColeccion(
+            UUID id,
+            Filtro filtros
+    ) {
+
+        Coleccion coleccion = this.coleccionRepository.findById(id);
+
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
+
+        List<Hecho> hechos = coleccion.mostrarHechos();
+
+        return this.hechosFiltrados(hechos, filtros);
     }
 
     /**
@@ -227,21 +245,6 @@ public class AgregadorService {
 
     }
 
-    public List<Hecho> encontrarHechosPorColeccion(
-            UUID id,
-            Filtro filtros
-    ) {
-
-        Coleccion coleccion = this.coleccionRepository.findById(id);
-
-        if (coleccion == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
-        }
-
-        List<Hecho> hechos = coleccion.mostrarHechos();
-
-        return this.hechosFiltrados(hechos, filtros);
-    }
 
 
     public SolicitudEliminacion modificarEstadoSolicitud(UUID id, Estado_Solicitud nuevoEstado) {

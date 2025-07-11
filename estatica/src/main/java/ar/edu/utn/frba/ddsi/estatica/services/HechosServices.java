@@ -11,20 +11,25 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HechosServices {
     private final HechosRepository hechosRepository;
-     //Me permite abrir los recursos
 
     public HechosServices(HechosRepository hechosRepository) {
         this.hechosRepository = hechosRepository;
 
     }
 
-    public List<Hecho> obtenerHechos() {
-        return this.hechosRepository.findAll();
+    public List<Hecho> obtenerHechos(String ultimaConsulta) {
+        return this.hechosRepository.findAll()
+                .stream()
+                .filter(hecho -> ultimaConsulta == null ||
+                                hecho.getFechaCarga().isAfter(LocalDateTime.parse(ultimaConsulta)))
+                .collect(Collectors.toList());
     }
 }
