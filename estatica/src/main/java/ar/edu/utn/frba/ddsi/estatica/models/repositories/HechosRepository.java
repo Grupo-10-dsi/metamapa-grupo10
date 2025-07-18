@@ -1,8 +1,10 @@
 package ar.edu.utn.frba.ddsi.estatica.models.repositories;
 
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.Importador;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importadorCSV.ImportadorCSV;
 import com.opencsv.exceptions.CsvValidationException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -20,15 +22,16 @@ import java.util.*;
 public class HechosRepository {
 
     private final List<Hecho> hechos = new ArrayList<Hecho>();
-    private final ResourceLoader resourceLoader;
+    private final Importador importador;
 
-    public HechosRepository(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+
+
+    public HechosRepository(Importador importador) {
+        this.importador = importador;
     }
 
-
     public List<Hecho> findAll() {
-        return cargarCSVs();
+        return this.hechos;
     }
 
     public Hecho findById(UUID id) {
@@ -50,37 +53,13 @@ public class HechosRepository {
         this.hechos.addAll(hechos);
     }
 
-    public List<Hecho> cargarCSVs() {
-        List<Hecho> hechosImportados = new ArrayList<>();
-        try {
-            ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader); // Es un buscador que encuentra los archivos con patron CSV
-            Resource[] recursos = resolver.getResources("classpath:*.csv"); // Busca todos los archivos CSV en el classpath
+    @PostConstruct
+    public void importarHechos() {
+        System.out.println("Importando hechos...");
+        List<Hecho> hechosImportados = importador.importarHechos();
 
+        this.addHechos(hechosImportados);
 
-            Arrays.stream(recursos).forEach(recurso -> { // el forEach recorre cada recurso (csv) encontrado
-                try {
-                    String nombreArchivo = recurso.getFilename();
-                    hechosImportados.addAll(this.importarHechosDesdeCSV(nombreArchivo));
-                } catch (Exception e) {
-                    System.err.println("Error al importar archivo " + recurso.getFilename() + ": " + e.getMessage());
-                }
-            });
-
-        } catch (Exception e) {
-            System.err.println("Error al buscar archivos CSV: " + e.getMessage());
-        }
-        return hechosImportados;
     }
 
-    public List<Hecho> importarHechosDesdeCSV(String nombreArchivo) throws IOException, CsvValidationException {
-        ImportadorCSV importador = new ImportadorCSV();
-        List<Hecho> hechosImportados = importador.importarCSV(nombreArchivo);
-
-        if (hechosImportados.isEmpty()) {
-            System.out.println("No se encontraron hechos en el archivo: " + nombreArchivo);
-        } else {
-            System.out.println("Se importaron " + hechosImportados.size() + " hechos desde el archivo: " + nombreArchivo);
-        }
-        return hechosImportados;
-    }
 }
