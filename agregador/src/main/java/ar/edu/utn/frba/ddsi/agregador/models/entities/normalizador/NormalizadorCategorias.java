@@ -21,6 +21,7 @@ public class NormalizadorCategorias {
         } else {
             equivalenciasCategoriasRepo.agregarCategoriaNueva(unHecho.getCategoria());
         }
+        //commit
 
         return unHecho;
     }
