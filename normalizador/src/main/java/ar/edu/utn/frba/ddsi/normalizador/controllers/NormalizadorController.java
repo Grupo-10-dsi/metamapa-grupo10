@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.ddsi.normalizador.controllers;
 
-import ar.edu.utn.frba.ddsi.normalizador.NormalizadorApplication;
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.normalizador.services.NormalizadorService;
 import org.springframework.stereotype.Controller;

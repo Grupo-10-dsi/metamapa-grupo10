@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.ddsi.normalizador.models.entities.normalizador;
 
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Hecho;
-import ar.edu.utn.frba.ddsi.normalizador.models.entities.personas.Anonimo;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.ArrayList;
 import java.util.List;
