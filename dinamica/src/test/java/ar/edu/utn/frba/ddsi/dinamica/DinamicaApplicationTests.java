@@ -54,7 +54,7 @@ class TestingWebApplicationTest {
                 new Ubicacion(34.6037, -58.3816),
                 LocalDateTime.now().minusDays(1),
                 List.of(new Etiqueta("urgente"), new Etiqueta("tránsito")),
-                new Registrado("Juan Pérez", "juan@example.com", 30),
+                new Registrado(UUID.randomUUID(), "Juan Pérez"),
                 "Contenido completo de la noticia con todos los detalles del accidente..."
 
         );
@@ -130,7 +130,7 @@ class TestingWebApplicationTest {
                 new Ubicacion(34.6037, -58.3816),
                 LocalDateTime.now().minusDays(1),
                 List.of(new Etiqueta("urgente"), new Etiqueta("tránsito")),
-                new Registrado("Juan Pérez", "juan@example.com", 30),
+                new Registrado(UUID.randomUUID(), "Juan Pérez"),
                 "Contenido completo de la noticia con todos los detalles del accidente..."
         );
 
