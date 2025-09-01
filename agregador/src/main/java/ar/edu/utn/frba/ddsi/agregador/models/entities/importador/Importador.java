@@ -14,7 +14,7 @@ import java.util.List;
 public class Importador {
 
     protected WebClient webClient;
-    private final Conversor adaptador = new Conversor();
+    private final Conversor conversor = new Conversor();
 
     public Importador() {
         this.webClient = WebClient.builder()
@@ -33,7 +33,7 @@ public class Importador {
                 .collectList()
                 .block();
         if (hechos != null) {
-            fuente.agregarHechos(hechos.stream().map(adaptador::convertirHecho).toList());
+            fuente.agregarHechos(hechos.stream().map(conversor::convertirHecho).toList());
         }
 
 

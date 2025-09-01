@@ -17,6 +17,8 @@ public class HechosServices {
     }
 
     public List<Hecho> obtenerHechos(String ultimaConsulta) {
+        this.hechosRepository.importarHechos();
+
         return this.hechosRepository.findAll()
                 .stream()
                 .filter(hecho -> ultimaConsulta == null ||

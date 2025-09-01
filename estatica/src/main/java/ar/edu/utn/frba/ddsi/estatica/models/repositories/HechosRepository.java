@@ -49,7 +49,6 @@ public class HechosRepository {
         this.hechos.addAll(hechos);
     }
 
-    @PostConstruct
     public void importarHechos() {
         System.out.println("Importando hechos...");
         List<Hecho> hechosImportados = importador.importarHechos();
