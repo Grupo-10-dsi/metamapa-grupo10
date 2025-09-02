@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="dinamica" />
         <module name="proxy" />
+        <module name="GestorPersonas" />
         <module name="estatica" />
         <module name="agregador" />
         <module name="normalizador" />
@@ -16,16 +17,19 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cliente-simulation" target="17" />
+      <module name="untitled" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="GestorPersonas" options="-parameters" />
       <module name="agregador" options="-parameters" />
       <module name="dinamica" options="-parameters" />
       <module name="estatica" options="-parameters" />
       <module name="metamapa" options="" />
       <module name="normalizador" options="-parameters" />
       <module name="proxy" options="-parameters" />
+      <module name="untitled" options="-parameters" />
     </option>
   </component>
 </project>
