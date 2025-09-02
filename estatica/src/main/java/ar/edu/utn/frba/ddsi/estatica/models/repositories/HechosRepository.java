@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.estatica.models.repositories;
 
+import ar.edu.utn.frba.ddsi.estatica.models.entities.ArchivoProcesado.ArchivoProcesado;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.Importador;
 
@@ -17,44 +18,33 @@ import java.util.UUID;
 @Repository
 public class HechosRepository {
 
-    private final List<Hecho> hechos = new ArrayList<>();
+    private final List<ArchivoProcesado> hechos = new ArrayList<>();
     private final Importador importador;
-
-
 
     public HechosRepository(Importador importador) {
         this.importador = importador;
     }
 
-    public List<Hecho> findAll() {
+    public List<ArchivoProcesado> findAllArchivosProcesados() {
         return this.hechos;
     }
 
-    public Hecho findById(UUID id) {
-        return this.hechos.stream()
-                .filter(hecho -> hecho.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
 
-    public void save(Hecho hecho) {
-        this.hechos.add(hecho);
-    }
-
-    public void delete(Hecho hecho) {
-        this.hechos.removeIf(h -> h.getId().equals(hecho.getId()));
-    }
-
-    public void addHechos(List<Hecho> hechos) {
+    public void addHechos(List<ArchivoProcesado> hechos) {
         this.hechos.addAll(hechos);
+    }
+
+    public void importarHechosSin(List<String> nombresArchivos) {
+        System.out.println("Importando hechos sin: " + nombresArchivos);
+        importador.setArchivosProcesados(nombresArchivos);
+        this.importarHechos();
     }
 
     public void importarHechos() {
         System.out.println("Importando hechos...");
-        List<Hecho> hechosImportados = importador.importarHechos();
+        List<ArchivoProcesado> hechosImportados = importador.importarHechos();
 
         this.addHechos(hechosImportados);
-
     }
 
 }

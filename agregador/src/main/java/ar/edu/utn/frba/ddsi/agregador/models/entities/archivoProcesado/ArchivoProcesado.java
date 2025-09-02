@@ -1,17 +1,21 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.archivoProcesado;
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
+
+import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.UUID;
 
+@Getter
 public class ArchivoProcesado {
 
+    private UUID id;
     private String nombre;
-    private LocalDateTime ultimaConsulta;
+    private LocalDateTime fechaCarga;
 
-    public ArchivoProcesado(String nombre, LocalDateTime ultimaConsulta, List<HechoDTO> hechos) {
+    public ArchivoProcesado(String nombre, LocalDateTime fechaCarga) {
+        this.id = UUID.randomUUID();
         this.nombre = nombre;
-        this.ultimaConsulta = ultimaConsulta;
+        this.fechaCarga = fechaCarga;
     }
 }

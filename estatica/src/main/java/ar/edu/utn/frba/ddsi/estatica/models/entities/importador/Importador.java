@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.estatica.models.entities.importador;
 
+import ar.edu.utn.frba.ddsi.estatica.models.entities.ArchivoProcesado.ArchivoProcesado;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.lector.Lector;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.lector.LectorCSV;
@@ -8,6 +9,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +32,8 @@ public class Importador {
     }
 
 
-    public List<Hecho> importarHechos() {
-        List<Hecho> hechosImportados = new ArrayList<>();
+    public List<ArchivoProcesado> importarHechos() {
+        List<ArchivoProcesado> nuevosArchivosProcesados = new ArrayList<>();
 
 //        for(Resource r : recursos) {
 //            System.out.println("Recurso encontrado: " + r.getFilename());
@@ -44,8 +47,10 @@ public class Importador {
                     String filename = recurso.getFilename();
                     try {
                         List<Hecho> hechosDesdeArchivo = importarSegunArchivo(recurso);
-                        hechosImportados.addAll(hechosDesdeArchivo);
-                        this.archivosProcesados.add(recurso);
+                        nuevosArchivosProcesados.add(
+                                new ArchivoProcesado(filename, LocalDateTime.now() , hechosDesdeArchivo)
+                        );
+
                     } catch (Exception e) {
                         System.err.println("Error al procesar el recurso " + filename + ": " + e.getMessage());
                     }
@@ -54,20 +59,20 @@ public class Importador {
             throw new RuntimeException(e);
         }
 
-        return hechosImportados;
+        return nuevosArchivosProcesados;
 
     } // archivoProcesadoDTO importarHechos(List<String> nombresArchivosProcesados)
 
     public List<Resource> filtrarArchivosNuevos() {
-        Resource[] archivosSinProcesar;
+        Resource[] archivosAlmacenados;
         try {
-            archivosSinProcesar = resolver.getResources("classpath:archivos/*");
+            archivosAlmacenados = resolver.getResources("classpath:archivos/*");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         List<Resource> archivosNuevos = new ArrayList<>();
-        for (Resource archivo : archivosSinProcesar) {
+        for (Resource archivo : archivosAlmacenados) {
             if (!this.archivosProcesados.contains(archivo)) {
                 archivosNuevos.add(archivo);
             }
@@ -85,6 +90,20 @@ public class Importador {
             throw new Exception("Formato de archivo no soportado: " + extension);
         }
         return lector.leerArchivo(recurso);
+    }
+
+    public void setArchivosProcesados(List<String> nombreArchivosProcesados) {
+        List<Resource> archivosProcesados = new ArrayList<>();
+        archivosProcesados = Arrays.stream(nombreArchivosProcesados.toArray(new String[0]))
+                .map(nombre -> {
+                    try {
+                        return resolver.getResource("classpath:archivos/" + nombre);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+        this.archivosProcesados = archivosProcesados;
     }
 }
     /*

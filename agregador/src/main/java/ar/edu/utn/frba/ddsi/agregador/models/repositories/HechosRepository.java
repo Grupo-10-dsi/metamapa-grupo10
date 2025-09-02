@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.ddsi.agregador.models.repositories;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.archivoProcesado.ArchivoProcesado;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.FuenteEstatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.importador.Importador;
 
@@ -21,9 +23,9 @@ public class HechosRepository {
      */
     @Setter
     private List<Fuente> fuentes = List.of(
-            new Fuente("http://localhost:8082/api/dinamica/hechos", "Dinamica"),
-            new Fuente("http://localhost:8081/api/estatica/hechos", "Estatica"),
-            new Fuente("http://localhost:8083/api/proxy/hechos", "Proxy")
+            new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA"),
+            new FuenteEstatica("http://localhost:8081/api/estatica/hechos", "ESTATICA", List.of()),
+            new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY")
     );
 
     private LocalDateTime ultimaConsulta;

@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,13 +22,13 @@ public abstract class Hecho {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private Origen_Fuente origenFuente;
+    private OrigenFuente origenFuente;
     private List<Etiqueta> etiquetas;
     private Contribuyente contribuyente;
     private Integer cantidadMenciones;
 
     public Hecho(UUID id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
-                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, Origen_Fuente origenFuente, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
+                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, OrigenFuente origenFuente, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;

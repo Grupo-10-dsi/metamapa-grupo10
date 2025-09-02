@@ -24,31 +24,19 @@ public class Importador {
     }
 
     public void importarHechos(Fuente fuente, LocalDateTime ultimaConsulta) {
-        URI uri = aplicarUltimaConsulta(fuente.getUrl(), ultimaConsulta);
+        URI uri = aplicarUltimaConsulta(fuente, ultimaConsulta);
+
         System.out.println(uri);
-        List<HechoDTO> hechos = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToFlux(HechoDTO.class)
-                .collectList()
-                .block();
-        if (hechos != null) {
-            fuente.agregarHechos(hechos.stream().map(conversor::convertirHecho).toList());
-        }
+        fuente.realizarConsulta(uri, webClient, conversor);
 
 
         System.out.print("Ultima consulta: ");
         System.out.println(ultimaConsulta);
     }
 
-    public URI aplicarUltimaConsulta(String url, LocalDateTime ultimaConsulta) {
+    public URI aplicarUltimaConsulta(Fuente fuente, LocalDateTime ultimaConsulta) {
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
-
-        if (ultimaConsulta != null) {
-            String ultimaConsultaString = ultimaConsulta.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-            builder.queryParam("ultimaConsulta", ultimaConsultaString);
-        }
+        UriComponentsBuilder builder = fuente.armarParametrosConsulta(ultimaConsulta);
 
         return builder.build().toUri();
     }

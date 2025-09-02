@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.estatica.controllers;
 
+import ar.edu.utn.frba.ddsi.estatica.models.entities.dtos.ArchivoProcesadoDTO;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.estatica.services.HechosServices;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,12 @@ public class EstaticaController {
     }
 
     @GetMapping("/hechos")
-    public List<Hecho> listarHechos(@RequestParam(required = false) String ultimaConsulta) {
-        return hechosServices.obtenerHechos(ultimaConsulta);
+    public List<ArchivoProcesadoDTO> listarHechos(@RequestParam() List<String> archivosProcesados) {
+        return hechosServices.obtenerHechos(archivosProcesados);
     }
+
+    // get /hechos/desastre1&desastre2&desastre3
+
+
 
 }
