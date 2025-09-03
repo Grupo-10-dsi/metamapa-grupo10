@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Getter
 public class Fuente {
-    private List<Hecho> hechos = new ArrayList<>();
+    public List<Hecho> hechos = new ArrayList<>();
     private final String url;
     private final String nombre;
 

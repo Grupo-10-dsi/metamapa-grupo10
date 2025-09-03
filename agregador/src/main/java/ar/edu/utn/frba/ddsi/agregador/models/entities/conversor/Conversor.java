@@ -8,6 +8,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatic
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Anonimo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Conversor {
@@ -19,7 +20,7 @@ public class Conversor {
         if (origen instanceof Estatica) {
             ((HechoTextual) hecho).setCuerpo(hechoDTO.getDescripcion());
             hecho.setContribuyente(Anonimo.getInstance());
-            hecho.setEtiquetas(List.of());
+            hecho.setEtiquetas(new ArrayList<>());
         }
 
         hecho.setCantidadMenciones(1);

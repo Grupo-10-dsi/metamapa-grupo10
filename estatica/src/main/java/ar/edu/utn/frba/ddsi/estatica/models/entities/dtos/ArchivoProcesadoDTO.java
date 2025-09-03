@@ -9,12 +9,12 @@ import java.util.List;
 public class ArchivoProcesadoDTO {
 
     private String nombre;
-    private LocalDateTime ultimaConsulta;
+    private LocalDateTime fechaCarga;
     private List<HechoDTO> hechos;
 
-    public ArchivoProcesadoDTO(String nombre, LocalDateTime ultimaConsulta, List<HechoDTO> hechos) {
+    public ArchivoProcesadoDTO(String nombre, LocalDateTime fechaCarga, List<HechoDTO> hechos) {
         this.nombre = nombre;
-        this.ultimaConsulta = ultimaConsulta;
+        this.fechaCarga = fechaCarga;
         this.hechos = hechos;
     }
 

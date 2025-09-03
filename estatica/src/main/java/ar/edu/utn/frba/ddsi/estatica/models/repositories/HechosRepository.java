@@ -35,12 +35,13 @@ public class HechosRepository {
     }
 
     public void importarHechosSin(List<String> nombresArchivos) {
-        System.out.println("Importando hechos sin: " + nombresArchivos);
+        //System.out.println("Importando hechos sin: " + nombresArchivos);
         importador.setArchivosProcesados(nombresArchivos);
         this.importarHechos();
     }
 
     public void importarHechos() {
+        this.hechos.clear();
         System.out.println("Importando hechos...");
         List<ArchivoProcesado> hechosImportados = importador.importarHechos();
 

@@ -25,13 +25,14 @@ public class FuenteEstatica extends Fuente{
 
     @Override
     public UriComponentsBuilder armarParametrosConsulta(LocalDateTime ultimaConsulta) {
-        UriComponentsBuilder builder = super.armarParametrosConsulta(ultimaConsulta);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(this.getUrl());
         List<String> archivosDTO = new ArrayList<>();
 
         for(ArchivoProcesado archivo : archivosProcesados){
              archivosDTO.add(archivo.getNombre());
         }
-        builder.queryParam("archivosProcesados", String.join("+", archivosDTO));
+
+        builder.queryParam("archivosProcesados", String.join("&archivosProcesados=", archivosDTO));
 
         return builder;
     }
@@ -48,9 +49,10 @@ public class FuenteEstatica extends Fuente{
 
         if (archivosDTO != null) {
             for (ArchivoProcesadoDTO archivoDTO : archivosDTO) {
-                OrigenFuente origenFuente = new Estatica(new ArchivoProcesado(archivoDTO.getNombre(), archivoDTO.getFechaCarga()));
-
-                this.agregarHechos(archivoDTO.getHechos().stream().map(h -> conversor.creacionHecho(h, origenFuente)).toList());
+                ArchivoProcesado archivoProcesado = new ArchivoProcesado(archivoDTO.getNombre(), archivoDTO.getFechaCarga());
+                OrigenFuente origenFuente = new Estatica(archivoProcesado);
+                this.archivosProcesados.add(archivoProcesado);
+                this.agregarHechos(archivoDTO.getHechos().stream().map(h -> conversor.convertirHecho(h, origenFuente)).toList());
             }
         }
 

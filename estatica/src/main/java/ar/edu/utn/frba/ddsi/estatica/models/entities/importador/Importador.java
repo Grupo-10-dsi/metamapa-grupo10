@@ -21,7 +21,7 @@ public class Importador {
     private final LectorCSV lectorCSV;
     private final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
     private final Map<String, Lector> lectores = new HashMap<>();
-    private List<Resource> archivosProcesados = new ArrayList<>();
+    private List<String> archivosProcesados = new ArrayList<>();
 
     public Importador() {
         // TODO decidir cuando / donde instanciar los lectores
@@ -72,15 +72,22 @@ public class Importador {
         }
 
         List<Resource> archivosNuevos = new ArrayList<>();
-        for (Resource archivo : archivosAlmacenados) {
+        /*
+           for (Resource archivo : archivosAlmacenados) {
             if (!this.archivosProcesados.contains(archivo)) {
                 archivosNuevos.add(archivo);
             }
-        }
+        }*/
+
+        archivosNuevos = Arrays.stream(archivosAlmacenados).filter(this::noProcesado).toList();
+
         return archivosNuevos;
     }
 
-
+    private boolean noProcesado(Resource recurso) {
+        System.out.println(recurso.getFilename());
+        return !this.archivosProcesados.contains(recurso.getFilename());
+    }
 
 
     private List<Hecho> importarSegunArchivo(Resource recurso) throws Exception {
@@ -93,8 +100,14 @@ public class Importador {
     }
 
     public void setArchivosProcesados(List<String> nombreArchivosProcesados) {
-        List<Resource> archivosProcesados = new ArrayList<>();
-        archivosProcesados = Arrays.stream(nombreArchivosProcesados.toArray(new String[0]))
+        this.archivosProcesados = nombreArchivosProcesados;
+    }
+}
+
+    /*
+    * public void setArchivosProcesados(List<String> nombreArchivosProcesados) {
+        List<Resource> archivosProcesados;
+        archivosProcesados = nombreArchivosProcesados.stream()
                 .map(nombre -> {
                     try {
                         return resolver.getResource("classpath:archivos/" + nombre);
@@ -105,8 +118,6 @@ public class Importador {
                 .toList();
         this.archivosProcesados = archivosProcesados;
     }
-}
-    /*
     private List<Hecho> importarSegunArchivo(Resource recurso) throws Exception {
         String extensionArchivo = recurso.getFilename().substring(recurso.getFilename().lastIndexOf(".") + 1).toLowerCase();
         switch (extensionArchivo) {

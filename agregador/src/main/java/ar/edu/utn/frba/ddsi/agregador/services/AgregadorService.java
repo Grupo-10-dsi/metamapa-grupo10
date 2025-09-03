@@ -58,7 +58,7 @@ public class AgregadorService {
     /**
      * Cada una hora, se ejecuta este metodo para consultar los hechos de las fuentes.
      */
-    @Scheduled(fixedRate = 60 * 60 * 1000, initialDelay = 30000)
+    @Scheduled(fixedRate = 60 * 1000, initialDelay = 30000)
     public void consultarHechosPeriodicamente() {
         System.out.println("Consultando hechos de las fuentes...");
         hechosRepository.importarHechosDesdeFuentes(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes

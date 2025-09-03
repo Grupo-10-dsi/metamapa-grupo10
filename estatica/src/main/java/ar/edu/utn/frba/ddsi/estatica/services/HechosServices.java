@@ -40,6 +40,6 @@ public class HechosServices {
 
     // Por si se necesitara en un futuro la fecha de procesamiento
     private ArchivoProcesado fromDTO(ArchivoProcesadoDTO dto) {
-        return new ArchivoProcesado(dto.getNombre(), dto.getUltimaConsulta(), List.of());
+        return new ArchivoProcesado(dto.getNombre(), dto.getFechaCarga(), List.of());
     }
 }

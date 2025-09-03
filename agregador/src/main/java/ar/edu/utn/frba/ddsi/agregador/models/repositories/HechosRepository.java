@@ -23,9 +23,9 @@ public class HechosRepository {
      */
     @Setter
     private List<Fuente> fuentes = List.of(
-            new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA"),
-            new FuenteEstatica("http://localhost:8081/api/estatica/hechos", "ESTATICA", List.of()),
-            new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY")
+            //new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA")
+            new FuenteEstatica( "ESTATICA", "http://localhost:8081/api/estatica/hechos", new ArrayList<>())
+            //new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY")
     );
 
     private LocalDateTime ultimaConsulta;
