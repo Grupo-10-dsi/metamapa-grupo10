@@ -28,6 +28,7 @@ public class EquivalenciasRepository {
     }
 
     public Map<String, Categoria> obtenerEquivalencias() {
+        System.out.println("Devolviendo las categorias: \n" + equivalenciasCategorias);
         return equivalenciasCategorias;
     }
 
@@ -51,12 +52,9 @@ public class EquivalenciasRepository {
                 // adsada
             });
 
-
-
         } catch (IOException e) {
             throw new RuntimeException("Error al cargar el archivo de equivalencias", e);
         }
-        System.out.println(equivalenciasCategorias);
     }
 
     public void agregarCategoriaNueva(Categoria nuevaCategoria) {

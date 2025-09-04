@@ -4,24 +4,32 @@ import ar.edu.utn.frba.ddsi.normalizador.models.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.normalizador.models.repositories.EquivalenciasRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class Normalizador {
-    private final List<INormalizador> normalizadores = List.of(new NormalizadorCategorias(new EquivalenciasRepository(new ObjectMapper())));
+    
+    @Autowired
+    public Normalizador(List<INormalizador> normalizadores) {
+        this.normalizadores = normalizadores;
+    }
+
+    private final List<INormalizador> normalizadores;
 
     private static Normalizador instance;
 
-    private Normalizador() {// Constructor privado
-    }
-
-    public static Normalizador getInstance() {
-        if (instance == null) {
-            instance = new Normalizador();
-        }
-        return instance;
-    }
+//    private Normalizador() {// Constructor privado
+//    }
+//
+//    public static Normalizador getInstance() {
+//        if (instance == null) {
+//            instance = new Normalizador();
+//        }
+//        return instance;
+//    }
 
     public HechoDTO normalizar(HechoDTO hechoCrudo) {
         HechoDTO hechoNormalizado = normalizadores.stream().reduce(hechoCrudo,
