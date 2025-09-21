@@ -5,16 +5,18 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.DiscriminatorColumn;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
+@Entity @DiscriminatorValue("TEXTUAL")
 public class HechoTextual extends Hecho {
+    @Column(name = "Cuerpo")
     private String cuerpo;
 
-    public HechoTextual(UUID id,
+    public HechoTextual(Integer id,
                         String titulo,
                         String descripcion,
                         Categoria categoria,
@@ -28,5 +30,8 @@ public class HechoTextual extends Hecho {
 
         super(id, titulo, descripcion, categoria, ubicacion, fechaAcontecimiento, fechaCarga, origenFuente, etiquetas, contribuyente);
         this.cuerpo = cuerpo;
+    }
+    public HechoTextual() {
+
     }
 }

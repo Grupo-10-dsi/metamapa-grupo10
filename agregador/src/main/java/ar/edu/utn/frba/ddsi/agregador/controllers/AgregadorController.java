@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import java.util.UUID;
 
 
 @RequestMapping("/agregador")
@@ -33,7 +32,7 @@ public class AgregadorController {
      */
     @PostMapping("/colecciones")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    public UUID crearColeccion(@RequestBody ColeccionDTO coleccion) {
+    public Integer crearColeccion(@RequestBody ColeccionDTO coleccion) {
         return this.agregadorService.crearColeccion(coleccion);
     }
 
@@ -52,7 +51,7 @@ public class AgregadorController {
      * Si no se encuentra la coleccion, devuelve un error 404.
      */
     @GetMapping("/colecciones/{id}")
-    public Coleccion obtenerColeccion(@PathVariable UUID id){
+    public Coleccion obtenerColeccion(@PathVariable Integer id){
         return this.agregadorService.obtenerColeccion(id);
     }
 
@@ -62,7 +61,7 @@ public class AgregadorController {
      */
     @DeleteMapping("/colecciones/{id}")
     @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
-    public void eliminarColeccion(@PathVariable UUID id) {
+    public void eliminarColeccion(@PathVariable Integer id) {
         this.agregadorService.eliminarColeccionPorId(id);
     }
 
@@ -72,14 +71,14 @@ public class AgregadorController {
      */
     @PutMapping("/colecciones/{id}")
     @ResponseStatus(org.springframework.http.HttpStatus.OK)
-    public Coleccion modificarColeccion(@PathVariable UUID id, @RequestBody ColeccionDTO coleccionDTO) {
+    public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ColeccionDTO coleccionDTO) {
         return this.agregadorService.actualizarColeccion(id, coleccionDTO);
     }
 
 
      //Endpoint para modificar algoritmo de consenso de una coleccion
     @PatchMapping("/colecciones/{id}")
-    public Coleccion modificarAlgoritmoConsenso(@PathVariable UUID id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
+    public Coleccion modificarAlgoritmoConsenso(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
 
         if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
             return this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
@@ -93,13 +92,13 @@ public class AgregadorController {
 
 
 //    @PatchMapping("/colecciones/{id}")
-//    public Coleccion modificarFuentes(@PathVariable UUID id, @RequestBody List<String> urls_fuente) {
+//    public Coleccion modificarFuentes(@PathVariable Integer id, @RequestBody List<String> urls_fuente) {
 //        return this.agregadorService.modificarListaDeFuentes(id, urls_fuente);
 //    }
 
     // Endpoint para aceptar/rechazar solicitudes de eliminacion
     @PutMapping("/solicitudes/{id}")
-    public SolicitudEliminacion modificarSolicitud(@PathVariable UUID id, @RequestBody Estado_Solicitud nuevoEstado) {
+    public SolicitudEliminacion modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
         return agregadorService.modificarEstadoSolicitud(id, nuevoEstado);
 
     }
@@ -107,7 +106,7 @@ public class AgregadorController {
     // Navegacion de forma irrestricta -> No se aplica curacion
 
     @GetMapping("/colecciones/{id}/hechos")
-    public List<Hecho> obtenerHechosPorColeccion(@PathVariable UUID id,
+    public List<Hecho> obtenerHechosPorColeccion(@PathVariable Integer id,
                 @RequestParam(required = false) String categoria,
                 @RequestParam(required = false) String fecha_reporte_desde,
                 @RequestParam(required = false) String fecha_reporte_hasta,

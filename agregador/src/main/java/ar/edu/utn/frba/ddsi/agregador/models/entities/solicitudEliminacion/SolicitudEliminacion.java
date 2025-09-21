@@ -3,21 +3,34 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import javax.persistence.*;
+
 @Getter
+@Setter
+@Entity
+@Table(name="Solicitud_Eliminacion")
 public class SolicitudEliminacion {
-    private UUID id;
-    private UUID idHecho;
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    private Integer idHecho;
     private String justificacion;
-    @Setter
+
+    @Enumerated(EnumType.STRING)
     private Estado_Solicitud estado;
 
-    public SolicitudEliminacion(UUID idHecho, String justificacion) {
-        this.id = UUID.randomUUID();
+
+    public SolicitudEliminacion(Integer idHecho, String justificacion) {
         this.idHecho = idHecho;
         this.justificacion = justificacion;
         this.estado = Estado_Solicitud.PENDIENTE;
     }
+
+    public SolicitudEliminacion() {}
+
+
 
     public boolean esCorrecta() {
         // Justificacion con minimo 500 caracteres

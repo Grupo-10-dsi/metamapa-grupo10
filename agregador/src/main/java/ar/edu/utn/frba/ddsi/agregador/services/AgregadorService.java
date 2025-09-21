@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,7 +91,7 @@ public class AgregadorService {
      * Crea una nueva colección a partir del DTO recibido.
      * Si se crea correctamente, devuelve el ID de la colección creada.
      */
-    public UUID crearColeccion(ColeccionDTO coleccionDTO){
+    public Integer crearColeccion(ColeccionDTO coleccionDTO){
 
         List<Fuente> fuentes = this.hechosRepository.findFuentes(coleccionDTO.getUrls_fuente());
 
@@ -145,7 +144,7 @@ public class AgregadorService {
         return this.coleccionRepository.findAll();
     }
 
-    public List<Hecho> obtenerHechosCurados(UUID id, Filtro filtros) {
+    public List<Hecho> obtenerHechosCurados(Integer id, Filtro filtros) {
         Coleccion coleccion = this.coleccionRepository.findById(id);
         if (coleccion == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
@@ -158,7 +157,7 @@ public class AgregadorService {
     }
 
     public List<Hecho> encontrarHechosPorColeccion(
-            UUID id,
+            Integer id,
             Filtro filtros
     ) {
 
@@ -189,17 +188,17 @@ public class AgregadorService {
     /**
      * Busca una colección por su ID.
      */
-    public Coleccion obtenerColeccion(UUID id){ return this.coleccionRepository.findById(id);}
+    public Coleccion obtenerColeccion(Integer id){ return this.coleccionRepository.findById(id);}
 
     /**
      * Elimina una colección por su ID.
      */
-    public void eliminarColeccionPorId(UUID id) { this.coleccionRepository.findAndDelete(id);}
+    public void eliminarColeccionPorId(Integer id) { this.coleccionRepository.findAndDelete(id);}
 
     /**
      * Actualiza una colección existente con los datos del DTO proporcionado.
      */
-    public Coleccion actualizarColeccion(UUID id, ColeccionDTO coleccionDTO) {
+    public Coleccion actualizarColeccion(Integer id, ColeccionDTO coleccionDTO) {
 
         List<CriterioPertenencia> criterios = coleccionDTO.getCriterios().stream()
                 .map(this::criterioFromDTO)
@@ -221,7 +220,7 @@ public class AgregadorService {
     /**
      * Modifica el algoritmo de consenso de una colección existente a partir de su ID.
      */
-    public Coleccion modificarAlgoritmoConsenso(UUID id, Algoritmo_Consenso nuevoAlgoritmo){
+    public Coleccion modificarAlgoritmoConsenso(Integer id, Algoritmo_Consenso nuevoAlgoritmo){
         Coleccion coleccionAModificadar = this.coleccionRepository.findById(id);
         if (coleccionAModificadar == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
@@ -234,7 +233,7 @@ public class AgregadorService {
      * Modifica la lista de fuentes de una colección existente a partir de su ID.
      * Recibe una lista de URLs (string) de fuentes y actualiza la colección con las fuentes encontradas.
      */
-    public Coleccion modificarListaDeFuentes(UUID id, List<String> urls_fuente) {
+    public Coleccion modificarListaDeFuentes(Integer id, List<String> urls_fuente) {
         Coleccion coleccionAModificadar = this.coleccionRepository.findById(id);
         if (coleccionAModificadar == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
@@ -250,7 +249,7 @@ public class AgregadorService {
 
 
 
-    public SolicitudEliminacion modificarEstadoSolicitud(UUID id, Estado_Solicitud nuevoEstado) {
+    public SolicitudEliminacion modificarEstadoSolicitud(Integer id, Estado_Solicitud nuevoEstado) {
 
         SolicitudEliminacion solicitudAEditar = solicitudesRepository.findById(id);
 

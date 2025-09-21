@@ -15,6 +15,7 @@ import lombok.Setter;
 @JsonTypeName("anonimo")
 public class Anonimo extends Contribuyente {
 
+    private Integer id;
     private static Anonimo instance;
 
     private Anonimo() {

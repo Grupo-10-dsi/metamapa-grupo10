@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public class ColeccionRepository {
@@ -20,13 +19,13 @@ public class ColeccionRepository {
         colecciones.add(coleccion);
     }
 
-    public Coleccion findById(UUID id) {
+    public Coleccion findById(Integer id) {
         return colecciones.stream().filter(coleccion -> coleccion.getId().equals(id)).findFirst().orElse(null);
     }
 
 
 
-    public Coleccion findByIdAndUpdate(UUID id, Coleccion updatedColeccion) {
+    public Coleccion findByIdAndUpdate(Integer id, Coleccion updatedColeccion) {
         Coleccion existingColeccion = findById(id);
         if (existingColeccion != null) {
             // Logica sin base de datos
@@ -41,7 +40,7 @@ public class ColeccionRepository {
         return colecciones;
     }
 
-    public Coleccion findAndDelete(UUID id) {
+    public Coleccion findAndDelete(Integer id) {
         Coleccion coleccionEncontrada = findById(id);
 
         if (coleccionEncontrada != null) {

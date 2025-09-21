@@ -12,14 +12,13 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 
 public class HechoDTO {
-    private UUID id;
+    private Integer id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
@@ -32,7 +31,7 @@ public class HechoDTO {
     private String cuerpo;
     private Contribuyente contribuyente;
 
-    public HechoDTO(UUID id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, List<String> contenidoMultimedia, String cuerpo, Origen_Fuente_VIEJO origenFuente, Contribuyente contribuyente) {
+    public HechoDTO(Integer id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, List<String> contenidoMultimedia, String cuerpo, Origen_Fuente_VIEJO origenFuente, Contribuyente contribuyente) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;

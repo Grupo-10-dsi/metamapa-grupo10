@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,15 +16,28 @@ import java.util.stream.Collectors;
 @Setter
 
 public class Coleccion {
-    private UUID id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String titulo;
     private String descripcion;
+
+    @Enumerated(EnumType.STRING)
     private Algoritmo_Consenso algoritmo_consenso;
+
+    @ManyToMany
+    @JoinTable(
+            name = "coleccion_fuente",
+            joinColumns = @JoinColumn(name = "coleccion_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "fuente_url", referencedColumnName = "url")
+    )
     private List<Fuente> fuentes;
+
+    @OneToMany
+    @JoinColumn(name = "coleccion_id", referencedColumnName = "id")
     private List<CriterioPertenencia> criterios;
 
     public Coleccion(String titulo, String  descripcion, Algoritmo_Consenso algoritmo_consenso, List<Fuente> fuentes, List<CriterioPertenencia> criterios) {
-        this.id = UUID.randomUUID();
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.algoritmo_consenso = algoritmo_consenso;
@@ -41,6 +54,8 @@ public class Coleccion {
                 .toList();
 
     }
+
+
 
 
 

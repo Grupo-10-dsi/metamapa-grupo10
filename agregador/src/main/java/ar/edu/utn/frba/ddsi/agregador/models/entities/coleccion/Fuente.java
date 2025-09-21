@@ -5,23 +5,40 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.*;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
+@Setter
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="tipo")
 public class Fuente {
+
+    @OneToMany
+    @JoinColumn(name="url_fuente", referencedColumnName = "url")
     public List<Hecho> hechos = new ArrayList<>();
-    private final String url;
-    private final String nombre;
+
+    @Id
+    private String url;
+
+    private String nombre;
 
     public Fuente(String url, String nombre) {
         this.url = url;
         this.nombre = nombre;
+    }
+
+    public Fuente() {
+
     }
 
     public void agregarHechos(List<Hecho> nuevosHechos) {
