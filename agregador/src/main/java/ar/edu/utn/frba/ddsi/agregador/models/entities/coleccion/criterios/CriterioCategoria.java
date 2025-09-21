@@ -6,7 +6,7 @@ import lombok.Getter;
 
 
 @Getter
-public class CriterioCategoria implements CriterioPertenencia{
+public class CriterioCategoria extends CriterioPertenencia{
     private final Categoria categoria;
 
     public CriterioCategoria(Categoria categoria) {

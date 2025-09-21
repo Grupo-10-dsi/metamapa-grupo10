@@ -5,7 +5,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class CriterioFechaDesde implements CriterioPertenencia{
+public class CriterioFechaDesde extends CriterioPertenencia{
     private final LocalDateTime desde;
 
     public CriterioFechaDesde(LocalDateTime desde) {

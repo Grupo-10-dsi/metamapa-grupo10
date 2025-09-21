@@ -5,7 +5,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class CriterioFechaHasta implements CriterioPertenencia{
+public class CriterioFechaHasta extends CriterioPertenencia{
     private final LocalDateTime hasta;
 
     public CriterioFechaHasta(LocalDateTime hasta) {

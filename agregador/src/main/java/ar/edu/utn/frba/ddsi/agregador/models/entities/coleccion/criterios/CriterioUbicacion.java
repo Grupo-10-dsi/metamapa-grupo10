@@ -3,7 +3,7 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.criterios;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 
-public class CriterioUbicacion implements CriterioPertenencia{
+public class CriterioUbicacion extends CriterioPertenencia{
     private final Ubicacion ubicacion;
 
     public CriterioUbicacion(Ubicacion ubicacion) {

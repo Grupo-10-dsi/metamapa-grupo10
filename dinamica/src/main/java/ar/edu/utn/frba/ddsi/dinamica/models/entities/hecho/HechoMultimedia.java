@@ -34,4 +34,8 @@ public class HechoMultimedia extends Hecho {
 
         this.contenidoMultimedia = contenidoMultimedia;
     }
+
+    public HechoMultimedia() {
+
+    }
 }

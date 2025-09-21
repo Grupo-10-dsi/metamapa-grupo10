@@ -4,7 +4,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import lombok.Getter;
 
 @Getter
-public class CriterioDescripcion implements CriterioPertenencia{
+public class CriterioDescripcion extends CriterioPertenencia{
     private final String descripcion;
 
     public CriterioDescripcion(String descripcion) {
