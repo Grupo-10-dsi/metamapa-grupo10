@@ -6,10 +6,8 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.importador.Importador;
 
 import lombok.Setter;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,8 +16,8 @@ import java.util.List;
 @Repository
 public class HechosRepository {
 
-    @PersistenceContext(unitName = "Agregador_BD")
-    private EntityManager em;
+//    @PersistenceContext(unitName = "Agregador_BD")
+//    private EntityManager em;
 
     /**
      * Por ahora las fuentes se hardcodean aca. Eventualmente se

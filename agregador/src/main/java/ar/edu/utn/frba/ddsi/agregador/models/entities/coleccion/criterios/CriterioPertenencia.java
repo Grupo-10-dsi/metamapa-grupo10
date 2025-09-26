@@ -13,7 +13,7 @@ public abstract class CriterioPertenencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    boolean cumpleConCriterio(Hecho hecho) {
+    public boolean cumpleConCriterio(Hecho hecho) {
         return false;
     }
 }
