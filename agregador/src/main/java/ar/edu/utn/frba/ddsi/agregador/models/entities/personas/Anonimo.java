@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,9 +22,13 @@ public class Anonimo extends Contribuyente {
 
     private static Anonimo instance;
 
-    public Anonimo() {
+    public Anonimo(Integer id) {
         // Constructor privado
-        this.id = -1;
+        this.id = id;
+    }
+
+    public Anonimo() {
+
     }
 
     @JsonCreator
@@ -31,16 +36,24 @@ public class Anonimo extends Contribuyente {
         return getInstance();
     }
 
-
+//    @Override
+//    public void asignarId() {
+//        // Asignar manualmente ID -1 para anónimo
+//        this.id = -1;
+//    }
 
     public static Anonimo getInstance() {
         if (instance == null) {
             instance = new Anonimo();
 
+
         }
         return instance;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
 
 }

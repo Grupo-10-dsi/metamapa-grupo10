@@ -31,15 +31,16 @@ public abstract class Hecho {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
 
-    @OneToOne
-    @JoinColumn(name = "origen_Fuente_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "origen_fuente_id")
     private OrigenFuente origenFuente;
 
     @OneToMany
     @JoinColumn(name = "hecho_id",referencedColumnName = "id")
     private List<Etiqueta> etiquetas;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contribuyente_id", referencedColumnName = "id")
     private Contribuyente contribuyente;
 
     private Integer cantidadMenciones;

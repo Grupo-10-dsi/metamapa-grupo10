@@ -11,16 +11,16 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.importador.Importador;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Anonimo;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
-import ar.edu.utn.frba.ddsi.agregador.models.repositories.FuentesRepository;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ar.edu.utn.frba.ddsi.agregador.models.repositories.HechosRepository;
-import ar.edu.utn.frba.ddsi.agregador.models.repositories.ColeccionRepository;
-import ar.edu.utn.frba.ddsi.agregador.models.repositories.SolicitudesRepository;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.clasificador.Clasificador;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,24 +38,34 @@ public class AgregadorService {
     private final FuentesRepository fuentesRepository;
     private final SolicitudesRepository solicitudesRepository;
     private final ColeccionRepository coleccionRepository;
+    private final ContribuyenteRepository contribuyenteRepository;
     private final Importador importador = new Importador();
     private LocalDateTime ultimaConsulta;
 
-    public AgregadorService(HechosRepository hechosRepository, FuentesRepository fuentesRepository, SolicitudesRepository solicitudesRepository, ColeccionRepository coleccionRepository) {
+    public AgregadorService(HechosRepository hechosRepository, FuentesRepository fuentesRepository, SolicitudesRepository solicitudesRepository, ColeccionRepository coleccionRepository, ContribuyenteRepository contribuyenteRepository) {
         this.hechosRepository = hechosRepository;
         this.fuentesRepository = fuentesRepository;
         this.solicitudesRepository = solicitudesRepository;
         this.coleccionRepository = coleccionRepository;
+        this.contribuyenteRepository = contribuyenteRepository;
     }
 
     /**
      * Gestiona la consulta de hechos por primera vez al iniciar el sistema y,
      * los clasifica inmediatamente.
      */
-
+    @Transactional
     @PostConstruct
     public void consultarHechosPorPrimeraVez() {
         //System.out.print("Se ejecuta el PostConstruct");
+        Contribuyente anonimoExistente = contribuyenteRepository.findById(1).orElse(null);
+
+        if (anonimoExistente == null) {
+            // Crear e insertar el anónimo con ID manual
+            Anonimo anonimo = Anonimo.getInstance();
+            contribuyenteRepository.saveAndFlush(anonimo);
+        }
+
         this.consultarHechosPeriodicamente();
         this.clasificarHechos();
     }
@@ -63,6 +73,7 @@ public class AgregadorService {
     /**
      * Cada una hora, se ejecuta este metodo para consultar los hechos de las fuentes.
      */
+    @Transactional
     @Scheduled(fixedRate = 60 * 1000, initialDelay = 30000)
     public void consultarHechosPeriodicamente() {
         System.out.println("Consultando hechos de las fuentes...");
@@ -73,7 +84,28 @@ public class AgregadorService {
         System.out.println(ultimaConsulta);
         this.ultimaConsulta = LocalDateTime.now();
         fuentes.forEach(fuente -> {
-            hechosRepository.saveAll(fuente.getHechos());
+
+            System.out.println("Hechos de la fuente: " + fuente.getNombre());
+            fuente.getHechos().forEach(hecho -> {
+                if (hecho.getContribuyente() != null) {
+                    System.out.println("Hecho ID: " + hecho.getId() + " - Contribuyente ID: " + hecho.getContribuyente().getId());
+                } else {
+                    System.out.println("Hecho ID: " + hecho.getId() + " - Contribuyente: null");
+                }
+            });
+
+
+            for (Hecho hecho : fuente.getHechos()) {
+                Contribuyente contribuyente = hecho.getContribuyente();
+                if (contribuyente != null && contribuyente.getId() != null) {
+                    boolean exists = contribuyenteRepository.existsById(contribuyente.getId());
+                    if (!exists) {
+                        contribuyenteRepository.save(contribuyente);
+                    }
+                }
+            }
+
+            hechosRepository.saveAll(fuente.getHechos()); // ! EXPLOTA POR ESTA LINEA, al parecer por intentar guardar hechos con contribuyentes que no existen en la BD.
         }); // TODO: Despues chequear si funciona bien y no guarda repetidos
 
         hechosRepository.findAll(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes

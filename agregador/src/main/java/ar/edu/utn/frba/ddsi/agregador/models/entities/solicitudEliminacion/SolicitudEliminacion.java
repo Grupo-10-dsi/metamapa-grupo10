@@ -11,8 +11,7 @@ import jakarta.persistence.*;
 @Table(name="Solicitud_Eliminacion")
 public class SolicitudEliminacion {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Integer idHecho;

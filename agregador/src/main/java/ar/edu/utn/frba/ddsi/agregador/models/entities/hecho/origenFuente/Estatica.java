@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 @Entity
 @DiscriminatorValue("estatica")
 public class Estatica extends OrigenFuente {
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Origen_Fuente_id", referencedColumnName = "id")
     private ArchivoProcesado archivoProcesado;
 

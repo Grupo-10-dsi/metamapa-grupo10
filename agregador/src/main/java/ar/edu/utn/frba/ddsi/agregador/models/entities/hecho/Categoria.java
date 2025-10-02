@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 public class Categoria {
 
 
-    @Column(name = "detalle", nullable = false, unique = true)
+    @Column(name = "detalle", nullable = false)
     private String detalle;
 
     public Categoria(String detalle) {
