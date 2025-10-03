@@ -18,7 +18,7 @@ import java.util.UUID;
 
 
 public abstract class Hecho {
-    private UUID id;
+    private Integer id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
@@ -30,7 +30,7 @@ public abstract class Hecho {
     private Contribuyente contribuyente;
     private Integer cantidadMenciones;
 
-    public Hecho(UUID id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
+    public Hecho(Integer id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
                  LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, OrigenFuente origenFuente, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
         this.id = id;
         this.titulo = titulo;

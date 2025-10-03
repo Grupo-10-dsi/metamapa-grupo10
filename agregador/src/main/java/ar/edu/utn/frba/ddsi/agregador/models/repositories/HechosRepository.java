@@ -16,6 +16,9 @@ import java.util.List;
 public interface HechosRepository extends JpaRepository<Hecho, Integer> {
     List<Hecho> findByOrigenFuente(OrigenFuente origenFuente);
 
+    List<Hecho> findHechosByFuente(Fuente fuente);
+
+
     /**
      * Por ahora las fuentes se hardcodean aca. Eventualmente se
      * vera si se pueden agregar/sacar usando requests.

@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 public class Etiqueta {
-    @Id @generatedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String descripcion;

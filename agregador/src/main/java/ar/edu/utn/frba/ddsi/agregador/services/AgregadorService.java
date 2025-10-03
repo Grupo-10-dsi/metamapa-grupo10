@@ -69,8 +69,10 @@ public class AgregadorService {
 
         Fuente fuenteExistente = fuentesRepository.findFuenteByNombre("estatica");
         if(fuenteExistente == null){
-            FuenteEstatica fuenteEstatica = new FuenteEstatica( "estatica", "http://localhost:8081/api/estatica/hechos", new ArrayList<>());
+            FuenteEstatica fuenteEstatica = new FuenteEstatica( "ESTATICA", "http://localhost:8081/api/estatica/hechos", new ArrayList<>());
+            Fuente dinamica = new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA");
             fuentesRepository.saveAndFlush(fuenteEstatica);
+            fuentesRepository.saveAndFlush(dinamica);
         }
 
 
@@ -96,16 +98,6 @@ public class AgregadorService {
         this.ultimaConsulta = LocalDateTime.now();
         fuentes.forEach(fuente -> {
 
-            System.out.println("Hechos de la fuente: " + fuente.getNombre());
-            fuente.getHechos().forEach(hecho -> {
-                if (hecho.getContribuyente() != null) {
-                    System.out.println("Hecho ID: " + hecho.getId() + " - Contribuyente ID: " + hecho.getContribuyente().getId());
-                } else {
-                    System.out.println("Hecho ID: " + hecho.getId() + " - Contribuyente: null");
-                }
-            });
-
-
             for (Hecho hecho : fuente.getHechos()) {
                 Contribuyente contribuyente = hecho.getContribuyente();
                 if (contribuyente != null && contribuyente.getId() != null) {
@@ -116,7 +108,7 @@ public class AgregadorService {
                 }
             }
 
-            hechosRepository.saveAll(fuente.getHechos()); // ! EXPLOTA POR ESTA LINEA, al parecer por intentar guardar hechos con contribuyentes que no existen en la BD.
+            hechosRepository.saveAll(fuente.getHechos());
         }); // TODO: Despues chequear si funciona bien y no guarda repetidos
 
         hechosRepository.findAll(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
@@ -129,6 +121,7 @@ public class AgregadorService {
 
     @Scheduled(cron = "0 0 3 * * *")
     public void clasificarHechos() {
+        System.out.println("Clasificando hechos...");
         List<Fuente> fuentes = fuentesRepository.findAll();
 
         for (Fuente fuente : fuentes) {
@@ -136,10 +129,11 @@ public class AgregadorService {
                     .filter(f -> !f.equals(fuente))  // excluye la fuente actual de la iteración
                     .collect(Collectors.toList());
 
+            List<Hecho> hechos = hechosRepository.findHechosByFuente(fuente);
+            Clasificador.clasificarHechosPorMenciones(hechos, fuentesParaEvaluar, hechosRepository);
 
-            List<Hecho> hechosClasificados = Clasificador.clasificarHechosPorMenciones(fuente.getHechos(), fuentesParaEvaluar);
-            hechosRepository.saveAll(hechosClasificados);
-            fuente.setHechos(hechosClasificados);
+            hechosRepository.saveAll(hechos);
+            fuente.setHechos(hechos);
         }
     }
 

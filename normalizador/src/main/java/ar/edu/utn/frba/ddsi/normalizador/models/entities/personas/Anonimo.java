@@ -15,8 +15,13 @@ public class Anonimo extends Contribuyente {
 
     private static Anonimo instance;
 
-    private Anonimo() {
+    public Anonimo(Integer id) {
         // Constructor privado
+        this.id = id;
+    }
+
+    public Anonimo() {
+
     }
 
     @JsonCreator
@@ -25,12 +30,18 @@ public class Anonimo extends Contribuyente {
     }
 
 
-
     public static Anonimo getInstance() {
         if (instance == null) {
             instance = new Anonimo();
+
+
         }
         return instance;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 
 }

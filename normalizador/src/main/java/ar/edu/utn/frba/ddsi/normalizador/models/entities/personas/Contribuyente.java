@@ -1,7 +1,10 @@
 package ar.edu.utn.frba.ddsi.normalizador.models.entities.personas;
 
+import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Hecho;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import java.util.List;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -15,5 +18,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 public abstract class Contribuyente {
     // Por ahora la defino como abstracta y sin metodos. TODO ver que agregar
+    public Integer id;
+
+    private List<Hecho> hechos;
+
     public Contribuyente() {}
 }

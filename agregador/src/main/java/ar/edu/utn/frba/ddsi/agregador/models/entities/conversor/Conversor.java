@@ -7,6 +7,8 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.HechoTextual;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Anonimo;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Registrado;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class Conversor {
                 hechoDTO.getFechaCarga(),
                 origen,
                 hechoDTO.getEtiquetas(),
-                hechoDTO.getContribuyente(),
+                this.instanciarContribuyente(hechoDTO.getContribuyente()),
                 hechoDTO.getCuerpo()
         );
     }
@@ -76,9 +78,17 @@ public class Conversor {
                 hechoDTO.getFechaCarga(),
                 origen,
                 hechoDTO.getEtiquetas(),
-                hechoDTO.getContribuyente(),
+                this.instanciarContribuyente(hechoDTO.getContribuyente()),
                 hechoDTO.getContenidoMultimedia()
         );
+    }
+
+    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO) {
+        if (contribuyenteHechoDTO == null ) {
+            return Anonimo.getInstance();
+        } else {
+            return new Registrado(contribuyenteHechoDTO.getNombre());
+        }
     }
 
 }

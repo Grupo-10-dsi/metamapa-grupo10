@@ -12,17 +12,12 @@ import java.util.UUID;
 
 public class Registrado extends Contribuyente {
 
-    private UUID id;
+    // El id debe matchear con el id de la persona en el sistema de usuarios
     private String nombre;
-    private String email;
-    private int edad;
 
-    public Registrado(String nombre, String email, int edad) {
-        this.id = UUID.randomUUID();
+    public Registrado(Integer id, String nombre) {
+        this.id = id;
         this.nombre = nombre;
-        this.email = email;
-        this.edad = edad;
     }
-
 
 }

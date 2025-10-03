@@ -35,6 +35,9 @@ public abstract class Contribuyente {
     // Por ahora la defino como abstracta y sin metodos. TODO ver que agregar
     public Contribuyente() {}
 
+    public String getNombre() {
+        return "";
+    }
 
 //    @PrePersist
 //    public void asignarId() {

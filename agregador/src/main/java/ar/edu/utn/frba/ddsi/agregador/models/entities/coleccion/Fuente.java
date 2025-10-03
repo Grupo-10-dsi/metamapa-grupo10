@@ -47,9 +47,6 @@ public class Fuente {
         }
     }
 
-    public void setHechos(List<Hecho> nuevosHechos) {
-        this.hechos = nuevosHechos;
-    }
 
     public UriComponentsBuilder armarParametrosConsulta(LocalDateTime ultimaConsulta) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);

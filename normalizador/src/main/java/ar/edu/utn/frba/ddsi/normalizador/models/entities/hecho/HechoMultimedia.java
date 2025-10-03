@@ -16,7 +16,7 @@ import java.util.UUID;
 public class HechoMultimedia extends Hecho{
     private List<String> contenidoMultimedia;
 
-    public HechoMultimedia(UUID id,
+    public HechoMultimedia(Integer id,
                         String titulo,
                         String descripcion,
                         Categoria categoria,

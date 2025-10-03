@@ -36,11 +36,6 @@ public class Anonimo extends Contribuyente {
         return getInstance();
     }
 
-//    @Override
-//    public void asignarId() {
-//        // Asignar manualmente ID -1 para anónimo
-//        this.id = -1;
-//    }
 
     public static Anonimo getInstance() {
         if (instance == null) {
@@ -49,6 +44,11 @@ public class Anonimo extends Contribuyente {
 
         }
         return instance;
+    }
+
+    @Override
+    public String getNombre() {
+        return "Anonimo";
     }
 
     public void setId(Integer id) {

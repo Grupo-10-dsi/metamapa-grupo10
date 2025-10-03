@@ -19,9 +19,13 @@ public class Registrado extends Contribuyente {
     // El id debe matchear con el id de la persona en el sistema de usuarios
     private String nombre;
 
-    public Registrado(Integer id, String nombre) {
-        this.id = id;
+    public Registrado(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public String getNombre() {
+        return this.nombre;
     }
 
 }
