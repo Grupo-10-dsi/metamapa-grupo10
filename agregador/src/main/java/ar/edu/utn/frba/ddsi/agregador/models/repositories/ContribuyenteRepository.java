@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContribuyenteRepository extends JpaRepository<Contribuyente,Integer> {
 
+    Contribuyente findContribuyenteById(Integer id);
 }
 
 

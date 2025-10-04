@@ -92,7 +92,7 @@ public class AgregadorService {
 
         fuentes.forEach(fuente -> System.out.println(fuente.hechos));
 
-        fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta));
+        fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta, contribuyenteRepository));
         System.out.print("Ultima consulta: ");
         System.out.println(ultimaConsulta);
         this.ultimaConsulta = LocalDateTime.now();

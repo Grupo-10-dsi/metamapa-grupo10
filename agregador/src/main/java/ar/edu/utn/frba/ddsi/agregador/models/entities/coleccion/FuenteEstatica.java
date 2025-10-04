@@ -5,6 +5,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.conversor.Conversor;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ArchivoProcesadoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -49,7 +50,7 @@ public class FuenteEstatica extends Fuente{
     }
 
     @Override
-    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor) {
+    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository) {
         List<ArchivoProcesadoDTO> archivosDTO = webClient.get()
                 .uri(uri)
                 .retrieve()
@@ -63,7 +64,7 @@ public class FuenteEstatica extends Fuente{
                 ArchivoProcesado archivoProcesado = new ArchivoProcesado(archivoDTO.getNombre(), archivoDTO.getFechaCarga(), this);
                 OrigenFuente origenFuente = new Estatica(archivoProcesado);
                 this.archivosProcesados.add(archivoProcesado);
-                this.agregarHechos(archivoDTO.getHechos().stream().map(h -> conversor.convertirHecho(h, origenFuente)).toList());
+                this.agregarHechos(archivoDTO.getHechos().stream().map(h -> conversor.convertirHecho(h, origenFuente, contribuyenteRepository)).toList());
             }
         }
 

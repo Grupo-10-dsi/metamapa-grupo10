@@ -40,8 +40,6 @@ public class Anonimo extends Contribuyente {
     public static Anonimo getInstance() {
         if (instance == null) {
             instance = new Anonimo();
-
-
         }
         return instance;
     }

@@ -9,6 +9,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenF
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Anonimo;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Registrado;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 public class Conversor {
     public Conversor() {}
 
-    public Hecho convertirHecho(HechoDTO hechoDTO, OrigenFuente origen) {
+    public Hecho convertirHecho(HechoDTO hechoDTO, OrigenFuente origen, ContribuyenteRepository contribuyenteRepository) {
         HechoDTO hechoNormalizado = this.aplicarNormalizacion(hechoDTO);
         System.out.println("Convirtiendo hecho: " + hechoNormalizado.getTitulo() + " de la fuente: " + hechoDTO.getOrigenFuente());
         Hecho hecho = creacionHecho(hechoNormalizado, origen);
@@ -28,7 +29,7 @@ public class Conversor {
         }
 
         hecho.setCantidadMenciones(1);
-
+        hecho.setContribuyente(this.instanciarContribuyente(hechoDTO.getContribuyente(), contribuyenteRepository));
         return hecho;
     }
 
@@ -66,8 +67,6 @@ public class Conversor {
                 null,
                 hechoDTO.getCuerpo()
         );
-        hecho.setContribuyente(this.instanciarContribuyente(hechoDTO.getContribuyente()));
-
         return hecho;
     }
 
@@ -85,16 +84,16 @@ public class Conversor {
                 null,
                 hechoDTO.getContenidoMultimedia()
         );
-        hecho.setContribuyente(this.instanciarContribuyente(hechoDTO.getContribuyente()));
-
         return hecho;
     }
 
-    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO) {
-        if (contribuyenteHechoDTO == null || contribuyenteHechoDTO instanceof Anonimo) {
-            return Anonimo.getInstance();
+    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO, ContribuyenteRepository contribuyenteRepository) {
+        if (contribuyenteHechoDTO instanceof Anonimo) {
+            return contribuyenteRepository.findContribuyenteById(1);
         } else {
-            return new Registrado(contribuyenteHechoDTO.getNombre());
+            Contribuyente nuevoRegistrado = new Registrado(contribuyenteHechoDTO.getNombre());
+            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
+            return nuevoRegistrado;
         }
     }
 

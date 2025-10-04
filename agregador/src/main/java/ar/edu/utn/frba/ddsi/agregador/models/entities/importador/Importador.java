@@ -2,6 +2,8 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.importador;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.conversor.Conversor;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,11 +22,11 @@ public class Importador {
 
     }
 
-    public void importarHechos(Fuente fuente, LocalDateTime ultimaConsulta) {
+    public void importarHechos(Fuente fuente, LocalDateTime ultimaConsulta, ContribuyenteRepository contribuyenteRepository) {
         URI uri = aplicarUltimaConsulta(fuente, ultimaConsulta);
 
         //System.out.println(uri);
-        fuente.realizarConsulta(uri, webClient, conversor);
+        fuente.realizarConsulta(uri, webClient, conversor, contribuyenteRepository);
 
     }
 

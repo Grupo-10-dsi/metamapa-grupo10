@@ -4,6 +4,8 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.conversor.Conversor;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -60,7 +62,7 @@ public class Fuente {
 
     }
 
-    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor) {
+    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository) {
         OrigenFuente origenFuente;
         List<HechoDTO> hechos = webClient.get()
                 .uri(uri)
@@ -72,7 +74,7 @@ public class Fuente {
         if (hechos != null) {
             origenFuente = OrigenFuente.getOrigenFuente(this.nombre);
 
-            this.agregarHechos(hechos.stream().map(h -> conversor.convertirHecho(h, origenFuente)).toList());
+            this.agregarHechos(hechos.stream().map(h -> conversor.convertirHecho(h, origenFuente, contribuyenteRepository)).toList());
         }
 
     }
