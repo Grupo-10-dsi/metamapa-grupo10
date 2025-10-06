@@ -6,6 +6,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,7 +26,8 @@ import java.util.List;
 @DiscriminatorColumn(name="tipo")
 public class Fuente {
 
-    @OneToMany(mappedBy = "fuente", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "url_fuente", referencedColumnName = "url") // la FK
     public List<Hecho> hechos = new ArrayList<>();
 
     @Id
@@ -43,10 +45,10 @@ public class Fuente {
     }
 
     public void agregarHechos(List<Hecho> nuevosHechos) {
-        for (Hecho hecho : nuevosHechos) {
-            hecho.setFuente(this);
-            this.hechos.add(hecho);
+        if (this.hechos == null) {
+            this.hechos = new ArrayList<>();
         }
+        this.hechos.addAll(nuevosHechos);
     }
 
 

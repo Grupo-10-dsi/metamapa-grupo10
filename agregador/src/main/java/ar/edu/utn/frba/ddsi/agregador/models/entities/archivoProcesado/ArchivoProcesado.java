@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.archivoProcesado;
 
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,14 +18,13 @@ public class ArchivoProcesado {
     private String nombre;
     private LocalDateTime fechaCarga;
 
-    @ManyToOne
-    @JoinColumn(name = "url_fuente") // la FK
-    private Fuente fuente;
+//    @ManyToOne
+//    @JoinColumn(name = "url_fuente") // la FK
+//    private Fuente fuente;
 
-    public ArchivoProcesado(String nombre, LocalDateTime fechaCarga, Fuente fuente) {
+    public ArchivoProcesado(String nombre, LocalDateTime fechaCarga) {
         this.nombre = nombre;
         this.fechaCarga = fechaCarga;
-        this.fuente = fuente;
     }
 
     public ArchivoProcesado() {}

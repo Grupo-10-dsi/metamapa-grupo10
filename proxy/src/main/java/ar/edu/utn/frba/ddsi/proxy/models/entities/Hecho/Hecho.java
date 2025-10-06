@@ -22,7 +22,7 @@ import lombok.Getter;
         @JsonSubTypes.Type(value = HechoMultimedia.class, name = "multimedia")
 })
 public abstract class Hecho {
-    private UUID id;
+    private Integer id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
@@ -35,7 +35,7 @@ public abstract class Hecho {
 
     public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
                  LocalDateTime fechaAcontecimiento, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;

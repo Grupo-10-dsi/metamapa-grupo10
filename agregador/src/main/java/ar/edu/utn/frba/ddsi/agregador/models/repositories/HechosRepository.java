@@ -10,13 +10,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface HechosRepository extends JpaRepository<Hecho, Integer> {
     List<Hecho> findByOrigenFuente(OrigenFuente origenFuente);
 
-    List<Hecho> findHechosByFuente(Fuente fuente);
+
+
+    //List<Hecho> findHechosByFuente(Fuente fuente);
 
 
     /**

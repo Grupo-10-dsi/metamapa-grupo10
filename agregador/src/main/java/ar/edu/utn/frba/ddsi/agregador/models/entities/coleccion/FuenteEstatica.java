@@ -23,7 +23,7 @@ import java.util.List;
 @DiscriminatorValue("estatica")
 public class FuenteEstatica extends Fuente{
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="url_fuente", referencedColumnName = "url")
     private List<ArchivoProcesado> archivosProcesados;
 
@@ -61,7 +61,7 @@ public class FuenteEstatica extends Fuente{
 
         if (archivosDTO != null) {
             for (ArchivoProcesadoDTO archivoDTO : archivosDTO) {
-                ArchivoProcesado archivoProcesado = new ArchivoProcesado(archivoDTO.getNombre(), archivoDTO.getFechaCarga(), this);
+                ArchivoProcesado archivoProcesado = new ArchivoProcesado(archivoDTO.getNombre(), archivoDTO.getFechaCarga());
                 OrigenFuente origenFuente = new Estatica(archivoProcesado);
                 this.archivosProcesados.add(archivoProcesado);
                 this.agregarHechos(archivoDTO.getHechos().stream().map(h -> conversor.convertirHecho(h, origenFuente, contribuyenteRepository)).toList());

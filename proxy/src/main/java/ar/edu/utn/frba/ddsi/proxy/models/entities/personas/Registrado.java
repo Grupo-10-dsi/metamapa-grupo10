@@ -16,11 +16,15 @@ import java.util.UUID;
 @JsonTypeName("registrado")
 public class Registrado extends Contribuyente {
 
-    private UUID id;
+    // El id debe matchear con el id de la persona en el sistema de usuarios
     private String nombre;
 
-    public Registrado(UUID id, String nombre) {
-        this.id = UUID.randomUUID();
+    public Registrado(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public String getNombre() {
+        return this.nombre;
     }
 }

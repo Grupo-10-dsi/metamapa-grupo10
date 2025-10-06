@@ -41,7 +41,7 @@ public class Clasificador {
     public static int compararHechos(Hecho hecho, List<Fuente> fuentesRestantes, HechosRepository repoHechos) {
         int cantidadMenciones = 1;
         for (Fuente fuente : fuentesRestantes) {
-            boolean mencionadoEnFuente = repoHechos.findHechosByFuente(fuente)
+            boolean mencionadoEnFuente = fuente.getHechos()
                     .stream()
                     .anyMatch(h -> hechosIguales(h, hecho));
 

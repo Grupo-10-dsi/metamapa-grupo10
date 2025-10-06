@@ -71,8 +71,10 @@ public class AgregadorService {
         if(fuenteExistente == null){
             FuenteEstatica fuenteEstatica = new FuenteEstatica( "ESTATICA", "http://localhost:8081/api/estatica/hechos", new ArrayList<>());
             Fuente dinamica = new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA");
+            Fuente proxy = new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY");
             fuentesRepository.saveAndFlush(fuenteEstatica);
             fuentesRepository.saveAndFlush(dinamica);
+            fuentesRepository.saveAndFlush(proxy);
         }
 
 
@@ -90,6 +92,8 @@ public class AgregadorService {
 
         List<Fuente> fuentes = fuentesRepository.findAll();
 
+        Contribuyente anonimoGestionado = contribuyenteRepository.findById(1).orElse(null);
+
         fuentes.forEach(fuente -> System.out.println(fuente.hechos));
 
         fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta, contribuyenteRepository));
@@ -101,17 +105,23 @@ public class AgregadorService {
             for (Hecho hecho : fuente.getHechos()) {
                 Contribuyente contribuyente = hecho.getContribuyente();
                 if (contribuyente != null && contribuyente.getId() != null) {
-                    boolean exists = contribuyenteRepository.existsById(contribuyente.getId());
-                    if (!exists) {
-                        contribuyenteRepository.save(contribuyente);
+                    if (contribuyente.getId() == 1) {
+                        hecho.setContribuyente(anonimoGestionado);
+                    } else {
+                        boolean exists = contribuyenteRepository.existsById(contribuyente.getId());
+                        if (!exists) {
+                            contribuyenteRepository.save(contribuyente);
+                        }
                     }
                 }
             }
 
-            hechosRepository.saveAll(fuente.getHechos());
+            fuentesRepository.save(fuente);
+
+            //hechosRepository.saveAll(fuente.getHechos());
         }); // TODO: Despues chequear si funciona bien y no guarda repetidos
 
-        hechosRepository.findAll(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
+        //hechosRepository.findAll(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
     }
 
     /**
@@ -129,7 +139,7 @@ public class AgregadorService {
                     .filter(f -> !f.equals(fuente))  // excluye la fuente actual de la iteración
                     .collect(Collectors.toList());
 
-            List<Hecho> hechos = hechosRepository.findHechosByFuente(fuente);
+            List<Hecho> hechos = fuente.getHechos();
             Clasificador.clasificarHechosPorMenciones(hechos, fuentesParaEvaluar, hechosRepository);
 
             hechosRepository.saveAll(hechos);

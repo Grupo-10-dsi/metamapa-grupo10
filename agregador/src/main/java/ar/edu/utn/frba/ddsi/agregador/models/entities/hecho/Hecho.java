@@ -4,6 +4,8 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,9 +31,10 @@ public abstract class Hecho {
     @Embedded
     private Ubicacion ubicacion;
 
-    @ManyToOne
-    @JoinColumn(name = "url_fuente", referencedColumnName = "url") // la FK
-    private Fuente fuente;
+//    @ManyToOne
+////    @JoinColumn(name = "url_fuente", referencedColumnName = "url") // la FK
+////    @JsonIgnore
+//    private Fuente fuente;
 
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
