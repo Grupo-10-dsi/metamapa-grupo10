@@ -152,5 +152,13 @@ public class AgregadorController {
         return this.agregadorService.obtenerTodosLosHechos();
     }
 
+
+    // ENDPOINTS PARA CONSULTAS A LA BD
+
+    @GetMapping("/colecciones/{Id}/provincia-max-hechos")
+    public String obtenerProvinciaDeColeccion(@PathVariable Integer Id) {
+        return this.agregadorService.obtenerProvinciaConMasHechos(Id);
+    }
+
 }
 

@@ -13,6 +13,15 @@
         <module name="agregador" />
         <module name="normalizador" />
       </profile>
+      <profile name="Annotation profile for estadistica" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+        </processorPath>
+        <module name="estadistica" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cliente-simulation" target="17" />
@@ -22,6 +31,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="agregador" options="-parameters" />
       <module name="dinamica" options="-parameters" />
+      <module name="estadistica" options="-parameters" />
       <module name="estatica" options="-parameters" />
       <module name="metamapa" options="" />
       <module name="normalizador" options="-parameters" />
