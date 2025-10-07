@@ -3,9 +3,14 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.archivoProcesado.ArchivoProcesado;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.conversor.Conversor;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ArchivoProcesadoDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.ArchivoProcesadoRepository;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.OrigenFuenteRepository;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -50,7 +55,8 @@ public class FuenteEstatica extends Fuente{
     }
 
     @Override
-    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository) {
+    @Transactional
+    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository, ArchivoProcesadoRepository archivoProcesadoRepository, OrigenFuenteRepository origenFuenteRepository) {
         List<ArchivoProcesadoDTO> archivosDTO = webClient.get()
                 .uri(uri)
                 .retrieve()
@@ -58,15 +64,31 @@ public class FuenteEstatica extends Fuente{
                 .collectList()
                 .block();
 
-
         if (archivosDTO != null) {
             for (ArchivoProcesadoDTO archivoDTO : archivosDTO) {
+                // Crear el archivo procesado
                 ArchivoProcesado archivoProcesado = new ArchivoProcesado(archivoDTO.getNombre(), archivoDTO.getFechaCarga());
-                OrigenFuente origenFuente = new Estatica(archivoProcesado);
-                this.archivosProcesados.add(archivoProcesado);
-                this.agregarHechos(archivoDTO.getHechos().stream().map(h -> conversor.convertirHecho(h, origenFuente, contribuyenteRepository)).toList());
+
+                ArchivoProcesado archPersistido = archivoProcesadoRepository.saveAndFlush(archivoProcesado);
+
+                // Usar el constructor con parámetro en lugar de setArchivoProcesado
+                Estatica estatica = new Estatica(archPersistido);
+                estatica = (Estatica) origenFuenteRepository.saveAndFlush(estatica);
+
+                // Procesar los hechos con este origen
+                List<Hecho> hechos = new ArrayList<>();
+                for (HechoDTO hechoDTO : archivoDTO.getHechos()) {
+                    Hecho hecho = conversor.convertirHecho(hechoDTO, estatica, contribuyenteRepository);
+                    hechos.add(hecho);
+                }
+                // Agregar a la colección
+                if (this.archivosProcesados == null) {
+                    this.archivosProcesados = new ArrayList<>();
+                }
+                this.archivosProcesados.add(archPersistido);
+
+                this.agregarHechos(hechos);
             }
         }
-
     }
 }

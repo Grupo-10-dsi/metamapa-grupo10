@@ -40,7 +40,7 @@ public abstract class Hecho {
     private LocalDateTime fechaCarga;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "origen_fuente_id")
+    @JoinColumn(name = "origen_fuente_id", referencedColumnName = "id")
     private OrigenFuente origenFuente;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

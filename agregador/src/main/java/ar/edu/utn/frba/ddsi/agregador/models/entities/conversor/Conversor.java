@@ -19,7 +19,7 @@ public class Conversor {
 
     public Hecho convertirHecho(HechoDTO hechoDTO, OrigenFuente origen, ContribuyenteRepository contribuyenteRepository) {
         HechoDTO hechoNormalizado = this.aplicarNormalizacion(hechoDTO);
-        System.out.println("Convirtiendo hecho: " + hechoNormalizado.getTitulo() + " de la fuente: " + hechoDTO.getOrigenFuente());
+        //System.out.println("Convirtiendo hecho: " + hechoNormalizado.getTitulo() + " de la fuente: " + hechoDTO.getOrigenFuente());
         Hecho hecho = creacionHecho(hechoNormalizado, origen);
         // Caso fuente estática
         if (origen instanceof Estatica) {
@@ -27,6 +27,8 @@ public class Conversor {
             hecho.setContribuyente(Anonimo.getInstance());
             hecho.setEtiquetas(new ArrayList<>());
         }
+
+        //hecho.setOrigenFuente(origen);
 
         hecho.setCantidadMenciones(1);
         hecho.setContribuyente(this.instanciarContribuyente(hechoDTO.getContribuyente(), contribuyenteRepository));

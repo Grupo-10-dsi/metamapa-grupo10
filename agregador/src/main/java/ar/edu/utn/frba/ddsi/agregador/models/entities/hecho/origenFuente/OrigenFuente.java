@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.archivoProcesado.ArchivoProcesado;
 import jakarta.persistence.*;
 
 
@@ -20,12 +21,15 @@ public abstract class OrigenFuente {
         return switch (tipo) {
             case "DINAMICA" -> new Dinamica();
             case "PROXY" -> new Proxy();
-            case "ESTATICA" -> new Estatica(null);
+            case "ESTATICA" -> new Estatica();
 
             default -> throw new IllegalArgumentException();
         };
 
 
+    }
+
+    public void setArchivoProcesado(ArchivoProcesado archivoProcesado) {
     }
 
 }

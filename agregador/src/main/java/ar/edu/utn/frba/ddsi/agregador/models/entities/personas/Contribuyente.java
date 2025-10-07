@@ -29,8 +29,8 @@ public abstract class Contribuyente {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @OneToMany(mappedBy = "contribuyente")
-    private List<Hecho> hechos;
+//    @OneToMany(mappedBy = "contribuyente")
+//    private List<Hecho> hechos;
 
     // Por ahora la defino como abstracta y sin metodos. TODO ver que agregar
     public Contribuyente() {}

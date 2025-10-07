@@ -5,7 +5,9 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.ArchivoProcesadoRepository;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
+import ar.edu.utn.frba.ddsi.agregador.models.repositories.OrigenFuenteRepository;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,7 +66,7 @@ public class Fuente {
 
     }
 
-    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository) {
+    public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository, ArchivoProcesadoRepository a, OrigenFuenteRepository o) {
         OrigenFuente origenFuente;
         List<HechoDTO> hechos = webClient.get()
                 .uri(uri)

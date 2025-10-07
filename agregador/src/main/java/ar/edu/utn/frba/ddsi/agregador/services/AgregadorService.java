@@ -40,15 +40,19 @@ public class AgregadorService {
     private final SolicitudesRepository solicitudesRepository;
     private final ColeccionRepository coleccionRepository;
     private final ContribuyenteRepository contribuyenteRepository;
+    private final ArchivoProcesadoRepository archivoProcesadoRepository;
+    private final OrigenFuenteRepository origenFuenteRepository;
     private final Importador importador = new Importador();
     private LocalDateTime ultimaConsulta;
 
-    public AgregadorService(HechosRepository hechosRepository, FuentesRepository fuentesRepository, SolicitudesRepository solicitudesRepository, ColeccionRepository coleccionRepository, ContribuyenteRepository contribuyenteRepository) {
+    public AgregadorService(HechosRepository hechosRepository, FuentesRepository fuentesRepository, SolicitudesRepository solicitudesRepository, ColeccionRepository coleccionRepository, ContribuyenteRepository contribuyenteRepository, ArchivoProcesadoRepository archivoProcesadoRepository, OrigenFuenteRepository origenFuenteRepository) {
         this.hechosRepository = hechosRepository;
         this.fuentesRepository = fuentesRepository;
         this.solicitudesRepository = solicitudesRepository;
         this.coleccionRepository = coleccionRepository;
         this.contribuyenteRepository = contribuyenteRepository;
+        this.archivoProcesadoRepository = archivoProcesadoRepository;
+        this.origenFuenteRepository = origenFuenteRepository;
     }
 
     /**
@@ -94,9 +98,9 @@ public class AgregadorService {
 
         Contribuyente anonimoGestionado = contribuyenteRepository.findById(1).orElse(null);
 
-        fuentes.forEach(fuente -> System.out.println(fuente.hechos));
+        //fuentes.forEach(fuente -> System.out.println(fuente.hechos));
 
-        fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta, contribuyenteRepository));
+        fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta, contribuyenteRepository, archivoProcesadoRepository, origenFuenteRepository));
         System.out.print("Ultima consulta: ");
         System.out.println(ultimaConsulta);
         this.ultimaConsulta = LocalDateTime.now();

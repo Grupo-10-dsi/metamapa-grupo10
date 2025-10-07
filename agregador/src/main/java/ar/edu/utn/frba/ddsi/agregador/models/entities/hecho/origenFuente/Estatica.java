@@ -10,8 +10,8 @@ import jakarta.persistence.*;
 @Entity
 @DiscriminatorValue("estatica")
 public class Estatica extends OrigenFuente {
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "Origen_Fuente_id", referencedColumnName = "id")
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch=FetchType.EAGER)
+    @JoinColumn(name = "archivo_id", referencedColumnName = "id")
     private ArchivoProcesado archivoProcesado;
 
     public Estatica(ArchivoProcesado archivoProcesado) {
@@ -20,6 +20,11 @@ public class Estatica extends OrigenFuente {
     }
 
     public Estatica() {
+        super();
+    }
 
+    @Override
+    public void setArchivoProcesado(ArchivoProcesado archivoProcesado) {
+        this.archivoProcesado = archivoProcesado;
     }
 }
