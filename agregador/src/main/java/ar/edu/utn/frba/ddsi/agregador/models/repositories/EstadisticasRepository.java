@@ -23,7 +23,7 @@ public interface EstadisticasRepository extends JpaRepository<Hecho, Integer> { 
             WHERE c.id = ?1
         """,
             nativeQuery = true)
-    List<Ubicacion> obtenerUbicaciones(Integer id); // el WHERE c.coleccion_id = ?1 compara el id de la coleccion con el primer parametro que recibe el metodo.
+    List<Ubicacion> obtenerUbicacionesColeccion(Integer id); // el WHERE c.coleccion_id = ?1 compara el id de la coleccion con el primer parametro que recibe el metodo.
 
     // La instanciara directo a la categoria?
     @Query( value = """ 
@@ -35,29 +35,37 @@ public interface EstadisticasRepository extends JpaRepository<Hecho, Integer> { 
             nativeQuery = true)
     Categoria obtenerCategoriaConMasHechos();
 
+//    @Query( value = """
+//            SELECT h.latitud, h.longitud
+//            FROM hecho h
+//            JOIN fuente f ON h.url_fuente = f.url
+//            JOIN coleccion_fuente cf ON cf.fuente_url = f.url
+//            JOIN coleccion c ON cf.coleccion_id = c.id
+//            WHERE c.id = ?1
+//            GROUP BY h.latitud, h.longitud\s
+//            ORDER BY count(*) desc limit 1
+//        """,
+//            nativeQuery = true)
+//    Ubicacion obtenerUbicacionMasFrecuenteDeColeccion(Integer id);
+
+//    @Query( value = """
+//           select h.latitud, h.longitud
+//           from hecho h
+//           where h.detalle = ?1
+//           group by h.latitud, h.longitud
+//           order by count(*) desc
+//           limit 1
+//        """,
+//            nativeQuery = true)
+//    Ubicacion obtenerUbicacionMasFrecuenteDeCategoria(Integer id);
+
     @Query( value = """
             SELECT h.latitud, h.longitud
             FROM hecho h
-            JOIN fuente f ON h.url_fuente = f.url
-            JOIN coleccion_fuente cf ON cf.fuente_url = f.url
-            JOIN coleccion c ON cf.coleccion_id = c.id
-            WHERE c.id = ?1
-            GROUP BY h.latitud, h.longitud\s
-            ORDER BY count(*) desc limit 1
+            WHERE h.detalle = ?1
         """,
             nativeQuery = true)
-    Ubicacion obtenerUbicacionMasFrecuenteDeColeccion(Integer id);
-
-    @Query( value = """
-           select h.latitud, h.longitud
-           from hecho h
-           where h.detalle = ?1
-           group by h.latitud, h.longitud
-           order by count(*) desc
-           limit 1        
-        """,
-            nativeQuery = true)
-    Ubicacion obtenerUbicacionMasFrecuenteDeCategoria(Integer id);
+    List<Ubicacion> obtenerUbicacionesCategoria(Integer id);
 
     @Query( value = """
            select HOUR(h.fecha_acontecimiento)

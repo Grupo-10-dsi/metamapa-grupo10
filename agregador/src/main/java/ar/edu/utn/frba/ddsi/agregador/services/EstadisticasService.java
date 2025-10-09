@@ -6,7 +6,6 @@ import ar.edu.utn.frba.ddsi.agregador.models.repositories.EstadisticasRepository
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,20 +17,20 @@ public class EstadisticasService {
     }
 
     // SERVICIOS PARA EL MÓDULO DE ESTADÍSTICAS
-    public List<Ubicacion> obtenerUbicaciones(Integer idColeccion) {
-        return this.estadisticasRepository.obtenerUbicaciones(idColeccion);
+    public List<Ubicacion> obtenerUbicacionesColeccion(Integer idColeccion) {
+        return this.estadisticasRepository.obtenerUbicacionesColeccion(idColeccion);
     }
 
     public Categoria obtenerCategoriaConMasHechos() {
         return this.estadisticasRepository.obtenerCategoriaConMasHechos();
     }
 
-    public Ubicacion obtenerUbicacionMasFrecuenteDeColeccion(Integer idColeccion) {
-        return this.estadisticasRepository.obtenerUbicacionMasFrecuenteDeColeccion(idColeccion);
-    }
-
-    public Ubicacion obtenerUbicacionMasFrecuenteDeCategoria(Integer idCategoria) {
-        return this.estadisticasRepository.obtenerUbicacionMasFrecuenteDeCategoria(idCategoria);
+//    public Ubicacion obtenerUbicacionMasFrecuenteDeColeccion(Integer idColeccion) {
+//        return this.estadisticasRepository.obtenerUbicacionMasFrecuenteDeColeccion(idColeccion);
+//    }
+//
+    public List<Ubicacion> obtenerUbicacionesCategoria(Integer idCategoria) {
+        return this.estadisticasRepository.obtenerUbicacionesCategoria(idCategoria);
     }
 
     public LocalTime obtenerHoraMasFrecuente(Integer Id) {
