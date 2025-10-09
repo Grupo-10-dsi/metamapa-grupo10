@@ -72,17 +72,18 @@ public class EstadisticaService {
         JSONArray ubicacionesArray = new JSONArray();
 
 
-       for (Ubicacion ubicacion : ubicaciones) {
-            JSONObject obj = new JSONObject();
-            obj.put("lat", ubicacion.getLatitud());
-            obj.put("lon", ubicacion.getLongitud());
-            obj.put("campos", "basico");
-            obj.put("aplanar", true);
-            ubicacionesArray.put(obj);
-       }
+        for (Ubicacion ubicacion : ubicaciones) {
+             JSONObject obj = new JSONObject();
+             obj.put("lat", ubicacion.getLatitud());
+             obj.put("lon", ubicacion.getLongitud());
+             obj.put("campos", "basico");
+             obj.put("aplanar", true);
+             ubicacionesArray.put(obj);
+        }
+        body.put("ubicaciones", ubicacionesArray);
 
         String response = webClient.post()
-                .uri("/ubicaciones")
+                .uri("/ubicacion")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(body.toString())
                 .retrieve()
