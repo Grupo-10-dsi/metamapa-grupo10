@@ -14,6 +14,7 @@
         <module>proxy</module>
         <module>agregador</module>
         <module>normalizador</module>
+        <module>estadistica</module>
     </modules>
     <groupId>ar.edu.utn.frba.ddsi</groupId>
     <artifactId>metamapa</artifactId>

@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.repositories;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
@@ -63,10 +64,10 @@ public interface EstadisticasRepository extends JpaRepository<Hecho, Integer> { 
     @Query( value = """
             SELECT h.latitud, h.longitud
             FROM hecho h
-            WHERE h.detalle = ?1
+            WHERE h.categoria_id = ?1
         """,
             nativeQuery = true)
-    List<Ubicacion> obtenerUbicacionesCategoria(Integer id);
+    List<UbicacionDTO> obtenerUbicacionesCategoria(Integer id);
 
     @Query( value = """
            select HOUR(h.fecha_acontecimiento)

@@ -49,16 +49,16 @@ public class AgregadorClient {
 
     // Trae la ubicacion que esta en la mayor cantidad de hechos de una categoria
     public List<Ubicacion> obtenerUbicacionesDeCategoria (Integer Id) {
-        List<Ubicacion> ubicacionesConMasHechos = webClient.get()
+        List<Ubicacion> ubicaciones = webClient.get()
                 .uri("/categoria/{Id}/ubicaciones", Id)
                 .retrieve()
                 .bodyToFlux(Ubicacion.class)
                 .collectList()
                 .block();
-        if(ubicacionesConMasHechos == null) {
+        if(ubicaciones == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro la provincia o la categoria buscada");
         }
-        return ubicacionesConMasHechos;
+        return ubicaciones;
     }
 
     public LocalTime obtenerHoraMasFrecuenteDeCategoria (Integer Id) {

@@ -34,6 +34,7 @@ public class EstadisticaService {
     public String obtenerProvinciaDeCategoria(Integer id) {
         List<Ubicacion> ubicacionesCategoria = agregadorClient.obtenerUbicacionesDeCategoria(id);
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
+
         return provinciaMasFrecuente(provincias);
     }
 

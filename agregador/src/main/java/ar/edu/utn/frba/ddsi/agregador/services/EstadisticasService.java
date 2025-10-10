@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.services;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.EstadisticasRepository;
@@ -30,7 +31,7 @@ public class EstadisticasService {
 //    }
 //
     public List<Ubicacion> obtenerUbicacionesCategoria(Integer idCategoria) {
-        return this.estadisticasRepository.obtenerUbicacionesCategoria(idCategoria);
+        List<UbicacionDTO> ubicaciones = this.estadisticasRepository.obtenerUbicacionesCategoria(idCategoria);
     }
 
     public LocalTime obtenerHoraMasFrecuente(Integer Id) {
