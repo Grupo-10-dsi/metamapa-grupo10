@@ -67,7 +67,7 @@ public interface EstadisticasRepository extends JpaRepository<Hecho, Integer> { 
             WHERE h.categoria_id = ?1
         """,
             nativeQuery = true)
-    List<UbicacionDTO> obtenerUbicacionesCategoria(Integer id);
+    List<Ubicacion> obtenerUbicacionesCategoria(Integer id);
 
     @Query( value = """
            select HOUR(h.fecha_acontecimiento)

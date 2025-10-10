@@ -31,7 +31,7 @@ public class EstadisticasService {
 //    }
 //
     public List<Ubicacion> obtenerUbicacionesCategoria(Integer idCategoria) {
-        List<UbicacionDTO> ubicaciones = this.estadisticasRepository.obtenerUbicacionesCategoria(idCategoria);
+        return this.estadisticasRepository.obtenerUbicacionesCategoria(idCategoria);
     }
 
     public LocalTime obtenerHoraMasFrecuente(Integer Id) {
