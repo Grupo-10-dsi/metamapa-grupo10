@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,26 +11,22 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="Solicitud_Eliminacion")
 public class SolicitudEliminacion {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer idHecho;
+    @ManyToOne
+    @JoinColumn(name="hecho_id",referencedColumnName = "id")
+    private Hecho hecho;
+
     private String justificacion;
 
     @Enumerated(EnumType.STRING)
     private Estado_Solicitud estado;
 
 
-    public SolicitudEliminacion(Integer idHecho, String justificacion) {
-        this.idHecho = idHecho;
-        this.justificacion = justificacion;
-        this.estado = Estado_Solicitud.PENDIENTE;
+    public SolicitudEliminacion() {
+        this.estado = Estado_Solicitud.PENDIENTE; // Estado inicial por defecto
     }
-
-    public SolicitudEliminacion() {}
-
-
 
     public boolean esCorrecta() {
         // Justificacion con minimo 500 caracteres

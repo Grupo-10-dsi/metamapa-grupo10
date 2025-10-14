@@ -342,9 +342,37 @@ public class AgregadorService {
         return coleccionRepository.save(coleccionAModificadar);
     }
 
+    public Integer crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
+
+        SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion();
+
+        nuevaSolicitudEliminacion.setJustificacion(solicitudDTO.getJustificacion());
+
+//        if(DetectorDeSpam.esSpam(nuevaSolicitudEliminacion.getJustificacion())) {
+//            nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.RECHAZADA);
+//        }
+
+//        if (!nuevaSolicitudEliminacion.esCorrecta()) {
+//            throw new IllegalArgumentException("La justificación debe tener al menos 500 caracteres.");
+//        }
+
+        // Verifico si el hecho existe
+        Hecho hechoAeliminar = hechosRepository.findById(solicitudDTO.getIdHecho()).orElse(null);
+
+        if (hechoAeliminar == null) {
+            throw new IllegalArgumentException("Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
+        }
+
+        nuevaSolicitudEliminacion.setHecho(hechoAeliminar);
+
+        solicitudesRepository.save(nuevaSolicitudEliminacion);
+
+        return nuevaSolicitudEliminacion.getId();
+    }
+
     public SolicitudEliminacion modificarEstadoSolicitud(Integer id, Estado_Solicitud nuevoEstado) {
 
-        SolicitudEliminacion solicitudAEditar = solicitudesRepository.findSolicitudEliminacionById(id);
+        SolicitudEliminacion solicitudAEditar = solicitudesRepository.findById(id).orElse(null);
 
         if (solicitudAEditar == null) {
             throw new IllegalArgumentException("Solicitud no encontrada con ID: " + id);
@@ -352,18 +380,15 @@ public class AgregadorService {
 
         solicitudAEditar.setEstado(nuevoEstado);
 
-        return solicitudesRepository.save(solicitudAEditar);
-    }
+        SolicitudEliminacion solicitudActualizada = solicitudesRepository.save(solicitudAEditar);
 
-    public SolicitudEliminacion crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
-            SolicitudEliminacion nuevaSolicitud = new SolicitudEliminacion(
-                    solicitudDTO.getIdHecho(),
-                    solicitudDTO.getJustificacion()
-            );
 
-            this.solicitudesRepository.save(nuevaSolicitud);
+//        if(nuevoEstado == Estado_Solicitud.ACEPTADA) {
+//            this.ocultarHecho(solicitudAEditar.getIdHecho());
+//        }
 
-        return nuevaSolicitud;
+        return solicitudActualizada;
+
     }
 
     public List<Hecho> hechosFiltrados(List<Hecho> hechos, Filtro filtros) {

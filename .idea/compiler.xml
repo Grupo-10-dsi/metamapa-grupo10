@@ -13,7 +13,7 @@
         <module name="agregador" />
         <module name="normalizador" />
       </profile>
-      <profile name="Annotation profile for estadistica" enabled="true">
+      <profile name="Annotation profile for metamapa" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

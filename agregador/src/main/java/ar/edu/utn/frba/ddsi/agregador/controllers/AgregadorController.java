@@ -97,13 +97,6 @@ public class AgregadorController {
 //        return this.agregadorService.modificarListaDeFuentes(id, urls_fuente);
 //    }
 
-    // Endpoint para aceptar/rechazar solicitudes de eliminacion
-    @PutMapping("/solicitudes/{id}")
-    public SolicitudEliminacion modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
-        return agregadorService.modificarEstadoSolicitud(id, nuevoEstado);
-
-    }
-
     // Navegacion de forma irrestricta -> No se aplica curacion
 
     @GetMapping("/colecciones/{id}/hechos")
@@ -143,8 +136,15 @@ public class AgregadorController {
 
     // Endpoint para generar solicitudes de eliminacion de hechos le pega metamapa
     @PostMapping("/solicitudes")
-    public SolicitudEliminacion generarSolicitudEliminacion(@RequestBody SolicitudDTO solicitudEliminacion) {
+    public Integer generarSolicitudEliminacion(@RequestBody SolicitudDTO solicitudEliminacion) {
         return agregadorService.crearSolicitudEliminacion(solicitudEliminacion);
+    }
+
+    // Endpoint para aceptar/rechazar solicitudes de eliminacion
+    @PutMapping("/solicitudes/{id}")
+    public SolicitudEliminacion modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
+        return agregadorService.modificarEstadoSolicitud(id, nuevoEstado);
+
     }
 
 
