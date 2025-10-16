@@ -99,16 +99,17 @@ public class AgregadorClient {
         return horaMasFrecuente;
     }
 
-    public Integer obtenerCantidadDeSolicitudesSpam() {
-        Integer cantidadSolicitudesSpam = webClient.get()
+    public List<SolicitudDTO> obtenerSolicitudesSpam() {
+        List <SolicitudDTO> solicitudesSpam = webClient.get()
                 .uri("/estadisticas/solicitudes/spam")
                 .retrieve()
-                .bodyToMono(Integer.class)
+                .bodyToFlux(SolicitudDTO.class)
+                .collectList()
                 .block();
-        if(cantidadSolicitudesSpam == null) {
+        if(solicitudesSpam == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro la cantidad de solicitudes spam");
         }
-        return cantidadSolicitudesSpam;
+        return solicitudesSpam;
     }
 
 }

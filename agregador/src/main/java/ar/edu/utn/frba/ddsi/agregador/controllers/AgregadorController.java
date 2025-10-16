@@ -81,9 +81,9 @@ public class AgregadorController {
 //    }
 
 
-     //Endpoint para modificar algoritmo de consenso de una coleccion
+     //Endpoint para modificar coleccion
     @PatchMapping("/colecciones/{id}")
-    public Coleccion modificarAlgoritmoConsenso(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
+    public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
 
         if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
             return this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
@@ -135,6 +135,12 @@ public class AgregadorController {
         } else {
             throw new IllegalArgumentException("Tipo de navegacion no soportado: " + tipoNavegacion);
         }
+    }
+
+
+    @GetMapping("/solicitudes")
+    public List<SolicitudEliminacion> obtenerSolicitudes() {
+        return agregadorService.encontrarSolicitudes();
     }
 
 

@@ -1,14 +1,9 @@
-package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
+package ar.edu.utn.frba.ddsi.estadistica.models.entities;
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 
 @Getter
-@Setter
-@NoArgsConstructor
 public class SolicitudDTO {
     private Integer id;
     private Integer idHecho;

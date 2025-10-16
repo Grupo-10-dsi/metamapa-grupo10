@@ -52,8 +52,8 @@ public class Coleccion {
     }
 
     public List<Hecho> mostrarHechos() {
-        System.out.println("Criterios: ");
-        this.criterios.forEach(criterio -> System.out.println(criterio));
+        //System.out.println("Criterios: ");
+        //this.criterios.forEach(criterio -> System.out.println(criterio));
 
         return this.fuentes.stream()
                 .flatMap(fuente -> fuente.getHechos().stream())
@@ -63,97 +63,35 @@ public class Coleccion {
 
     }
 
-
-
-
-
-//    public boolean vericidad(String algoritmo) {
-//        // Verifica la veracidad de los hechos en la coleccion
-//        switch (algoritmo) {
-//            case "multiplesMenciones":
-//                System.out.println("Usando algoritmo de múltiples menciones");
-//                break;
-//            case "mayoriaSimple":
-//                System.out.println("Usando algoritmo de mayoría simple");
-//                break;
-//            case "absoluta":
-//                System.out.println("Usando algoritmo absoluto");
-//                break;
-//            default:
-//                System.out.println("Algoritmo por defecto");
-//        }
-//        return true; //TODO: IMPLEMENTAR ESTO
-//    }
-
-//    public void aplivarVerificacionAlgoritmoPorDefecto() {
-//        this.fuentes.stream()
+//    public List<Hecho> mostrarHechosPorConsenso(String algoritmo) {
+//        Mapa que cuenta menciones de cada hecho
+//        Map<Hecho, Long> conteo = this.fuentes.stream()
 //                .flatMap(fuente -> fuente.getHechos().stream())
-//                .forEach(hecho -> hecho.setVerificado(true));
+//                .filter(hecho -> this.criterios.stream()
+//                        .allMatch(criterio -> criterio.cumpleConCriterio(hecho)))
+//                .collect(Collectors.groupingBy(
+//                        Function.identity(),
+//                        Collectors.counting() // cuenta cuantas veces aparece cada hecho en el stream, nos tienen que decir cuando están repetidos para cambiarlo
+//                ));
+//
+//        int totalFuentes = this.fuentes.size();
+//
+//        return conteo.entrySet().stream() // itera todos los hechos
+//                .filter(entry -> {
+//                    long cantidad = entry.getValue(); // obtiene la cantidad de menciones del hecho
+//                    switch (algoritmo) {
+//                        case "multiplesMenciones":
+//                            return cantidad > 1;
+//                        case "mayoriaSimple":
+//                            return cantidad > totalFuentes / 2;
+//                        case "absoluta":
+//                            return cantidad == totalFuentes;
+//                        default:
+//                            return false; // algoritmo no reconocido
+//                    }
+//                })
+//                .map(Map.Entry::getKey) // obtiene el hecho de la entrada del mapa
+//                .toList();
 //    }
-
-    // aplicarVerifiacionAlgoritmo
-    /*
-    public void aplicarVerificacionAlgoritmo(String algoritmo) {
-        Map<Hecho, Long> conteo = this.fuentes.stream()
-                .flatMap(fuente -> fuente.getHechos().stream())
-                .filter(hecho -> this.criterios.stream()
-                        .allMatch(criterio -> criterio.cumpleConCriterio(hecho)))
-                .collect(Collectors.groupingBy(
-                        Function.identity(),
-                        Collectors.counting()
-                ));
-
-        int totalFuentes = this.fuentes.size();
-
-        conteo.entrySet().stream()
-                .filter(entry -> {
-                    long cantidad = entry.getValue();
-                    switch (algoritmo) {
-                        case "multiplesMenciones":
-                            return cantidad > 1;
-                        case "mayoriaSimple":
-                            return cantidad > totalFuentes / 2;
-                        case "absoluta":
-                            return cantidad == totalFuentes;
-                        default:
-                            return false;
-                    }
-                })
-                .map(Map.Entry::getKey)
-                .forEach(hecho -> hecho.setVerificado(true));
-    }
-
-     */
-
-    public List<Hecho> mostrarHechosPorConsenso(String algoritmo) {
-        // Mapa que cuenta menciones de cada hecho
-        Map<Hecho, Long> conteo = this.fuentes.stream()
-                .flatMap(fuente -> fuente.getHechos().stream())
-                .filter(hecho -> this.criterios.stream()
-                        .allMatch(criterio -> criterio.cumpleConCriterio(hecho)))
-                .collect(Collectors.groupingBy(
-                        Function.identity(),
-                        Collectors.counting() // cuenta cuantas veces aparece cada hecho en el stream, nos tienen que decir cuando están repetidos para cambiarlo
-                ));
-
-        int totalFuentes = this.fuentes.size();
-
-        return conteo.entrySet().stream() // itera todos los hechos
-                .filter(entry -> {
-                    long cantidad = entry.getValue(); // obtiene la cantidad de menciones del hecho
-                    switch (algoritmo) {
-                        case "multiplesMenciones":
-                            return cantidad > 1;
-                        case "mayoriaSimple":
-                            return cantidad > totalFuentes / 2;
-                        case "absoluta":
-                            return cantidad == totalFuentes;
-                        default:
-                            return false; // algoritmo no reconocido
-                    }
-                })
-                .map(Map.Entry::getKey) // obtiene el hecho de la entrada del mapa
-                .toList();
-    }
 
 }

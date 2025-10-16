@@ -348,6 +348,10 @@ public class AgregadorService {
         return coleccionRepository.save(coleccionAModificadar);
     }
 
+    public List<SolicitudEliminacion> encontrarSolicitudes() {
+        return this.solicitudesRepository.findAll();
+    }
+
     public Integer crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
 
         SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion();
@@ -355,7 +359,7 @@ public class AgregadorService {
         nuevaSolicitudEliminacion.setJustificacion(solicitudDTO.getJustificacion());
 
         if(DetectorDeSpam.esSpam(nuevaSolicitudEliminacion.getJustificacion())) {
-            nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.RECHAZADA);
+            nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.SPAM);
         }
 
 //        if (!nuevaSolicitudEliminacion.esCorrecta()) {
@@ -435,6 +439,10 @@ public class AgregadorService {
                     boolean latOk = latitud == null || hecho.getUbicacion().getLatitud().equals(latitud);
                     boolean lonOk = longitud == null || hecho.getUbicacion().getLongitud().equals(longitud);
                     return latOk && lonOk;
+                })
+                .filter(hecho -> {
+                     SolicitudEliminacion solicitud = solicitudesRepository.findSolicitudEliminacionByHecho_Id(hecho.getId());
+                        return solicitud == null || solicitud.getEstado() != Estado_Solicitud.ACEPTADA;
                 })
                 .collect(Collectors.toList());
     }

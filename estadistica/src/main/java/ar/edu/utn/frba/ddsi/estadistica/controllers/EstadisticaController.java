@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.ddsi.estadistica.controllers;
 
 import ar.edu.utn.frba.ddsi.estadistica.models.entities.Categoria;
+import ar.edu.utn.frba.ddsi.estadistica.models.entities.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.estadistica.service.CSVService;
 import ar.edu.utn.frba.ddsi.estadistica.service.EstadisticaService;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,7 +87,14 @@ public class EstadisticaController {
     //¿Cuántas solicitudes de eliminación son spam?
     @GetMapping("/solicitudes/spam" )
     @Operation(summary = "Cuantas solicitudes de eliminacion son spam")
-    public Integer obtenerCantidadDeSolicitudesSpam() {
-        return this.estadisticaService.obtenerCantidadDeSolicitudesSpam();
+    public ResponseEntity<?> obtenerCantidadDeSolicitudesSpam(@RequestParam(required = false, defaultValue = "false") boolean mostrar, @RequestParam(required = false) String formato) {
+        List<SolicitudDTO> solicitudes = this.estadisticaService.obtenerCantidadDeSolicitudesSpam();
+        if (mostrar && formato == null){
+            return ResponseEntity.ok(solicitudes);
+        }
+        else if (mostrar && formato != null && formato.equalsIgnoreCase("csv")) {
+            return this.csvService.convertirACSV(solicitudes, "solicitudes-spam");
+        }
+        return ResponseEntity.ok(solicitudes.size());
     }
 }

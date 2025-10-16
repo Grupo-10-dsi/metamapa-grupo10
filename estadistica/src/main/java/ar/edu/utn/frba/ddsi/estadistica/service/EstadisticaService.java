@@ -1,9 +1,6 @@
 package ar.edu.utn.frba.ddsi.estadistica.service;
 
-import ar.edu.utn.frba.ddsi.estadistica.models.entities.AgregadorClient;
-import ar.edu.utn.frba.ddsi.estadistica.models.entities.Categoria;
-import ar.edu.utn.frba.ddsi.estadistica.models.entities.Coleccion;
-import ar.edu.utn.frba.ddsi.estadistica.models.entities.Ubicacion;
+import ar.edu.utn.frba.ddsi.estadistica.models.entities.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
@@ -152,8 +149,9 @@ public class EstadisticaService {
         return provincias;
     }
 
-    public Integer obtenerCantidadDeSolicitudesSpam() {
-        return this.agregadorClient.obtenerCantidadDeSolicitudesSpam();
+    public List<SolicitudDTO> obtenerCantidadDeSolicitudesSpam() {
+
+        return this.agregadorClient.obtenerSolicitudesSpam();
     }
 
     public String provinciaMasFrecuente(List<String> provincias) {

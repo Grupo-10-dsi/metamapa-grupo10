@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,10 @@ public class SolicitudEliminacion {
     public boolean esCorrecta() {
         // Justificacion con minimo 500 caracteres
         return justificacion != null && justificacion.length() >= 500;
+    }
+
+    public SolicitudDTO toDTO() {
+        return new SolicitudDTO(this.getId(), this.hecho.getId(), this.getJustificacion(), this.getEstado());
     }
 
 }

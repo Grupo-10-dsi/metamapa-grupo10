@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.repositories;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,10 @@ import java.util.List;
 @Repository
 public interface SolicitudesRepository extends JpaRepository<SolicitudEliminacion, Integer> {
     SolicitudEliminacion findSolicitudEliminacionById(Integer id);
+
+    SolicitudEliminacion findSolicitudEliminacionByHecho_Id(Integer hechoId);
+
+    List<SolicitudEliminacion> findAllByEstado(Estado_Solicitud estado);
     /*
     private final List<SolicitudEliminacion> solicitudes = new ArrayList<>();
 
