@@ -4,6 +4,7 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Algoritmo_Consen
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.FuenteEstatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.criterios.*;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.detectorDeSpam.DetectorDeSpam;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.CriterioDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
@@ -352,9 +353,9 @@ public class AgregadorService {
 
         nuevaSolicitudEliminacion.setJustificacion(solicitudDTO.getJustificacion());
 
-//        if(DetectorDeSpam.esSpam(nuevaSolicitudEliminacion.getJustificacion())) {
-//            nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.RECHAZADA);
-//        }
+        if(DetectorDeSpam.esSpam(nuevaSolicitudEliminacion.getJustificacion())) {
+            nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.RECHAZADA);
+        }
 
 //        if (!nuevaSolicitudEliminacion.esCorrecta()) {
 //            throw new IllegalArgumentException("La justificación debe tener al menos 500 caracteres.");
