@@ -22,7 +22,7 @@ function NavBar() {
                         onSelect={(selectedKey) => navigate( `${selectedKey}`)}
                     >
                         <Nav.Item>
-                            <Nav.Link href="/hecho" >Buscar</Nav.Link>
+                            <Nav.Link href="/busqueda" >Buscar</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link href="/estadisticas" >Estadisticas</Nav.Link>

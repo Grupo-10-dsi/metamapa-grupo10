@@ -1,0 +1,57 @@
+.fondo-busqueda {
+    background-color: #efefef;
+    min-height: 70vh;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.fondo-mapa {
+    background-color: #ffffff;
+    width: 100%;
+}
+
+.contenido-busqueda h2 {
+    width: 636px;
+    height: 154px;
+    font-family: 'Inter', Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    color: #335c67;
+    letter-spacing: 0;
+    line-height: normal;
+    margin: 0 auto;
+}
+
+.caja-busqueda {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    border-radius: 30px;
+    height: 85px;
+    width: 1110px;
+    margin: 80px auto 0;
+    padding: 0 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-busqueda {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 18px;
+    color: #333;
+    background-color: transparent;
+    height: 100%;
+}
+
+.icono-busqueda {
+    color: #aaa;
+    font-size: 18px;
+    margin-right: 13px;
+}
+
+.texto-placeholder {
+    color: #aaa;
+    font-size: 16px;
+}

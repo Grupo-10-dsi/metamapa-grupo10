@@ -4,6 +4,7 @@ import Layout from "./features/layout/layout.jsx";
 import Perfil from "./features/perfil-page/perfil.jsx";
 import Login from "./features/login-page/log-in.jsx";
 import DetailPage from "./features/detail-page/detail-page.jsx";
+import Busqueda from "./features/busqueda-page/busqueda.jsx";
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/hecho" element={<DetailPage />} />
                 <Route path="/perfil" element={<Perfil />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/busqueda" element={<Busqueda />} />
             </Route>
 
         </Routes>
