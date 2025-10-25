@@ -1,34 +1,15 @@
-.custom-navbar {
-    background-color: #FFF7BB; /* Tu color personalizado */
+[data-bs-theme="prueba"] {
+    --bs-navbar-color: #DA9B3C; /* color de texto normal */
+    --bs-navbar-hover-color: #DA9B3C;
+    --bs-navbar-active-color: #DA9B3C; /* color de link activo */
+    --bs-navbar-brand-color: #000; /* color del brand */
+    --bs-navbar-brand-hover-color: #000;
+    --bs-navbar-bg: #2a002a; /* fondo del navbar */
+    --bs-navbar-border-color: #ff64a6; /* borde inferior opcional */
+    background-color: #FFF7BB;
 }
 
-.custom-container {
-    display: flex;
-}
-
-
-
-.custom-button {
-    padding: 10px;
-    border-radius: 10px;
-    color: #DA9B3C !important;
-
-}
-
-.custom-button:hover {
-
-    background-color: rgba(218,155,60,29);
-}
-
-.custom-button-sesion {
-    padding: 10px;
-    border-radius: 10px;
-    color: white;
-    background-color: #e08e0b;
-}
-
-.custom-button-sesion:hover {
-    background-color: #c47f04;
-
+[data-bs-theme="prueba"] .nav-link:hover {
+    background-color: rgba(218, 155, 60, .29);
 }
 
