@@ -1,0 +1,83 @@
+.fondo-estadisticas {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 80px 0;
+}
+
+.titulo-estadisticas {
+    font-family: 'Inter', Helvetica, sans-serif;
+    font-weight: 600;
+    color: #335c67;
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.lista-estadisticas {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.card-estadistica {
+    width: 70%;
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+}
+
+.card-estadistica.activa {
+    z-index: 1000;
+    transform: translateY(-2px);
+}
+
+.card-estadistica:hover {
+    transform: scale(1.02);
+}
+
+.card-estadistica .card-title {
+    font-weight: 600;
+    color: #335c67;
+}
+
+.formulario-estadistica {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 10px;
+    position: relative;
+    overflow: visible;
+}
+
+.input-con-icono {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.icono-formulario {
+    position: absolute;
+    left: 10px;
+    color: #999;
+}
+
+.input-con-icono input {
+    padding-left: 35px;
+}
+
+.sugerencias-lista {
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    z-index: 2000;
+    max-height: 200px;
+    overflow-y: auto;
+    top: calc(100% + 8px);
+    left: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+

@@ -7,6 +7,7 @@ import DetailPage from "./features/detail-page/detail-page.jsx";
 import Busqueda from "./features/busqueda-page/busqueda.jsx";
 import RegistrarHecho from "./features/registrar-hecho/registrar-hecho.jsx";
 import './App.css';
+import Estadisticas from "./features/estadisticas-page/estadisticas";
 
 function App() {
 
@@ -21,7 +22,8 @@ function App() {
                 <Route path="/perfil" element={<Perfil />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/busqueda" element={<Busqueda />} />
-                <Route path="registrar-hecho" element={<RegistrarHecho/>} />
+                <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
+                <Route path="/estadisticas" element={<Estadisticas/>} />
             </Route>
 
         </Routes>
