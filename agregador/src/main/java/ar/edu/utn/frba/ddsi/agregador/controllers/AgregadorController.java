@@ -38,6 +38,12 @@ public class AgregadorController {
         return this.agregadorService.crearColeccion(coleccion);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/hechos/{id}")
+    public Hecho obtenerHechoPorId(@PathVariable Integer id) {
+        return this.agregadorService.obtenerHechoPorId(id);
+    }
+
     /**
      * Devuelve una lista de colecciones dependiendo de los parametros enviados en la req.
      * Si no se envian parametros, devuelve todas las colecciones.

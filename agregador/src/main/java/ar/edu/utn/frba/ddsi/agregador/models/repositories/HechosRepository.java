@@ -1,12 +1,9 @@
 package ar.edu.utn.frba.ddsi.agregador.models.repositories;
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoSearchDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionParaMapaDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.importador.Importador;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -37,6 +33,8 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
     List<UbicacionParaMapaDTO> obtenerUbicaciones();
     //List<Hecho> findHechosByFuente(Fuente fuente);
 
+
+    Hecho findHechoById(Integer id);
 
     /**
      * Por ahora las fuentes se hardcodean aca. Eventualmente se

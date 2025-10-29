@@ -45,6 +45,8 @@ public class HechoDTO {
         this.origenFuente = origenFuente;
         this.contribuyente = contribuyente;
 
+
+
     }
 
     public Contribuyente getContribuyente() {

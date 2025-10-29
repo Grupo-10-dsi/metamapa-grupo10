@@ -235,6 +235,10 @@ public class AgregadorService {
         return this.hechosFiltrados(hechos, filtros);
     }
 
+    public Hecho obtenerHechoPorId(Integer id) {
+        return this.hechosRepository.findHechoById(id);
+    }
+
     public List<Hecho> encontrarHechosPorColeccion(
             Integer id,
             Filtro filtros

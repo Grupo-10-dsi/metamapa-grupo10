@@ -16,12 +16,16 @@ L.Icon.Default.mergeOptions({
 });
 
 function Mapa ({hechosMapa}) {
+    const center = hechosMapa[0]
+        ? { lat: hechosMapa[0].latitud, lng: hechosMapa[0].longitud }
+        : { lat: -34.37049232747865, lng: -58.90407374255551 };
+
     return(<Card className="shadow-lg" style={{marginTop: '50px', marginBottom: '50px'}}>
         <Card.Body style={{padding: '0px'}}>
             <h4 className="text-center pt-3 pb-3 mb-0">Mapa de hechos registrados</h4>
             <div style={{height: '450px', width: '100%'}}>
                 <MapContainer
-                    center={{lat: '-34.37049232747865', lng: '-58.90407374255551'}}
+                    center={center}
                     zoom={10}>
                     <TileLayer
                         url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
