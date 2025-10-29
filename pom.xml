@@ -15,6 +15,7 @@
         <module>agregador</module>
         <module>normalizador</module>
         <module>estadistica</module>
+        <module>api-gateway</module>
     </modules>
     <groupId>ar.edu.utn.frba.ddsi</groupId>
     <artifactId>metamapa</artifactId>

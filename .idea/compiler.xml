@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="dinamica" />
+        <module name="api-gateway" />
         <module name="proxy" />
         <module name="estatica" />
         <module name="agregador" />
@@ -18,7 +19,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
         </processorPath>
         <module name="estadistica" />
@@ -31,6 +31,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="agregador" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
       <module name="dinamica" options="-parameters" />
       <module name="estadistica" options="-parameters" />
       <module name="estatica" options="-parameters" />
