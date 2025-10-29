@@ -3,7 +3,7 @@ import homeBG from "../../images/home_background.jpg";
 import { Container } from "react-bootstrap";
 import SourceCard from "./components/source-card.jsx";
 import Mapa from "./components/mapa.jsx";
-
+import ApiAgregador from "../../api/api-agregador";
 
 function HomePage() {
     const [scale, setScale] = useState(1);
@@ -13,6 +13,19 @@ function HomePage() {
     const sourcesSectionRef = React.useRef(null);
 
     const overlayColor = 'rgba(217,210,181,0.45)';
+
+    const [hechosMapa, setHechosMapa] = useState([])
+    const [loadingHechos, setLoadingHechos] = useState(true)
+
+    useEffect(() => {
+        ApiAgregador.obtenerUbicaciones()
+            .then((data) => {
+                    setHechosMapa(data)
+                    setLoadingHechos(false)
+                    console.log(data)
+                }
+            )
+    }, [])
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -98,7 +111,7 @@ function HomePage() {
 
             {/* --- SECCIÓN 2: MAPA --- */}
             <Container style={{ opacity: mapOpacity, transition: 'opacity 0.5s ease-in' }}>
-                <Mapa />
+                {loadingHechos ? <p> cargando hechos </p> : <Mapa hechosMapa={hechosMapa} />}
             </Container>
 
             {/* --- SECCIÓN 3: FUENTES --- */}

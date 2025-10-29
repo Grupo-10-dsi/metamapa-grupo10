@@ -8,6 +8,7 @@ import Busqueda from "./features/busqueda-page/busqueda.jsx";
 import RegistrarHecho from "./features/registrar-hecho/registrar-hecho.jsx";
 import './App.css';
 import Estadisticas from "./features/estadisticas-page/estadisticas";
+import CrearColeccion from "./features/crear-coleccion/crear-coleccion.jsx";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/busqueda" element={<Busqueda />} />
                 <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
                 <Route path="/estadisticas" element={<Estadisticas/>} />
+                <Route path="/crear-coleccion" element={<CrearColeccion/>} />
             </Route>
 
         </Routes>

@@ -1,13 +1,11 @@
 package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ActualizacionColeccionDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoSearchDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.*;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
@@ -15,7 +13,9 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequestMapping("/agregador")
@@ -166,6 +166,13 @@ public class AgregadorController {
     @GetMapping("/search")
     public List<HechoSearchDTO> busquedaTextoLibre(@RequestParam(required = false) String texto) {
         return agregadorService.buscarTextoLibre(texto);
+    }
+
+    /* Ubicaciones para mapa front */
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/hechos/ubicaciones")
+    public List<UbicacionParaMapaDTO> obtenerUbicaciones() {
+        return this.agregadorService.obtenerUbicaciones();
     }
 
 }

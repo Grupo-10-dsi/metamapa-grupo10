@@ -12,33 +12,39 @@ class ApiAgregador {
 
 
     async obtenerHecho(id) {
-        return await this.axiosInstance
-            .get(`/hechos/${id}`)
-            .then((response) => {
-                return response.data
-            })
-            .catch((error) => {
-                console.error('Error al obtener el hecho:', error)
-                throw error
-            })
+        try {
+            const response = await this.axiosInstance.get(`/hechos/${id}`)
+            return response.data
+        } catch (error) {
+            console.error('Error al obtener el hecho:', error)
+            throw error
+        }
     }
 
     async obtenerHechos(filtros) {
-        return await this.axiosInstance
-            .get('/hechos', {
-                params: filtros,
-                paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
-            })
-            .then((response) => {
-                return response.data
-            })
-            .catch((error) => {
-                console.error('Error al buscar hechos:', error)
-                throw error
-            })
+        try {
+            const response = await this.axiosInstance.get('/hechos', {
+                    params: filtros,
+                    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+                })
+            return response.data
+        } catch(error) {
+            console.error('Error al buscar hechos:', error)
+            throw error
+        }
+    }
+
+    async obtenerUbicaciones() {
+        try {
+            const response = await this.axiosInstance.get('/hechos/ubicaciones')
+            return response.data
+        } catch(error) {
+            console.error('Error al buscar ubicaciones de hechos:', error)
+            throw error
+        }
     }
 
 
-
-
 }
+const api = new ApiAgregador()
+export default api

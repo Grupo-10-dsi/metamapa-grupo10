@@ -10,12 +10,14 @@ import {
     Tab,
     Spinner
 } from 'react-bootstrap';
+import MapaInteractivo from "../detail-page/components/mapa-interactivo/mapa-interactivo";
 
 function RegistrarHecho() {
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
         categoria: '',
+        categoria_nueva: '',
         latitud: '',
         longitud: '',
         fechaAcontecimiento: '',
@@ -50,12 +52,42 @@ function RegistrarHecho() {
         if (isSubmitting) return;
 
         setIsSubmitting(true);
+        let tipo = "multimedia"
 
-        console.log("Datos del formulario:", formData);
+        if (formData.cuerpo !== '') {
+            tipo = "textual"
+        }
+        const hechoData = {
+            tipo: tipo,
+            titulo: formData.titulo,
+            descripcion: formData.descripcion,
+            categoria: {
+                detalle: formData.categoria_nueva
+            },
+            ubicacion: {
+                latitud: formData.latitud,
+                longitud: formData.longitud
+            },
+            fechaAcontecimiento: formData.fechaAcontecimiento,
+            etiquetas: formData.etiquetas.split(',').map(tag => tag.trim()),
+            cuerpo: formData.cuerpo,
+            contenidoMultimedia: formData.contenidoMultimedia
+
+        }
+        console.log("Datos del hecho:", hechoData);
+
         await new Promise(resolve => setTimeout(resolve, 2000));
         setIsSubmitting(false);
         console.log("Hecho registrado con éxito");
     };
+
+    const handleMapChange = (coordenadas) => {
+        setFormData(prevData => ({
+            ...prevData,
+            latitud: coordenadas.latitud,
+            longitud: coordenadas.longitud
+        }));
+    }
 
     const mockCategorias = [
         { id: 1, nombre: 'Incendio' },
@@ -81,7 +113,6 @@ function RegistrarHecho() {
                                     {/* --- 1. Información Principal --- */}
                                     <h5 className="mb-3">Información Principal</h5>
 
-                                    {/* ... (Título y Categoría sin cambios) ... */}
                                     <Row>
                                         <Col md={6}>
                                             <Form.Group className="mb-3" controlId="formTitulo">
@@ -98,7 +129,7 @@ function RegistrarHecho() {
                                         </Col>
                                     </Row>
 
-                                    {/* Campo condicional de Descripción Breve */}
+                                    {/* Campo condicional de Descripción */}
                                     {activeTab === 'cuerpo' && (
                                         <Form.Group className="mb-3" controlId="formDescripcionBreve">
                                             <Form.Label>Descripción Breve *</Form.Label>
@@ -109,7 +140,6 @@ function RegistrarHecho() {
                                                 placeholder="Describa brevemente lo que sucedió..."
                                                 value={formData.descripcion}
                                                 onChange={handleChange}
-                                                // CAMBIO 1: Hacer 'required' dinámico
                                                 required={activeTab === 'cuerpo'}
                                             />
                                         </Form.Group>
@@ -127,14 +157,29 @@ function RegistrarHecho() {
                                             {mockCategorias.map(cat => (
                                                 <option key={cat.id} value={cat.id}>{cat.nombre}</option>
                                             ))}
+                                            <option value="OTRA">-- Agregar nueva categoría --</option>
                                         </Form.Select>
                                     </Form.Group>
+
+                                    {/* Campo condicional para la nueva categoría */}
+                                    {formData.categoria === 'OTRA' && (
+                                        <Form.Group className="mb-3" controlId="formCategoriaNueva">
+                                            <Form.Label>Nombre de la nueva categoría *</Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                name="categoria_nueva"
+                                                value={formData.categoria_nueva}
+                                                onChange={handleChange}
+                                                placeholder="Ej: Vandalismo"
+                                                required
+                                            />
+                                        </Form.Group>
+                                    )}
 
                                     <hr className="my-4" />
 
                                     {/* --- 2. ¿Cuándo y Dónde? --- */}
                                     <h5 className="mb-3">¿Cuándo y Dónde?</h5>
-                                    {/* ... (Campos de fecha y ubicación sin cambios) ... */}
                                     <Form.Group className="mb-3" controlId="formFecha">
                                         <Form.Label>Fecha y Hora del Acontecimiento *</Form.Label>
                                         <Form.Control
@@ -145,35 +190,52 @@ function RegistrarHecho() {
                                             required
                                         />
                                     </Form.Group>
-                                    <Row>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3" controlId="formLatitud">
-                                                <Form.Label>Latitud *</Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    name="latitud"
-                                                    placeholder="-34.5811"
-                                                    value={formData.latitud}
-                                                    onChange={handleChange}
-                                                    required
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3" controlId="formLongitud">
-                                                <Form.Label>Longitud *</Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    name="longitud"
-                                                    placeholder="-58.4377"
-                                                    value={formData.longitud}
-                                                    onChange={handleChange}
-                                                    required
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
+                                    <Tabs
+                                        defaultActiveKey="manual"
+                                        id="location-tabs"
+                                        className="mb-3"
+                                    >
+                                        <Tab eventKey="manual" title="Ingreso Manual">
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3" controlId="formLatitud">
+                                                        <Form.Label>Latitud *</Form.Label>
+                                                        <Form.Control
+                                                            type="number"
+                                                            name="latitud"
+                                                            placeholder="-34.5811"
+                                                            value={formData.latitud} // Controlado por el estado
+                                                            onChange={handleChange}
+                                                            required
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3" controlId="formLongitud">
+                                                        <Form.Label>Longitud *</Form.Label>
+                                                        <Form.Control
+                                                            type="number"
+                                                            name="longitud"
+                                                            placeholder="-58.4377"
+                                                            value={formData.longitud} // Controlado por el estado
+                                                            onChange={handleChange}
+                                                            required
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                        </Tab>
 
+                                        <Tab eventKey="mapa" title="Seleccionar en Mapa" mountOnEnter>
+                                            <MapaInteractivo
+                                                value={{ latitud: formData.latitud, longitud: formData.longitud }}
+                                                onChange={handleMapChange}
+                                            />
+                                            <Form.Text className="text-muted">
+                                                Haz clic en el mapa para establecer la latitud y longitud.
+                                            </Form.Text>
+                                        </Tab>
+                                    </Tabs>
 
                                     <hr className="my-4" />
 
@@ -196,7 +258,6 @@ function RegistrarHecho() {
                                                     placeholder="Describa brevemente lo que sucedió..."
                                                     value={formData.descripcion}
                                                     onChange={handleChange}
-                                                    // CAMBIO 2: Hacer 'required' dinámico
                                                     required={activeTab === 'multimedia'}
                                                 />
                                             </Form.Group>
@@ -221,7 +282,6 @@ function RegistrarHecho() {
                                                     placeholder="Escriba aquí el reporte detallado..."
                                                     value={formData.cuerpo}
                                                     onChange={handleChange}
-                                                    // CAMBIO 3: Hacer 'required' dinámico
                                                     required={activeTab === 'cuerpo'}
                                                 />
                                             </Form.Group>
@@ -233,7 +293,6 @@ function RegistrarHecho() {
 
                                     {/* --- 4. Detalles Adicionales --- */}
                                     <h5 className="mb-3">Detalles Adicionales</h5>
-                                    {/* ... (Campo de etiquetas sin cambios) ... */}
                                     <Form.Group className="mb-3" controlId="formEtiquetas">
                                         <Form.Label>Etiquetas</Form.Label>
                                         <Form.Control
@@ -250,7 +309,6 @@ function RegistrarHecho() {
 
                                     {/* --- 5. Botón de Envío --- */}
                                     <div className="d-grid mt-5">
-                                        {/* ... (Lógica del botón sin cambios) ... */}
                                         <Button
                                             variant="warning"
                                             type="submit"

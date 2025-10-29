@@ -2,7 +2,9 @@ package ar.edu.utn.frba.ddsi.agregador.models.repositories;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoSearchDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionParaMapaDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.importador.Importador;
 
@@ -27,6 +29,12 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
                     "   ORDER BY relevancia DESC", nativeQuery = true)
     List<HechoSearchDTO> findByTexto(@Param("texto") String texto);
 
+    @Query( value = """
+            SELECT h.id, h.descripcion, h.latitud, h.longitud
+            FROM hecho h
+        """,
+            nativeQuery = true)
+    List<UbicacionParaMapaDTO> obtenerUbicaciones();
     //List<Hecho> findHechosByFuente(Fuente fuente);
 
 

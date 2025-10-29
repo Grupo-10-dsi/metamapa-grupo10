@@ -1,4 +1,4 @@
-.fondo-estadisticas {
+cd.fondo-estadisticas {
     background-color: #f8f9fa;
     min-height: 100vh;
     padding: 80px 0;
@@ -50,6 +50,7 @@
     position: relative;
     overflow: visible;
 }
+
 
 .input-con-icono {
     display: flex;
