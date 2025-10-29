@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Spinner, Carousel, Row, Col, Badge, Button } from 'react-bootstrap';
 import { hechomockeado } from "./hechomockeado";
 import VentanaFlotante from './components/ventana-flotante/ventana-flotante.jsx';
+import MapaInteractivo from './components/mapa-interactivo/mapa-interactivo.jsx';
 
 function DetailPage() {
     const [hecho, setHecho] = useState(null);
@@ -39,7 +40,6 @@ function DetailPage() {
         return new Date(fechaISO).toLocaleString();
     };
 
-    // 2. Reactivé tu función formatOrigen
     const formatOrigen = (origen) => {
         if (origen === 'Estatica') return 'Carga Manual';
         return origen || 'No especificado';
@@ -93,7 +93,6 @@ function DetailPage() {
                         <h4>Detalles del Reporte</h4>
 
                         <Row className="mt-3">
-                            {/* ... (Col 1 y 2 sin cambios) ... */}
                             <Col md={6} className="mb-3">
                                 <p className="mb-0 fs-5">
                                     <span title="Fecha de Carga">📅</span> <strong>Fecha de Carga:</strong>
@@ -117,9 +116,8 @@ function DetailPage() {
                                 <p className="mb-0 fs-5">
                                     <span title="Fuente del Reporte">💻</span> <strong>Fuente:</strong>
                                 </p>
-                                {/* 2. (bis) La volví a usar aquí */}
                                 <p className="text-muted fs-5">
-                                    {formatOrigen(hecho.origen)}
+                                    {(hecho.origen)}
                                 </p>
                             </Col>
 
