@@ -1,18 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Container, Card, Button, Form, ListGroup } from "react-bootstrap";
-import "./estadisticas.css";
 import { FaSearch } from "react-icons/fa";
+import ContadorElementos from "./contadorElementos.jsx";
+import "./estadisticas.css";
 
 function Estadisticas() {
     const [seleccionada, setSeleccionada] = useState(null);
     const [busqueda, setBusqueda] = useState("");
     const [sugerencias, setSugerencias] = useState([]);
     const [campoSeleccionado, setCampoSeleccionado] = useState("");
-
-    // Esto lo uso para que cuando clickeas afuera del formulario, se cierre el desplegable de sugerencias
     const contenedorRef = useRef(null);
 
-    // Mock solo para ver como se veria el autocompletado
     const colecciones = [
         "Hechos ambientales 2024",
         "Violencia de género",
@@ -62,7 +60,7 @@ function Estadisticas() {
     useEffect(() => {
         const manejarClickFuera = (event) => {
             if (contenedorRef.current && !contenedorRef.current.contains(event.target)) {
-                setSugerencias([]); // Cierra el desplegable
+                setSugerencias([]);
             }
         };
         document.addEventListener("mousedown", manejarClickFuera);
@@ -99,6 +97,9 @@ function Estadisticas() {
                                 </ListGroup>
                             )}
                         </Form.Group>
+
+                        <ContadorElementos />
+
                         <Button variant="primary" className="mt-3">Consultar</Button>
                     </Form>
                 );
@@ -132,19 +133,27 @@ function Estadisticas() {
                                 </ListGroup>
                             )}
                         </Form.Group>
+
+                        <ContadorElementos />
+
                         <Button variant="primary" className="mt-3">Consultar</Button>
                     </Form>
                 );
 
             default:
-                return <Button variant="primary" className="mt-2">Consultar</Button>;
+                return (
+                    <div className="text-center mt-3">
+                        <ContadorElementos />
+                        <Button variant="primary" className="mt-3">Consultar</Button>
+                    </div>
+                );
         }
     };
 
     return (
         <div className="fondo-estadisticas">
             <Container className="estadisticas-container">
-                <h2 className="titulo-estadisticas">Explorá algunas estadisticas de MetaMapa</h2>
+                <h2 className="titulo-estadisticas">Explorá algunas estadísticas de MetaMapa</h2>
 
                 <div className="lista-estadisticas">
                     {estadisticas.map((item) => (
