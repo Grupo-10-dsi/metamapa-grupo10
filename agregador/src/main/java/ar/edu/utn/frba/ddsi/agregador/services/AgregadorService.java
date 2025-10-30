@@ -75,10 +75,10 @@ public class AgregadorService {
         Fuente fuenteExistente = fuentesRepository.findFuenteByNombre("estatica");
         if(fuenteExistente == null){
             FuenteEstatica fuenteEstatica = new FuenteEstatica( "ESTATICA", "http://localhost:8081/api/estatica/hechos", new ArrayList<>());
-            //Fuente dinamica = new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA");
+            Fuente dinamica = new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA");
             //Fuente proxy = new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY");
             fuentesRepository.saveAndFlush(fuenteEstatica);
-            //fuentesRepository.saveAndFlush(dinamica);
+            fuentesRepository.saveAndFlush(dinamica);
             //fuentesRepository.saveAndFlush(proxy);
         }
 
@@ -351,6 +351,12 @@ public class AgregadorService {
 
     public List<SolicitudEliminacion> encontrarSolicitudes() {
         return this.solicitudesRepository.findAll();
+    }
+
+    public List<SolicitudEliminacion> encontrarSolicitudesPendientes(){
+        List<SolicitudEliminacion> solicitudes = this.solicitudesRepository.findAllByEstado(Estado_Solicitud.PENDIENTE);
+
+        return solicitudes;
     }
 
     public Integer crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {

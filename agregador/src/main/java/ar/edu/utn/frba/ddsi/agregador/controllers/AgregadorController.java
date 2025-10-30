@@ -47,6 +47,7 @@ public class AgregadorController {
      * Devuelve una lista de colecciones dependiendo de los parametros enviados en la req.
      * Si no se envian parametros, devuelve todas las colecciones.
      */
+
     @GetMapping("/colecciones")
     public List<Coleccion> obtenerColecciones(){
         return this.agregadorService.obtenerColecciones();
@@ -69,6 +70,7 @@ public class AgregadorController {
      * Elimina una coleccion del sistema a partir de su ID. No devuelve contenido.
      * Si no se encuentra la coleccion, devuelve un error 404.
      */
+
     @DeleteMapping("/colecciones/{id}")
     @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
     public void eliminarColeccion(@PathVariable Integer id) {
@@ -87,17 +89,18 @@ public class AgregadorController {
 
 
      //Endpoint para modificar coleccion
+
     @PatchMapping("/colecciones/{id}")
     public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
 
         if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
-            return this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
-        } else if (actualizacionColeccion.getUrls_fuente() != null) {
-            return this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
+            this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
+        } if (actualizacionColeccion.getUrls_fuente() != null) {
+            this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
         } else {
             throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
         }
-
+        return this.agregadorService.obtenerColeccion(id);
     }
 
 
@@ -148,6 +151,13 @@ public class AgregadorController {
         return agregadorService.encontrarSolicitudes();
     }
 
+    //  ENDPOINT PARA BUSCAR SOLICITUDES PENDIENTES
+
+    @GetMapping("/solicitudes/pendientes")
+    public List<SolicitudEliminacion> obtenerSolicitudesPendientes() {
+        return agregadorService.encontrarSolicitudesPendientes();
+    }
+
 
     // Endpoint para generar solicitudes de eliminacion de hechos le pega metamapa
     @PostMapping("/solicitudes")
@@ -156,6 +166,7 @@ public class AgregadorController {
     }
 
     // Endpoint para aceptar/rechazar solicitudes de eliminacion
+
     @PutMapping("/solicitudes/{id}")
     public SolicitudEliminacion modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
         return agregadorService.modificarEstadoSolicitud(id, nuevoEstado);

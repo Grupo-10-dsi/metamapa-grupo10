@@ -20,13 +20,13 @@ export default function Perfil ({mostrarEnPantalla}){
                 <BotonesOpciones activo={mostrarEnPantalla}></BotonesOpciones>
             </Container>
             <Container as="div"  fluid className="contenedor-informacion">
-            <Container as="div" fluid className="contenedor-tarjetas">
-                {mostrarEnPantalla === 'solicitudes' ? (
-                    <MostrarSolicitudes />
-                ) : mostrarEnPantalla === 'colecciones' ? (
-                    <MostrarColecciones/>
-                ) : null}
-            </Container>
+                <Container as="div" fluid className="contenedor-tarjetas">
+                    {mostrarEnPantalla === 'solicitudes' ? (
+                        <MostrarSolicitudes />
+                    ) : mostrarEnPantalla === 'colecciones' ? (
+                        <MostrarColecciones/>
+                    ) : null}
+                </Container>
             </Container>
         </Container>
 

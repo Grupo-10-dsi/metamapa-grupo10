@@ -1,0 +1,130 @@
+.ventana-flotante-confirmacion {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    color: #222;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+    min-width: 280px;
+    text-align: center;
+    font-size: 1.1rem;
+    z-index: 1001;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    animation: modalFadeIn 0.3s ease-out;
+    transform: translate(-50%, -50%) scale(1);
+    transition: all 0.3s ease-out;
+}
+
+.ventana-flotante-confirmacion-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+
+    background: rgba(0, 0, 0, 0.5);
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.boton-cerrar-ventana {
+    background: #DA9B3C;
+    color: black;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton-cerrar-ventana:hover {
+    background: rgb(211, 192, 84);
+}
+
+.boton-confirmar-reserva {
+    background: #DA9B3C;
+    color: black;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-right: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton-confirmar-reserva:hover {
+    background: rgb(211, 192, 84);
+}
+
+.motivo-texto {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+@media screen and (max-width: 600px) {
+    .ventana-flotante-confirmacion {
+        padding: 1.5rem;
+        margin: 0;
+        min-width: unset;
+        width: calc(100vw - 2rem);
+        max-width: calc(100vw - 2rem);
+        font-size: 1rem;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .ventana-flotante-confirmacion h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+
+    .boton-confirmar-reserva,
+    .boton-cerrar-ventana {
+        width: 100%;
+        margin: 0.5rem 0;
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .boton-confirmar-reserva {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .motivo-texto {
+        margin: 1rem 0;
+    }
+}

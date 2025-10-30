@@ -1,0 +1,53 @@
+.contenedor-tarjeta-solicitud {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centra horizontalmente */
+    justify-content: center; /* centra verticalmente dentro de la card */
+    text-align: center; /* asegura que el texto esté centrado */
+    padding: 16px;
+    gap: 8px; /* espacio entre h2, h3 y botones */
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    word-break: break-word;
+    margin: 20px 0; /* evita overflow en textos largos */
+    width: 100%;
+}
+
+/* Título principal (hecho.titulo) - más grande */
+.contenedor-tarjeta-solicitud h2 {
+    margin: 0;
+    font-weight: 700;
+    /* tamaño responsive: entre 1.25rem y 1.8rem */
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+    line-height: 1.2;
+    color: #111827;
+}
+
+/* Justificación - centrada y más chica que el título */
+.contenedor-tarjeta-solicitud h3 {
+    margin: 0;
+    font-weight: 500;
+    /* tamaño más pequeño y responsive */
+    font-size: clamp(0.9rem, 1.6vw, 1rem);
+    line-height: 1.3;
+    color: #6b7280; /* gris para diferenciar visualmente */
+    white-space: pre-line; /* respeta saltos de línea si vienen desde backend */
+    max-width: 90%;
+}
+
+/* Ajuste para el contenedor de botones para que no interfiera con el centrado */
+.contenedor-botoness {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    justify-content: center;
+    width: 100%;
+}
+
+.fondo-gris{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+}

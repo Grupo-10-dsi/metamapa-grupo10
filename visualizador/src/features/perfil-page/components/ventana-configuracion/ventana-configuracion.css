@@ -1,0 +1,43 @@
+.vc-titulo {
+    text-transform: none;
+    font-weight: 700;
+    text-align: center;
+    margin: 8px 0;
+    font-size: 1rem;
+    color: #111827;
+}
+
+.vc-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.vc-btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #cfcfcf;
+    background: #f3f4f6;
+    color: #111827;
+    cursor: pointer;
+    min-width: 140px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.vc-btn:hover {
+    background: #e6e7e9;
+}
+
+.vc-btn.selected {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+.vc-btn.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}

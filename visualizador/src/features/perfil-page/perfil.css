@@ -15,7 +15,11 @@
     background-color: white ;
     max-width: 30%;
     align-items: center;
+    box-shadow: 0 6px 6px rgba(0,1,0,0.12);
+
+
 }
+
 
 
 .contenedor-informacion{
@@ -95,6 +99,8 @@
     align-items: center;
 
 }
+
+
 
 
 
