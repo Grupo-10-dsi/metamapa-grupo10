@@ -1,14 +1,16 @@
 package ar.edu.utn.frba.ddsi.dinamica.services;
 
+import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.ContribuyenteDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.HechoMultimedia;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.HechoTextual;
+import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Contribuyente;
+
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Anonimo;
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Registrado;
+
 import ar.edu.utn.frba.ddsi.dinamica.models.repositories.*;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Estado_Solicitud;
 
@@ -21,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,26 +52,32 @@ public class DinamicaService {
     }
 
 
-    @PostConstruct
-    private void inicializarContribuyente() {
-        Contribuyente anonimoExistente = contribuyenteRepository.findById(1).orElse(null);
+//    @PostConstruct
+//    private void inicializarContribuyente() {
+//        Contribuyente anonimoExistente = contribuyenteRepository.findById(1).orElse(null);
+//
+//        if (anonimoExistente == null) {
+//            // Crear e insertar el anónimo con ID manual
+//            Anonimo anonimo = Anonimo.getInstance();
+//            contribuyenteRepository.saveAndFlush(anonimo);
+//        }
+//    }
 
-        if (anonimoExistente == null) {
-            // Crear e insertar el anónimo con ID manual
-            Anonimo anonimo = Anonimo.getInstance();
-            contribuyenteRepository.saveAndFlush(anonimo);
-        }
-    }
 
-
-    private Contribuyente determinarContribuyente(HechoDTO hechoDTO) {
-        if (hechoDTO.getRegistrado() == null) {
-            return contribuyenteRepository.findById(1).orElse(null);
+    private Contribuyente determinarContribuyente(ContribuyenteDTO contribuyenteDTO) {
+//        if (hechoDTO.getRegistrado() == null) {
+//            return contribuyenteRepository.findById(1).orElse(null);
+//        } else {
+//            Contribuyente nuevoRegistrado = new Registrado(hechoDTO.getRegistrado().getNombre());
+//            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
+//            return nuevoRegistrado;
+//        }
+        if(contribuyenteDTO == null) {
+            return new Contribuyente(0, "Anonimo");
         } else {
-            Contribuyente nuevoRegistrado = new Registrado(hechoDTO.getRegistrado().getNombre());
-            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
-            return nuevoRegistrado;
+            return contribuyenteRepository.findByCloakId(contribuyenteDTO);
         }
+
     }
 
     private Hecho hechoFromDTO (HechoDTO hechoDTO) {
@@ -82,7 +89,7 @@ public class DinamicaService {
                     hechoDTO.getUbicacion(),
                     hechoDTO.getFechaAcontecimiento(),
                     hechoDTO.getEtiquetas(),
-                    determinarContribuyente(hechoDTO),
+                    determinarContribuyente(hechoDTO.getContribuyente()),
                     hechoDTO.getCuerpo()
             );
         } else if (hechoDTO.getTipo().equalsIgnoreCase("multimedia")) {
@@ -93,7 +100,7 @@ public class DinamicaService {
                     hechoDTO.getUbicacion(),
                     hechoDTO.getFechaAcontecimiento(),
                     hechoDTO.getEtiquetas(),
-                    determinarContribuyente(hechoDTO),
+                    determinarContribuyente(hechoDTO.getContribuyente()),
                     hechoDTO.getContenidoMultimedia()
             );
         } else {
@@ -113,6 +120,8 @@ public class DinamicaService {
     // <---------------------------------- ACTUALIZACION DE HECHOS ---------------------------------->
 
     public Hecho actualizarHecho(Integer id, HechoDTO hechoDTO) {
+
+
         Hecho hechoAEditar = hechosRepository.findById(id).orElse(null);
 
         if (hechoAEditar == null) {

@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +19,7 @@ public class HechoMultimedia extends Hecho{
     @CollectionTable(name = "hecho_multimedias", joinColumns = @JoinColumn(name = "hecho_id")) @Column(name = "contenido_multimedia")
     private List<String> contenidoMultimedia;
 
-    public HechoMultimedia(Integer id,
+    public HechoMultimedia(
                         String titulo,
                         String descripcion,
                         Categoria categoria,
@@ -31,7 +31,7 @@ public class HechoMultimedia extends Hecho{
                         Contribuyente contribuyente,
                         List<String> contenidoMultimedia) {
 
-        super(id, titulo, descripcion, categoria, ubicacion, fechaAcontecimiento, fechaCarga, origenFuente, etiquetas, contribuyente);
+        super(titulo, descripcion, categoria, ubicacion, fechaAcontecimiento, fechaCarga, origenFuente, etiquetas, contribuyente);
         this.contenidoMultimedia = contenidoMultimedia;
     }
 

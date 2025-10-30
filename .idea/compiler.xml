@@ -8,11 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="dinamica" />
-        <module name="api-gateway" />
+        <module name="gestor-personas" />
         <module name="proxy" />
-        <module name="estatica" />
         <module name="agregador" />
         <module name="normalizador" />
+        <module name="api-gateway" />
+        <module name="estatica" />
       </profile>
       <profile name="Annotation profile for metamapa" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -35,6 +36,7 @@
       <module name="dinamica" options="-parameters" />
       <module name="estadistica" options="-parameters" />
       <module name="estatica" options="-parameters" />
+      <module name="gestor-personas" options="-parameters" />
       <module name="metamapa" options="" />
       <module name="normalizador" options="-parameters" />
       <module name="proxy" options="-parameters" />

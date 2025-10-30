@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
 

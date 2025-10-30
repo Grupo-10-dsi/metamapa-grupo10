@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho;
 
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.origenFuente.OrigenFuente;
-import ar.edu.utn.frba.ddsi.normalizador.models.entities.personas.Contribuyente;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;

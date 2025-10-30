@@ -29,9 +29,9 @@ public class HechoDTO {
     private List<Etiqueta> etiquetas;
     private List<String> contenidoMultimedia;
     private String cuerpo;
-    private Contribuyente contribuyente;
+    private ContribuyenteDTO contribuyente;
 
-    public HechoDTO(Integer id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, List<String> contenidoMultimedia, String cuerpo, Origen_Fuente_VIEJO origenFuente, Contribuyente contribuyente) {
+    public HechoDTO(Integer id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion, LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, List<Etiqueta> etiquetas, List<String> contenidoMultimedia, String cuerpo, Origen_Fuente_VIEJO origenFuente, ContribuyenteDTO contribuyente) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -49,12 +49,7 @@ public class HechoDTO {
 
     }
 
-    public Contribuyente getContribuyente() {
-        if (contribuyente == null) {
-            return Anonimo.getInstance();
-        } else
-        return contribuyente;
-    }
+
 
 
 }

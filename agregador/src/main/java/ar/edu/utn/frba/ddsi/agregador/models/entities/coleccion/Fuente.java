@@ -3,6 +3,7 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.conversor.Conversor;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Dinamica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.ArchivoProcesadoRepository;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 @Getter
 @Setter
 
@@ -69,6 +72,7 @@ public class Fuente {
 
     public void realizarConsulta(URI uri, WebClient webClient, Conversor conversor, ContribuyenteRepository contribuyenteRepository, ArchivoProcesadoRepository a, OrigenFuenteRepository o, CategoriaRepository categoriaRepository) {
         OrigenFuente origenFuente;
+
         List<HechoDTO> hechos = webClient.get()
                 .uri(uri)
                 .retrieve()
@@ -77,8 +81,11 @@ public class Fuente {
                 .block();
 
         if (hechos != null) {
-            origenFuente = OrigenFuente.getOrigenFuente(this.nombre);
-
+            if (Objects.equals(this.nombre, "DINAMICA")) {
+                origenFuente = o.findOrigenFuenteById(1);
+            } else {
+                origenFuente = o.findOrigenFuenteById(2);
+            }
             this.agregarHechos(hechos.stream().map(h -> conversor.convertirHecho(h, origenFuente, contribuyenteRepository, categoriaRepository)).toList());
         }
 

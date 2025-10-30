@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
@@ -31,11 +32,14 @@ public class SecurityConfig {
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtSpec ->
                     jwtSpec.jwtAuthenticationConverter(jwtAuthenticationConverter())
             ))
+                .cors(withDefaults())
+
 
                 // 2. Definir las reglas de autorización (BASADO EN TU CONTROLLER)
                 .authorizeExchange(exchanges ->
                     exchanges
 
+                      .pathMatchers(HttpMethod.OPTIONS).permitAll()
                       // --- REGLAS PÚBLICAS (permitAll) ---
                       // Todos los GET que consultan datos
                       .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
@@ -44,6 +48,7 @@ public class SecurityConfig {
                       .pathMatchers(HttpMethod.GET, "/agregador/hechos").permitAll()
                       .pathMatchers(HttpMethod.GET, "/agregador/hechos/**").permitAll()
                       .pathMatchers(HttpMethod.GET, "/agregador/search").permitAll()
+                      .pathMatchers(HttpMethod.POST, "/api/dinamica/hechos").permitAll()
 
                       // --- REGLAS DE "ADMIN" (hasRole) ---
                       .pathMatchers(HttpMethod.POST, "/agregador/colecciones").hasRole("ADMIN")

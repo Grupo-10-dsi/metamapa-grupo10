@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho;
 
 
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.*;
+
 
 @Getter
 @Setter
@@ -45,9 +45,15 @@ public abstract class Hecho {
     @JoinColumn(name = "hecho_id",referencedColumnName = "id")
     private List<Etiqueta> etiquetas;
 
-    @ManyToOne
-    @JoinColumn(name="contribuyente_id",referencedColumnName = "id")
+//    private Integer contribuyente_id;
+//    private String nombre_contribuyente;
+
+
+//    @ManyToOne
+//    @JoinColumn(name="contribuyente_id",referencedColumnName = "id")
+    @Embedded
     private Contribuyente contribuyente;
+
 
     public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
                  LocalDateTime fechaAcontecimiento, List<Etiqueta> etiquetas, Contribuyente contribuyente) {

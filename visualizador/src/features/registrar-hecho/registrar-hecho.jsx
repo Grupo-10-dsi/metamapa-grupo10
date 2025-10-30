@@ -11,8 +11,13 @@ import {
     Spinner
 } from 'react-bootstrap';
 import MapaInteractivo from "../detail-page/components/mapa-interactivo/mapa-interactivo";
+import {useKeycloak} from "@react-keycloak/web";
+import apiDinamica  from "../../api/api-dinamica";
 
 function RegistrarHecho() {
+
+    const {keycloak, initialized} = useKeycloak();
+
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
@@ -46,41 +51,40 @@ function RegistrarHecho() {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (isSubmitting) return;
-
-        setIsSubmitting(true);
-        let tipo = "multimedia"
-
-        if (formData.cuerpo !== '') {
-            tipo = "textual"
-        }
-        const hechoData = {
-            tipo: tipo,
-            titulo: formData.titulo,
-            descripcion: formData.descripcion,
-            categoria: {
-                detalle: formData.categoria_nueva
-            },
-            ubicacion: {
-                latitud: formData.latitud,
-                longitud: formData.longitud
-            },
-            fechaAcontecimiento: formData.fechaAcontecimiento,
-            etiquetas: formData.etiquetas.split(',').map(tag => tag.trim()),
-            cuerpo: formData.cuerpo,
-            contenidoMultimedia: formData.contenidoMultimedia
-
-        }
-        console.log("Datos del hecho:", hechoData);
-
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsSubmitting(false);
-        console.log("Hecho registrado con éxito");
-    };
-
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //
+    //     if (isSubmitting) return;
+    //
+    //     setIsSubmitting(true);
+    //     let tipo = "multimedia"
+    //
+    //     if (formData.cuerpo !== '') {
+    //         tipo = "textual"
+    //     }
+    //     const hechoData = {
+    //         tipo: tipo,
+    //         titulo: formData.titulo,
+    //         descripcion: formData.descripcion,
+    //         categoria: {
+    //             detalle: formData.categoria_nueva
+    //         },
+    //         ubicacion: {
+    //             latitud: formData.latitud,
+    //             longitud: formData.longitud
+    //         },
+    //         fechaAcontecimiento: formData.fechaAcontecimiento,
+    //         etiquetas: formData.etiquetas.split(',').map(tag => tag.trim()),
+    //         cuerpo: formData.cuerpo,
+    //         contenidoMultimedia: formData.contenidoMultimedia
+    //
+    //     }
+    //     console.log("Datos del hecho:", hechoData);
+    //
+    //     await new Promise(resolve => setTimeout(resolve, 2000));
+    //     setIsSubmitting(false);
+    //     console.log("Hecho registrado con éxito");
+    // };
     const handleMapChange = (coordenadas) => {
         setFormData(prevData => ({
             ...prevData,
@@ -96,6 +100,75 @@ function RegistrarHecho() {
         { id: 4, nombre: 'Corte de Luz' }
     ];
     // ...
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // 1. Solo esperar a que Keycloak esté inicializado
+        if (isSubmitting || !initialized) {
+            console.error("Keycloak no está listo.");
+            // Opcional: mostrar un error al usuario
+            return;
+        }
+
+        setIsSubmitting(true);
+        let tipo = "multimedia";
+
+        if (formData.cuerpo !== '') {
+            tipo = "textual";
+        }
+
+        // 2. Construir el objeto base del hecho
+        const hechoData = {
+            tipo: tipo,
+            titulo: formData.titulo,
+            descripcion: formData.descripcion,
+            categoria: {
+                // Asumiendo que 'categoria_nueva' es 'detalle'
+                detalle: formData.categoria_nueva
+            },
+            ubicacion: {
+                latitud: parseFloat(formData.latitud),
+                longitud: parseFloat(formData.longitud)
+            },
+            fechaAcontecimiento: formData.fechaAcontecimiento,
+            etiquetas: formData.etiquetas.split(',').map(tag => tag.trim()),
+            cuerpo: formData.cuerpo,
+            contenidoMultimedia: formData.contenidoMultimedia, // Asumiendo que ya es un array de strings (URLs)
+
+            // 3. Asignar 'contribuyente' por defecto como null (anónimo)
+            contribuyente: null
+        };
+
+        // 4. Si el usuario SÍ está autenticado, poblar los datos
+        //    (Tu Axios debe estar configurado para enviar el token también)
+        if (keycloak.authenticated && keycloak.tokenParsed) {
+            hechoData.contribuyente = {
+                sub: keycloak.tokenParsed.sub,
+                nombre: keycloak.tokenParsed.name,
+                email: keycloak.tokenParsed.email
+            };
+        }
+
+        console.log("Datos del hecho a enviar:", hechoData);
+
+        try {
+            // 5. Llamar a la API.
+            // 'apiDinamica' (tu Axios) debe estar configurado para
+            // enviar el token en el header SI el usuario está logueado.
+            const result = await apiDinamica.crearHecho(hechoData);
+
+            console.log("Hecho registrado con éxito:", result);
+            // Aquí podrías redirigir al usuario o limpiar el formulario
+
+        } catch (error) {
+            console.error("Error al registrar el hecho:", error);
+            // ... (tu manejo de errores de Axios) ...
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
 
     return (
         <div style={{ backgroundColor: '#f8f9fa', padding: '3rem 0' }}>
