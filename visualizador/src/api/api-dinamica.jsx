@@ -19,6 +19,27 @@ class ApiDinamica {
             throw error
         }
     }
+
+    async cargarImagen (hechoId, archivoImagen) {
+        try {
+            const formData = new FormData()
+            formData.append('file', archivoImagen)
+
+            const response = await this.axiosInstance.post(
+                `/upload/${hechoId}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+            return response.data
+        } catch (error) {
+            console.error('Error al cargar la imagen:', error)
+            throw error
+        }
+    }
 }
 
 const apiDinamica = new ApiDinamica()
