@@ -60,7 +60,7 @@ function AppRouter() {
         return <div>Cargando Keycloak...</div>;
     }
 
-    // 6. Una vez listo, renderiza todas tus rutas
+    // 6. renderiza todas las rutas
     return (
         <BrowserRouter>
             <Routes>
@@ -96,11 +96,10 @@ function AppRouter() {
 
 
 // --- COMPONENTE APP MODIFICADO ---
-// Tu 'App' ahora solo se encarga de renderizar el Provider
 function App() {
     return (
         <ReactKeycloakProvider authClient={kc}>
-            <AppRouter /> {/* <-- Renderiza el nuevo componente que tiene la lógica */}
+            <AppRouter />
         </ReactKeycloakProvider>
     );
 }

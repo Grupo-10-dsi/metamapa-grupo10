@@ -1,19 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Container, Spinner, Row, Col } from "react-bootstrap";
-import { FaSearch, FaMapMarkedAlt } from "react-icons/fa";
+import React, { useState, useEffect} from "react";
+import { Container } from "react-bootstrap";
+import { FaSearch } from "react-icons/fa";
 import "./busqueda.css";
 import Mapa from "../home-page/components/mapa.jsx";
 import ApiAgregador from "../../api/api-agregador";
+import HechoCard from "../viewHechos-page/components/hecho-card/HechoCard";
 
 function Busqueda() {
     const [busqueda, setBusqueda] = useState("");
     const [hechos, setHechos] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const mapaRef = useRef(null);
 
     const irAlMapa = () => {
         mapaRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
+    const [hechosObtenido, setHechosObtenidos] = useState([]);
+
+    const buscar = async () => {
+        try {
+            const resultados = await ApiAgregador.buscarPorTextoLibre(busqueda)
+            setHechosObtenidos(resultados)
+        } catch (error) {
+
+        }
+    }
 
     useEffect(() => {
         const fetchUbicaciones = async () => {
@@ -52,6 +65,7 @@ function Busqueda() {
                             value={busqueda}
                             onChange={(e) => setBusqueda(e.target.value)}
                         />
+                        <Button onClick={() => buscar()} >Buscar</Button>
                     </div>
                 </Container>
             </section>
@@ -77,6 +91,15 @@ function Busqueda() {
                     )}
                 </Container>
             </section>
+
+            <section>
+                <div style={{ maxWidth: 900, margin: '2rem auto 1.5rem auto', background: '#FFF9D6', borderRadius: 10, boxShadow: '0 2px 8px #99A88C', padding: '1.5rem 2rem' }}>
+                    {hechosObtenido.map((aHecho) => (
+
+                    <HechoCard key={aHecho.id} hecho={aHecho}/>))}
+                </div>
+            </section>
+
         </>
     );
 }

@@ -36,8 +36,6 @@ class ApiAgregador {
         }
     }
 
-
-
     async obtenerHechos(filtros) {
         try {
             const response = await this.axiosInstance.get('/hechos', {
@@ -149,6 +147,19 @@ class ApiAgregador {
         } catch(error) {
             console.error('Error al obtener la colección:', error)
             throw error
+        }
+    }
+
+    async buscarPorTextoLibre(texto) {
+        try {
+            const response = await this.axiosInstance.get(`/search`, {
+                params: {texto: texto}
+            })
+            return response.data
+        } catch (error) {
+            if (error.response) {
+                console.error('Error al buscar los hechos:', error)
+            }
         }
     }
 
