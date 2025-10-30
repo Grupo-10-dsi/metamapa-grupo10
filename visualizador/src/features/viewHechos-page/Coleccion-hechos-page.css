@@ -1,0 +1,26 @@
+/* hechos-page.css */
+.hechos-page-container { padding: 20px; }
+
+.hecho-item {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
+}
+
+.hecho-title {
+    color: #1f6feb;
+    text-decoration: none;
+    margin: 0;
+}
+
+.hecho-desc {
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.card {
+    background: #fffbe6;
+    border-color: #f1e3b8;
+}
+
+

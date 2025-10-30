@@ -1,0 +1,81 @@
+.hecho-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.hecho-card-img-box {
+  min-width: 84px;
+  max-width: 84px;
+  height: 84px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px #0001;
+}
+.hecho-card-img {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.hecho-card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.hecho-card-title {
+  font-weight: 700;
+  font-size: 1.18rem;
+  color: #2a6ecb;
+  text-decoration: none;
+  display: inline-block;
+}
+.hecho-card-autor {
+  font-size: .97rem;
+  color: #2a6ecb;
+  font-weight: 500;
+}
+.hecho-card-consenso {
+  color: #7d4f1e;
+  font-weight: 600;
+  font-size: .97rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.hecho-card-desc {
+  color: #444;
+  font-size: 1rem;
+  margin: 0 0 12px 0;
+}
+.hecho-card-chips {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.hecho-card-chip-categoria {
+  background: #f3e5d5;
+  color: #7d4f1e;
+  border-radius: 6px;
+  padding: 4px 14px;
+  font-size: .97rem;
+  font-weight: 600;
+  box-shadow: 0 1px 4px #0001;
+}
+.hecho-card-chip-ubicacion {
+  background: #e5f3d5;
+  color: #3d7d1e;
+  border-radius: 6px;
+  padding: 4px 14px;
+  font-size: .97rem;
+  font-weight: 600;
+  box-shadow: 0 1px 4px #0001;
+}

@@ -1,0 +1,33 @@
+.container {
+  max-width: 900px;
+  margin: 2rem auto 1.5rem auto;
+  background: #fffbe6;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 1.5rem 2rem;
+}
+
+.titulo {
+  margin: 0;
+  font-weight: 700;
+  color: #3d2c1e;
+  font-size: 1.5rem;
+}
+
+.fuente {
+  margin: 0.5rem 0 0.7rem 0;
+  color: #7d4f1e;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.descripcion {
+  color: #444;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.cantidad {
+  color: #888;
+  font-size: 0.98rem;
+}

@@ -1,0 +1,45 @@
+.consenso-switch-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+}
+.consenso-switch-label-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.consenso-switch-label {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #3d2c1e;
+}
+.consenso-switch-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.consenso-switch-checkbox {
+  accent-color: #7d4f1e;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+}
+.consenso-switch-checkbox-text {
+  font-size: 1rem;
+  color: #888;
+}
+.consenso-switch-checkbox-text.active {
+  color: #7d4f1e;
+}
+.consenso-switch-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  background: #7d4f1e;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  min-width: 90px;
+}
