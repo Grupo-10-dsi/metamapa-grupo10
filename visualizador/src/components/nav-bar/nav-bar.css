@@ -1,35 +1,200 @@
+[data-bs-theme="metamapa"] {
+    --bs-primary-rgb: 218, 155, 60;
+    --bs-primary: #DA9B3C;
+    --bs-primary-hover: #c48a36;
+    --bs-primary-active: #c48a36;
 
-[data-bs-theme="prueba"] {
-    --bs-navbar-color: #DA9B3C; /* color de texto normal */
-    --bs-navbar-hover-color: #DA9B3C;
-    --bs-navbar-active-color: default; /* color de link activo */
-    --bs-navbar-brand-color: #000; /* color del brand */
-    --bs-navbar-brand-hover-color: #000;
-    --bs-navbar-bg: #2a002a; /* fondo del navbar */
-    --bs-navbar-border-color: #ff64a6; /* borde inferior opcional */
-    background-color: #FFF7BB;
+    --bs-body-bg: #FFF7BB;
+
+    --bs-navbar-bg: var(--bs-body-bg);
+    --bs-navbar-color: #DA9B3C;            /* Color de links */
+    --bs-navbar-hover-color: #a5742c;       /* Links al pasar el mouse */
+    --bs-navbar-brand-color: #000000;     /* Color de "MetaMapa" */
+    --bs-navbar-brand-hover-color: #000000
+    --bs-btn-outline-primary-color: var(--bs-primary);
+    --bs-btn-outline-primary-border-color: var(--bs-primary);
+    --bs-btn-outline-primary-hover-color: #fff;
+    --bs-btn-outline-primary-hover-bg: var(--bs-primary);
+    --bs-btn-outline-primary-hover-border-color: var(--bs-primary);
+
+    --bs-btn-color: #ffffff;
 }
 
- .sesion {
-    color: #FFF;
+.metamapa-navbar {
+    background-color: var(--bs-body-bg);
+    padding: 0.25rem 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+
+.metamapa-brand {
+    font-size: 2.25rem;
+    font-weight: 700;
+    padding-left: 1rem;
+}
+
+.nav-link-metamapa {
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    color: var(--bs-navbar-color);
+}
+
+.nav-link-metamapa:hover,
+.nav-link-metamapa.active {
+    color: #a5742c !important;
+    background-color: rgba(218, 155, 60, 0.2);
+}
+
+[data-bs-theme="metamapa"] .btn {
+    border-radius: 20px;
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    font-size: 1rem;
+}
+
+[data-bs-theme="metamapa"] .dropdown-menu {
+
+    background-color: #fffacd;
+    border: 1px solid rgba(218, 155, 60, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    margin-top: 8px !important;
+
+
+    display: block !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s;
+}
+
+[data-bs-theme="metamapa"] .dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+[data-bs-theme="metamapa"] .dropdown-item {
+    color: #a5742c;
+    font-weight: 500;
+    padding: 0.6rem 1.25rem;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+[data-bs-theme="metamapa"] .dropdown-item:hover,
+[data-bs-theme="metamapa"] .dropdown-item:focus {
     background-color: #DA9B3C;
-    border-radius: 10px;
+    color: #ffffff;
 }
 
-[data-bs-theme="prueba"] .nav-link:hover {
-    background-color: rgba(218, 155, 60, .29);
+[data-bs-theme="metamapa"] .dropdown-divider {
+    border-top: 1px solid rgba(218, 155, 60, 0.2);
+    margin: 0.5rem 0;
 }
 
-[data-bs-theme="prueba"] .sesion:hover {
-    background-color: rgba(218, 155, 60, .60);
+.nav-vertical-separator {
+    width: 1px;
+    height: 24px;
+    background-color: #DA9B3C;
+    opacity: 0.6;
+    margin: 0 1rem;
+    align-self: center;
 }
 
-[data-bs-theme="prueba"] .sesion .nav-link:hover {
-    background-color: transparent;
+@media (max-width: 991.98px) {
+
+    .metamapa-navbar .navbar-collapse {
+        padding-top: 1rem;
+        text-align: center;
+    }
+
+    .metamapa-navbar .nav-link-metamapa {
+        margin: 0.5rem 0;
+        display: inline-block;
+    }
+
+    [data-bs-theme="metamapa"] .navbar-collapse .btn {
+        width: 80%;
+        margin: 0.75rem auto;
+    }
+
+    .nav-vertical-separator {
+        width: 80%;
+        height: 1px;
+        margin: 1.25rem auto;
+    }
+
+    [data-bs-theme="metamapa"] .navbar-collapse .dropdown-menu {
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        box-shadow: none;
+        margin: 0.5rem auto !important;
+        width: 80%;
+        text-align: center;
+        border-color: rgba(218, 155, 60, 0.3);
+    }
+
+    .metamapa-brand {
+        font-size: 1.9rem;
+        padding-left: 0.5rem;
+    }
 }
 
-[data-bs-theme="prueba"] .nav-item {
-    margin-left: 10px;
+.metamapa-navbar .navbar-toggler {
+    border: 2px solid #DA9B3C;
+    opacity: 0.8;
 }
 
+.metamapa-navbar .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.1rem rgba(218, 155, 60, 0.5);
+}
+
+.metamapa-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23DA9B3C' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF7BB;
+
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.loader-container.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-spinner.spinner-grow {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.loader-text {
+    margin-top: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #a5742c;
+}
 

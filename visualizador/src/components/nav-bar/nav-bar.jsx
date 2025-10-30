@@ -1,62 +1,73 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Button, Form, NavDropdown } from "react-bootstrap";
+import { Button, NavDropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useKeycloak } from '@react-keycloak/web'; // <--- 1. IMPORTAR EL HOOK
+import { useKeycloak } from '@react-keycloak/web';
 
 function NavBar() {
     const navigate = useNavigate();
-    const { keycloak } = useKeycloak(); // <--- 2. OBTENER EL CONTEXTO DE KEYCLOAK
+    const { keycloak } = useKeycloak();
 
     return (
-        <Navbar expand="lg" data-bs-theme='prueba' >
-            <Container fluid >
-                <Navbar.Brand href="/home">MetaMapa</Navbar.Brand>
+        <Navbar
+            expand="lg"
+            data-bs-theme='metamapa'
+            className="metamapa-navbar"
+            sticky="top"
+        >
+            <Container fluid>
+                <Navbar.Brand href="/home" className="metamapa-brand">MetaMapa</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
-                <Navbar.Collapse id="navbarScroll" >
+                <Navbar.Collapse id="navbarScroll">
+
                     <Nav
-                        className="ms-auto my-2 my-lg-0"
-                        style={{ maxHeight: '150px' }}
+                        className="ms-auto my-2 my-lg-0 align-items-center"
                         navbarScroll
-                        activeKey="/home"
                         onSelect={(selectedKey) => navigate(`${selectedKey}`)}
                     >
-                        <Nav.Item>
-                            <Nav.Link href="/busqueda" >Buscar</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/estadisticas" >Estadisticas</Nav.Link>
-                        </Nav.Item>
+                        <Nav.Link href="/colecciones" className="nav-link-metamapa">Colecciones</Nav.Link>
+                        <Nav.Link href="/estadisticas" className="nav-link-metamapa">Estadisticas</Nav.Link>
+                        <Nav.Link href="/busqueda" className="nav-link-metamapa">Buscar</Nav.Link>
 
-                        {/* --- 3. RENDERIZADO CONDICIONAL --- */}
+                        <Nav.Link
+                            href="/registrar-hecho"
+                            className="nav-link-metamapa"
+                        >
+                            Registrar Hecho
+                        </Nav.Link>
 
-                        {/* Si NO está autenticado, muestra el botón de Login */}
                         {!keycloak.authenticated && (
-                            <Nav.Item className='sesion'>
-                                {/* Es mejor usar onClick con navigate para el routing de React */}
-                                <Nav.Link onClick={() => keycloak.login()} >Iniciar Sesion</Nav.Link>
-                            </Nav.Item>
-                        )}
-
-                        {/* Si SÍ está autenticado, muestra el menú de usuario */}
-                        {keycloak.authenticated && (
-                            <NavDropdown
-                                // El nombre de usuario está en el token parseado
-                                title={`Hola, ${keycloak.tokenParsed.preferred_username}`}
-                                id="basic-nav-dropdown"
+                            <Button
+                                variant="outline-primary" // <-- Estilo intercambiado
+                                className="ms-3"
+                                onClick={() => keycloak.login()}
                             >
-                                <NavDropdown.Item onClick={() => navigate('/perfil')}>
-                                    Mi Perfil
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item onClick={() => keycloak.logout()}>
-                                    Cerrar Sesión
-                                </NavDropdown.Item>
-                            </NavDropdown>
+                                Iniciar Sesion
+                            </Button>
                         )}
 
+                        {keycloak.authenticated && (
+                            <>
+                                <div className="nav-vertical-separator"></div>
+
+                                <NavDropdown
+                                    title={`Hola, ${keycloak.tokenParsed.preferred_username}`}
+                                    id="basic-nav-dropdown"
+                                    align="end"
+                                >
+                                    <NavDropdown.Item onClick={() => navigate('/perfil')}>
+                                        Mi Perfil
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item onClick={() => keycloak.logout()}>
+                                        Cerrar Sesión
+                                    </NavDropdown.Item>
+                                </NavDropdown>
+                            </>
+                        )}
                     </Nav>
+
                 </Navbar.Collapse>
             </Container>
         </Navbar>
