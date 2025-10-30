@@ -1,6 +1,6 @@
-import React, { useState, useEffect} from "react";
-import { Container } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
+import React, {useState, useEffect, useRef} from "react";
+import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
+import {FaMapMarkedAlt, FaSearch} from "react-icons/fa";
 import "./busqueda.css";
 import Mapa from "../home-page/components/mapa.jsx";
 import ApiAgregador from "../../api/api-agregador";
