@@ -4,8 +4,7 @@ import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Etiqueta;
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Origen_Fuente;
 import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Ubicacion;
-import ar.edu.utn.frba.ddsi.normalizador.models.entities.personas.Anonimo;
-import ar.edu.utn.frba.ddsi.normalizador.models.entities.personas.Contribuyente;
+import ar.edu.utn.frba.ddsi.normalizador.models.entities.hecho.Contribuyente;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,12 +46,6 @@ public class HechoDTO {
 
     }
 
-    public Contribuyente getContribuyente() {
-        if (contribuyente == null) {
-            return Anonimo.getInstance();
-        } else
-        return contribuyente;
-    }
 
 
 }

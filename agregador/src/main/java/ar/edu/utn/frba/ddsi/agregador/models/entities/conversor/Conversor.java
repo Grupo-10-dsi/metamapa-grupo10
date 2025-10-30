@@ -1,15 +1,9 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.conversor;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.HechoMultimedia;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.HechoTextual;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.*;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Anonimo;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Registrado;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.CategoriaRepository;
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.ContribuyenteRepository;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,19 +22,26 @@ public class Conversor {
             categoriaNormalizada = categoriaRepository.saveAndFlush(hechoNormalizado.getCategoria());
         }
 
-
+        Contribuyente anonimo = new Contribuyente(0, "Anonimo");
         Hecho hecho = creacionHecho(hechoNormalizado, origen, categoriaNormalizada);
+        hecho.setCantidadMenciones(1);
+
         // Caso fuente estática
         if (origen instanceof Estatica) {
             ((HechoTextual) hecho).setCuerpo(hechoDTO.getDescripcion());
-            hecho.setContribuyente(Anonimo.getInstance());
+            hecho.setContribuyente(anonimo);
             hecho.setEtiquetas(new ArrayList<>());
+            return hecho;
+        } else if (hechoDTO.getOrigenFuente() == Origen_Fuente_VIEJO.INTERMEDIARIA) {
+            hecho.setContribuyente(anonimo);
+            return hecho;
+
         }
 
         //hecho.setOrigenFuente(origen);
 
-        hecho.setCantidadMenciones(1);
-        hecho.setContribuyente(this.instanciarContribuyente(hechoDTO.getContribuyente(), contribuyenteRepository));
+
+        hecho.setContribuyente(new Contribuyente(hechoDTO.getContribuyente().getContribuyente_id(), hechoDTO.getContribuyente().getContribuyente_nombre()));
         return hecho;
     }
 
@@ -66,7 +67,6 @@ public class Conversor {
 
     private Hecho crearHechoTextualBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
         Hecho hecho =  new HechoTextual(
-                hechoDTO.getId(),
                 hechoDTO.getTitulo(),
                 hechoDTO.getDescripcion(),
                 categoria,
@@ -83,7 +83,6 @@ public class Conversor {
 
     public Hecho crearHechoMultimediaBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
         Hecho hecho = new HechoMultimedia(
-                hechoDTO.getId(),
                 hechoDTO.getTitulo(),
                 hechoDTO.getDescripcion(),
                 categoria,
@@ -98,15 +97,15 @@ public class Conversor {
         return hecho;
     }
 
-    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO, ContribuyenteRepository contribuyenteRepository) {
-        if (contribuyenteHechoDTO instanceof Anonimo) {
-            return contribuyenteRepository.findContribuyenteById(1);
-        } else {
-            Contribuyente nuevoRegistrado = new Registrado(contribuyenteHechoDTO.getNombre());
-            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
-            return nuevoRegistrado;
-        }
-    }
+//    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO, ContribuyenteRepository contribuyenteRepository) {
+//        if (contribuyenteHechoDTO instanceof Anonimo) {
+//            return contribuyenteRepository.findContribuyenteById(1);
+//        } else {
+//            Contribuyente nuevoRegistrado = new Registrado(contribuyenteHechoDTO.getNombre());
+//            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
+//            return nuevoRegistrado;
+//        }
+//    }
 
 }
 

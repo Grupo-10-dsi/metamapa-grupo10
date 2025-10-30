@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.ddsi.dinamica.controllers;
 
 
+import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.ContribuyenteDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho.Hecho;
@@ -9,10 +10,10 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Solici
 import ar.edu.utn.frba.ddsi.dinamica.services.DinamicaService;
 
 
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,7 +67,16 @@ public class DinamicaController {
     **/
     @PostMapping("/hechos")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    public Integer subirHecho(@RequestBody HechoDTO hechoDTO) {
+    public Integer subirHecho(
+            @RequestBody HechoDTO hechoDTO){
+//            @AuthenticationPrincipal Jwt jwt) {
+//
+//        String userUuid = jwt.getSubject();
+//        String userEmail = jwt.getClaimAsString("email");
+//        String userName = jwt.getClaimAsString("name");
+//
+//        ContribuyenteDTO c = new ContribuyenteDTO(userUuid, userName, userEmail);
+//        hechoDTO.setContribuyente(c);
 
         verificarCamposHecho(hechoDTO);
         return dinamicaService.crearHecho(hechoDTO);

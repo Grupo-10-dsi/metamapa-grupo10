@@ -35,12 +35,14 @@ function App() {
                         <Route path="*" element={<Navigate to="/home" replace />} />
                         <Route path="/hecho/:hechoId" element={<DetailPage />} />
                         <Route path="/busqueda" element={<Busqueda />} />
+                        <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
+
+
                         {/* rutas usuario */}
                         <Route element={<RequireAuth/>} >
                             <Route path="/perfil" element={<Perfil/> } />
                             <Route path="perfil/solicitudes" element={<Perfil mostrarEnPantalla={'solicitudes'} /> }/>
                             <Route path="perfil/colecciones" element={<Perfil mostrarEnPantalla={'colecciones'}/> } />
-                            <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
                         </Route>
 
                         {/* rutas admin */}

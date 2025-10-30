@@ -3,7 +3,6 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -42,7 +41,7 @@ public abstract class Hecho {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "origen_fuente_id", referencedColumnName = "id")
     private OrigenFuente origenFuente;
 
@@ -50,15 +49,17 @@ public abstract class Hecho {
     @JoinColumn(name = "hecho_id",referencedColumnName = "id")
     private List<Etiqueta> etiquetas;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "contribuyente_id", referencedColumnName = "id")
+//    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+//    @JoinColumn(name = "contribuyente_id", referencedColumnName = "id")
+    @Embedded
     private Contribuyente contribuyente;
+
+
 
     private Integer cantidadMenciones;
 
-    public Hecho(Integer id, String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
+    public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
                  LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, OrigenFuente origenFuente, List<Etiqueta> etiquetas, Contribuyente contribuyente) {
-        this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;
