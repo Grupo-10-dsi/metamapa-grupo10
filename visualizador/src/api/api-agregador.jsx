@@ -21,6 +21,17 @@ class ApiAgregador {
         }
     }
 
+    async obtenerCategorias() {
+        try {
+            const response = await this.axiosInstance.get('/categorias')
+            return response.data
+        } catch(error) {
+            console.error('Error al buscar categorias:', error)
+            throw error
+        }
+    }
+
+
     async obtenerHechos(filtros) {
         try {
             const response = await this.axiosInstance.get('/hechos', {

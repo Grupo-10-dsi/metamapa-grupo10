@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import ContadorElementos from "./contadorElementos.jsx";
 import "./estadisticas.css";
 import ApiEstadistica from "../../api/api-estadistica.jsx";
-
+import ApiAgregador from "../../api/api-agregador";
 function Estadisticas() {
     const [seleccionada, setSeleccionada] = useState(null);
     const [busqueda, setBusqueda] = useState("");
@@ -13,6 +13,8 @@ function Estadisticas() {
     const contenedorRef = useRef(null);
     const [cantidades, setCantidades] = useState({});
     const [resultados, setResultados] = useState([]);
+    const [categorias, setCategorias] = useState([])
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null)
 
     const idColeccion = 1;
     const idCategoria = 4;
@@ -25,13 +27,6 @@ function Estadisticas() {
         "Emergencias urbanas"
     ];
 
-    const categorias = [
-        "Contaminación",
-        "Violencia",
-        "Transporte",
-        "Seguridad",
-        "Incendios"
-    ];
 
     const estadisticas = [
         { id: 1, titulo: "Provincia con más hechos reportados", descripcion: "De una colección, ¿en qué provincia se agrupan la mayor cantidad de hechos reportados?" },
@@ -40,6 +35,18 @@ function Estadisticas() {
         { id: 4, titulo: "Hora del día con más hechos", descripcion: "¿A qué hora del día ocurren la mayor cantidad de hechos de una cierta categoría?" },
         { id: 5, titulo: "Solicitudes de eliminación spam", descripcion: "¿Cuántas solicitudes de eliminación son spam?" }
     ];
+
+    useEffect(() => {
+        const cargarCategorias = async () => {
+            try {
+                const data = await ApiAgregador.obtenerCategorias()
+                setCategorias(data)
+            } catch (error) {
+                console.error("Error al cargar categorías:", error)
+            }
+        }
+        cargarCategorias()
+    }, [])
 
     const handleBusqueda = (valor, tipo) => {
         setBusqueda(valor);
@@ -51,15 +58,21 @@ function Estadisticas() {
                 c.toLowerCase().includes(valor.toLowerCase())
             );
         } else if (tipo === "categoria") {
-            listaFiltrada = categorias.filter(c =>
-                c.toLowerCase().includes(valor.toLowerCase())
+            listaFiltrada = categorias.filter(cat =>
+                cat.detalle.toLowerCase().includes(valor.toLowerCase())
             );
         }
+
         setSugerencias(listaFiltrada);
     };
 
     const seleccionarSugerencia = (item) => {
-        setBusqueda(item);
+        if (typeof item === "object" && item.id) {
+            setCategoriaSeleccionada(item);
+            setBusqueda(item.detalle);
+        } else {
+            setBusqueda(item);
+        }
         setSugerencias([]);
     };
 
@@ -89,7 +102,7 @@ function Estadisticas() {
                     datos = await ApiEstadistica.obtenerCategoriaMaxHechos({formato: null, cantidadCategorias: cantidad});
                     break;
                 case 3:
-                    datos = await ApiEstadistica.obtenerProvinciaPorCategoria({ id: idCategoria, formato: null, cantidadProvincias: cantidad });
+                    datos = await ApiEstadistica.obtenerProvinciaPorCategoria({ id: categoriaSeleccionada.id, formato: null, cantidadProvincias: cantidad });
                     break;
                 case 4:
                     datos = await ApiEstadistica.obtenerHoraMaxHechos({ id: idCategoria, cantidadHoras: cantidad });
@@ -126,9 +139,13 @@ function Estadisticas() {
                         </div>
                         {sugerencias.length > 0 && (
                             <ListGroup className="sugerencias-lista">
-                                {sugerencias.map((sug, index) => (
-                                    <ListGroup.Item key={index} action onClick={() => seleccionarSugerencia(sug)}>
-                                        {sug}
+                                {sugerencias.map((cat) => (
+                                    <ListGroup.Item
+                                        key={cat.id || cat}
+                                        action
+                                        onClick={() => seleccionarSugerencia(cat)}
+                                    >
+                                        {cat.detalle || cat}
                                     </ListGroup.Item>
                                 ))}
                             </ListGroup>
