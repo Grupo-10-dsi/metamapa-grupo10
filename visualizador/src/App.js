@@ -17,8 +17,6 @@ import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
 import ApiAgregador from "./api/api-agregador";
 import { useEffect, useState } from "react"; // 'useState' ya estaba
 import { Spinner } from "react-bootstrap";
-import { useEffect } from "react";
-
 
 const kcConfig = {
     url: "http://localhost:9090/",
@@ -37,7 +35,9 @@ function AppRouter() {
 
     useEffect(() => {
         if (initialized && keycloak.authenticated) {
+
             ApiAgregador.setToken(keycloak.token);
+
             keycloak.onTokenExpired = () => {
                 console.log("Token expirado, intentando refrescar...");
                 keycloak.updateToken(5)
@@ -65,6 +65,7 @@ function AppRouter() {
     }, [initialized]);
 
 
+    // 6. renderiza todas las rutas
     return (
         <>
             {showLoader && (
