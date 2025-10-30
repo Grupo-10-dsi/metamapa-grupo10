@@ -10,6 +10,10 @@ class ApiAgregador {
         })
     }
 
+    setToken(token){
+        this.tokenAuth = token
+    }
+
 
     async obtenerHecho(id) {
         try {
@@ -24,6 +28,7 @@ class ApiAgregador {
     async obtenerCategorias() {
         try {
             const response = await this.axiosInstance.get('/categorias')
+            console.log("Categorias obtenidas:", response.data)
             return response.data
         } catch(error) {
             console.error('Error al buscar categorias:', error)
@@ -66,7 +71,21 @@ class ApiAgregador {
         }
     }
 
-
+    async crearColeccion(data) {
+        try {
+            const response = await this.axiosInstance.post('/colecciones', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`,
+                }
+            })
+            return response.data
+        } catch (error) {
+            if (error.response) {
+                console.error('Error al crear la colección:', error)
+            }
+        }
+    }
 
 }
 const api = new ApiAgregador()

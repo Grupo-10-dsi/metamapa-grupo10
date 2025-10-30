@@ -10,53 +10,98 @@ import './App.css';
 import Estadisticas from "./features/estadisticas-page/estadisticas";
 import CrearColeccion from "./features/crear-coleccion/crear-coleccion.jsx";
 import RequireAuth from "./RequireAuth.jsx";
-import Keycloak from "keycloak-js"
-import {ReactKeycloakProvider} from "@react-keycloak/web";
 import RequireAdmin from "./RequireAdmin.jsx";
+
+// --- CAMBIOS EN IMPORTS ---
+import Keycloak from "keycloak-js";
+// Importa 'useKeycloak'
+import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
+// Importa tu API (asegúrate que la ruta sea correcta)
+import ApiAgregador from "./api/api-agregador";
+import { useEffect } from "react";
+// --- FIN CAMBIOS ---
+
 
 const kcConfig = {
     url: "http://localhost:9090/",
     realm: "MetaMapa",
     clientId: "metamapa-frontend"
-}
+};
 
 export const kc = new Keycloak(kcConfig);
 
 
-function App() {
+function AppRouter() {
+    const { keycloak, initialized } = useKeycloak();
+
+    useEffect(() => {
+        if (initialized && keycloak.authenticated) {
+
+            ApiAgregador.setToken(keycloak.token);
+
+            keycloak.onTokenExpired = () => {
+                console.log("Token expirado, intentando refrescar...");
+                keycloak.updateToken(5)
+                    .then(refreshed => {
+                        if (refreshed) {
+                            console.log("Token refrescado con éxito.");
+                            // Pasa el NUEVO token a tu API
+                            ApiAgregador.setToken(keycloak.token);
+                        }
+                    })
+                    .catch(() => {
+                        console.error("Fallo al refrescar el token.");
+                    });
+            }
+        }
+    }, [initialized, keycloak, keycloak.authenticated, keycloak.token]);
+
+
+    // 5. No renderizar la app hasta que Keycloak esté listo
+    if (!initialized) {
+        return <div>Cargando Keycloak...</div>;
+    }
+
+    // 6. Una vez listo, renderiza todas tus rutas
     return (
-        <ReactKeycloakProvider authClient={kc}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Layout/>}>
-                        {/* rutas públicas */}
-                        <Route path="/home" element={<HomePage />} />
-                        <Route path="/" element={<Navigate to="/home" replace />} />
-                        <Route path="*" element={<Navigate to="/home" replace />} />
-                        <Route path="/hecho/:hechoId" element={<DetailPage />} />
-                        <Route path="/busqueda" element={<Busqueda />} />
-                        <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Layout/>}>
+                    {/* rutas públicas */}
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/" element={<Navigate to="/home" replace />} />
+                    <Route path="*" element={<Navigate to="/home" replace />} />
+                    <Route path="/hecho/:hechoId" element={<DetailPage />} />
+                    <Route path="/busqueda" element={<Busqueda />} />
+                    <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
 
-
-                        {/* rutas usuario */}
-                        <Route element={<RequireAuth/>} >
-                            <Route path="/perfil" element={<Perfil/> } />
-                            <Route path="perfil/solicitudes" element={<Perfil mostrarEnPantalla={'solicitudes'} /> }/>
-                            <Route path="perfil/colecciones" element={<Perfil mostrarEnPantalla={'colecciones'}/> } />
-                        </Route>
-
-                        {/* rutas admin */}
-                        <Route element={<RequireAdmin/>} >
-                            <Route path="/crear-coleccion" element={<CrearColeccion/>} />
-                            <Route path="/estadisticas" element={<Estadisticas/>} />
-                        </Route>
+                    {/* rutas usuario */}
+                    <Route element={<RequireAuth/>} >
+                        <Route path="/perfil" element={<Perfil/> } />
+                        <Route path="perfil/solicitudes" element={<Perfil mostrarEnPantalla={'solicitudes'} /> }/>
+                        <Route path="perfil/colecciones" element={<Perfil mostrarEnPantalla={'colecciones'}/> } />
                     </Route>
-                </Routes>
-            </BrowserRouter>
-        </ReactKeycloakProvider>
+
+                    {/* rutas admin */}
+                    <Route element={<RequireAdmin/>} >
+                        <Route path="/crear-coleccion" element={<CrearColeccion/>} />
+                        <Route path="/estadisticas" element={<Estadisticas/>} />
+                    </Route>
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
 
 
+// --- COMPONENTE APP MODIFICADO ---
+// Tu 'App' ahora solo se encarga de renderizar el Provider
+function App() {
+    return (
+        <ReactKeycloakProvider authClient={kc}>
+            <AppRouter /> {/* <-- Renderiza el nuevo componente que tiene la lógica */}
+        </ReactKeycloakProvider>
+    );
+}
 
 export default App;

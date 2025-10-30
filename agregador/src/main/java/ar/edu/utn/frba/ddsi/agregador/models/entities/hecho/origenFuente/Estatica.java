@@ -16,6 +16,7 @@ public class Estatica extends OrigenFuente {
 
     public Estatica(ArchivoProcesado archivoProcesado) {
         super();
+        this.nombre = "Estatica";
         this.archivoProcesado = archivoProcesado;
     }
 

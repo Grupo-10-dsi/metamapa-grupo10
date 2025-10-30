@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Container,
     Card,
@@ -13,10 +13,12 @@ import {
 import MapaInteractivo from "../detail-page/components/mapa-interactivo/mapa-interactivo";
 import {useKeycloak} from "@react-keycloak/web";
 import apiDinamica  from "../../api/api-dinamica";
+import api from "../../api/api-agregador";
 
 function RegistrarHecho() {
 
     const {keycloak, initialized} = useKeycloak();
+    const [anonimo, setAnonimo] = useState(false)
 
     const [formData, setFormData] = useState({
         titulo: '',
@@ -51,40 +53,6 @@ function RegistrarHecho() {
         }));
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //
-    //     if (isSubmitting) return;
-    //
-    //     setIsSubmitting(true);
-    //     let tipo = "multimedia"
-    //
-    //     if (formData.cuerpo !== '') {
-    //         tipo = "textual"
-    //     }
-    //     const hechoData = {
-    //         tipo: tipo,
-    //         titulo: formData.titulo,
-    //         descripcion: formData.descripcion,
-    //         categoria: {
-    //             detalle: formData.categoria_nueva
-    //         },
-    //         ubicacion: {
-    //             latitud: formData.latitud,
-    //             longitud: formData.longitud
-    //         },
-    //         fechaAcontecimiento: formData.fechaAcontecimiento,
-    //         etiquetas: formData.etiquetas.split(',').map(tag => tag.trim()),
-    //         cuerpo: formData.cuerpo,
-    //         contenidoMultimedia: formData.contenidoMultimedia
-    //
-    //     }
-    //     console.log("Datos del hecho:", hechoData);
-    //
-    //     await new Promise(resolve => setTimeout(resolve, 2000));
-    //     setIsSubmitting(false);
-    //     console.log("Hecho registrado con éxito");
-    // };
     const handleMapChange = (coordenadas) => {
         setFormData(prevData => ({
             ...prevData,
@@ -93,12 +61,20 @@ function RegistrarHecho() {
         }));
     }
 
-    const mockCategorias = [
-        { id: 1, nombre: 'Incendio' },
-        { id: 2, nombre: 'Accidente Vial' },
-        { id: 3, nombre: 'Robo' },
-        { id: 4, nombre: 'Corte de Luz' }
-    ];
+    // Busco las categorias:
+    const [categorias, setCategorias] = useState([]);
+    useEffect(() => {
+        const fetchCategorias = async () => {
+            try {
+                const data = await api.obtenerCategorias();
+                setCategorias(data);
+            } catch (error) {
+                console.error("Error al obtener las categorías:", error);
+            }
+        };
+        fetchCategorias();
+    }, []);
+
     // ...
 
     const handleSubmit = async (e) => {
@@ -118,6 +94,15 @@ function RegistrarHecho() {
             tipo = "textual";
         }
 
+        const selectedCategory = categorias.find(
+            cat => cat.id.toString() === formData.categoria
+        );
+
+        // 2. Determinar el 'detalle' (string) de la categoría
+        const categoriaDetalle = formData.categoria === 'OTRA'
+            ? formData.categoria_nueva
+            : (selectedCategory ? selectedCategory.detalle : ''); // <-- Usamos el 'detalle' encontrado
+
         // 2. Construir el objeto base del hecho
         const hechoData = {
             tipo: tipo,
@@ -125,7 +110,7 @@ function RegistrarHecho() {
             descripcion: formData.descripcion,
             categoria: {
                 // Asumiendo que 'categoria_nueva' es 'detalle'
-                detalle: formData.categoria_nueva
+                detalle: categoriaDetalle
             },
             ubicacion: {
                 latitud: parseFloat(formData.latitud),
@@ -134,7 +119,7 @@ function RegistrarHecho() {
             fechaAcontecimiento: formData.fechaAcontecimiento,
             etiquetas: formData.etiquetas.split(',').map(tag => tag.trim()),
             cuerpo: formData.cuerpo,
-            contenidoMultimedia: formData.contenidoMultimedia, // Asumiendo que ya es un array de strings (URLs)
+            contenidoMultimedia: [],
 
             // 3. Asignar 'contribuyente' por defecto como null (anónimo)
             contribuyente: null
@@ -143,26 +128,57 @@ function RegistrarHecho() {
         // 4. Si el usuario SÍ está autenticado, poblar los datos
         //    (Tu Axios debe estar configurado para enviar el token también)
         if (keycloak.authenticated && keycloak.tokenParsed) {
-            hechoData.contribuyente = {
-                sub: keycloak.tokenParsed.sub,
-                nombre: keycloak.tokenParsed.name,
-                email: keycloak.tokenParsed.email
-            };
+            if(!anonimo) {
+                hechoData.contribuyente = {
+                    sub: keycloak.tokenParsed.sub,
+                    nombre: keycloak.tokenParsed.name,
+                    email: keycloak.tokenParsed.email
+                };
+            }
+
         }
 
         console.log("Datos del hecho a enviar:", hechoData);
 
         try {
-            // 5. Llamar a la API.
-            // 'apiDinamica' (tu Axios) debe estar configurado para
-            // enviar el token en el header SI el usuario está logueado.
-            const result = await apiDinamica.crearHecho(hechoData);
+            // --- PASO 1: Enviar el hecho ---
+            // Asumimos que 'crearHecho' devuelve la respuesta de axios
+            // y que la respuesta contiene el hecho creado con su ID
+            const response = await apiDinamica.crearHecho(hechoData);
 
-            console.log("Hecho registrado con éxito:", result);
+            const nuevoIdHecho = response; // <-- AJUSTA ESTO según la respuesta de tu API
+
+            console.log("Hecho registrado con éxito. ID:", nuevoIdHecho);
+
+            // --- PASO 2: Subir las imágenes (si existen) ---
+            if (formData.contenidoMultimedia.length > 0) {
+                console.log(`Paso 2: Subiendo ${formData.contenidoMultimedia.length} archivos...`);
+
+                // Creamos un array de promesas para todas las subidas
+                const promesasDeSubida = [];
+
+                for (let i = 0; i < formData.contenidoMultimedia.length; i++) {
+                    const file = formData.contenidoMultimedia[i];
+
+                    // Añadimos la promesa de subida al array
+                    promesasDeSubida.push(
+                        apiDinamica.cargarImagen(nuevoIdHecho, file)
+                    );
+                }
+
+                // Esperamos a que TODAS las imágenes se suban en paralelo
+                await Promise.all(promesasDeSubida);
+
+                console.log("Todas las imágenes se subieron correctamente.");
+            }
+
             // Aquí podrías redirigir al usuario o limpiar el formulario
+            // Renderizar una Toast que diga hecho creado con exito
+
+
 
         } catch (error) {
-            console.error("Error al registrar el hecho:", error);
+            console.error("Error en el proceso de registro:", error);
             // ... (tu manejo de errores de Axios) ...
         } finally {
             setIsSubmitting(false);
@@ -227,14 +243,13 @@ function RegistrarHecho() {
                                             required
                                         >
                                             <option value="">Seleccione una categoría...</option>
-                                            {mockCategorias.map(cat => (
-                                                <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                                            {categorias.map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.detalle}</option>
                                             ))}
                                             <option value="OTRA">-- Agregar nueva categoría --</option>
                                         </Form.Select>
                                     </Form.Group>
 
-                                    {/* Campo condicional para la nueva categoría */}
                                     {formData.categoria === 'OTRA' && (
                                         <Form.Group className="mb-3" controlId="formCategoriaNueva">
                                             <Form.Label>Nombre de la nueva categoría *</Form.Label>
@@ -379,6 +394,20 @@ function RegistrarHecho() {
                                             Separar etiquetas con comas.
                                         </Form.Text>
                                     </Form.Group>
+
+                                    {keycloak.authenticated && (
+                                        <Form.Group className="mb-3" controlId="formAnonimo">
+                                            <Form.Check
+                                                type="checkbox"
+                                                label="Registrar como anónimo"
+                                                checked={anonimo}
+                                                onChange={(e) => setAnonimo(e.target.checked)}
+                                            />
+                                            <Form.Text className="text-muted">
+                                                Si marcas esto, tu nombre de usuario no quedará asociado a este reporte.
+                                            </Form.Text>
+                                        </Form.Group>
+                                    )}
 
                                     {/* --- 5. Botón de Envío --- */}
                                     <div className="d-grid mt-5">

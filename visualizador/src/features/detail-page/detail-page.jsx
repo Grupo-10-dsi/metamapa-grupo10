@@ -93,12 +93,12 @@ function DetailPage() {
 
                             <Col md={6} className="mb-3">
                                 <p className="mb-0 fs-5"><span title="Contribuyente">👤</span> <strong>Reportado por:</strong></p>
-                                <p className="text-muted fs-5">{hecho.contribuyente?.nombre || 'No especificado'}</p>
+                                <p className="text-muted fs-5">{hecho.contribuyente.contribuyente_nombre}</p>
                             </Col>
 
                             <Col md={6} className="mb-3 mt-md-3">
                                 <p className="mb-0 fs-5"><span title="Fuente del Reporte">💻</span> <strong>Fuente:</strong></p>
-                                <p className="text-muted fs-5">{hecho.origenFuente?.archivoProcesado?.nombre || 'No especificado'}</p>
+                                <p className="text-muted fs-5">{hecho.origenFuente?.archivoProcesado?.nombre || hecho.origenFuente.nombre}</p>
                             </Col>
 
                             <Col md={6} className="mb-3 mt-md-3">
@@ -138,7 +138,7 @@ function DetailPage() {
                         <Carousel id="carouselHecho" className="mt-3" interval={null}>
                             {hecho.contenidoMultimedia.map((url, index) => (
                                 <Carousel.Item key={index}>
-                                    <img className="d-block w-100" src={url} alt={`Multimedia ${index + 1}`} style={carouselImageStyle} />
+                                    <img className="d-block w-100" src={"https://ycewwqszmnadqvimhdpx.supabase.co/storage/v1/object/public/multimedia/" + url} alt={`Multimedia ${index + 1}`} style={carouselImageStyle} />
                                 </Carousel.Item>
                             ))}
                         </Carousel>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Container,
     Card,
@@ -8,6 +8,7 @@ import {
     Button,
     Spinner
 } from 'react-bootstrap';
+import ApiAgregador from "../../api/api-agregador";
 
 const algoritmosConsenso = [
     "MULTIPLES_MENCIONES",
@@ -18,6 +19,12 @@ const algoritmosConsenso = [
 
 const tiposDeFuente = ["ESTATICA", "DINAMICA", "PROXY"];
 
+const urlsFuentes = {
+    "ESTATICA": "http://localhost:8081/api/estatica/hechos",
+    "DINAMICA": "http://localhost:8082/api/dinamica/hechos",
+    "PROXY": "http://localhost:8083/api/proxy/hechos"
+}
+
 const criteriosDisponibles = [
     "Categoria",
     "Descripcion",
@@ -26,12 +33,7 @@ const criteriosDisponibles = [
     "Titulo",
 ];
 
-const mockCategorias = [
-    { id: 1, nombre: 'Incendio' },
-    { id: 2, nombre: 'Accidente Vial' },
-    { id: 3, nombre: 'Robo' },
-    { id: 4, nombre: 'Corte de Luz' }
-];
+//const categorias = ApiAgregador.obtenerCategorias();
 
 function CrearColeccion() {
     const [formData, setFormData] = useState({
@@ -49,6 +51,23 @@ function CrearColeccion() {
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+    const [categorias, setCategorias] = useState([]);
+
+    useEffect(() => {
+        const cargarCategorias = async () => {
+            try {
+
+                const data = await ApiAgregador.obtenerCategorias();
+                setCategorias(data);
+            } catch (error) {
+                console.error("Error al cargar categorías:", error);
+            }
+        };
+        cargarCategorias();
+    }, []);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -79,9 +98,63 @@ function CrearColeccion() {
         e.preventDefault();
         setIsSubmitting(true);
         console.log("Enviando Colección:", formData);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsSubmitting(false);
-        console.log("Colección creada");
+
+        const criterioMap = {
+            "Categoria":   { tipo: "categoria",   valorKey: "criterio_categoria" },
+            "Descripcion": { tipo: "descripcion", valorKey: "criterio_descripcion" },
+            "Fecha Desde": { tipo: "fecha_desde", valorKey: "criterio_fecha_desde" },
+            "Fecha Hasta": { tipo: "fecha_hasta", valorKey: "criterio_fecha_hasta" },
+            "Titulo":      { tipo: "titulo",      valorKey: "criterio_titulo" }
+        };
+
+        // 2. Construye el array de criterios en el formato {tipo, valor}
+        //    Itera sobre los criterios que el usuario SELECCIONÓ (ej: ["Categoria", "Titulo"])
+        const criteriosParaRequest = formData.criterios
+            .map(criterioNombre => {
+                // Busca la configuración para ese criterio (ej: {tipo: "titulo", valorKey: "criterio_titulo"})
+                const config = criterioMap[criterioNombre];
+                if (!config) return null;
+
+                // Obtiene el valor correspondiente del estado (ej: formData["criterio_titulo"])
+                const valor = formData[config.valorKey];
+
+                // Si el valor no está vacío, crea el objeto
+                if (valor) {
+                    return {
+                        tipo: config.tipo,
+                        valor: valor
+                    };
+                }
+                return null;
+            })
+            .filter(Boolean); // Limpia cualquier 'null' (criterios seleccionados pero vacíos)
+
+
+        // 3. Crea el 'payload' final para la API
+        //    Esto evita enviar los campos 'criterio_...' sueltos
+        const payload = {
+            titulo: formData.titulo,
+            descripcion: formData.descripcion,
+            algoritmo_consenso: formData.algoritmo_consenso,
+            urls_fuente: formData.urls_fuente,
+            criterios: criteriosParaRequest // Aquí va tu lista formateada
+        };
+
+        try {
+
+
+            const response = await ApiAgregador.crearColeccion(payload)
+
+            console.log("Colección creada con éxito:", response);
+
+
+        } catch (error) {
+            console.error("Error al crear la colección:", error.message);
+
+        } finally {
+            setIsSubmitting(false);
+        }
+
     };
 
     return (
@@ -148,7 +221,7 @@ function CrearColeccion() {
                                                         type="checkbox"
                                                         id={`check-fuente-${fuente}`}
                                                         label={fuente}
-                                                        onChange={() => handleCheckboxListChange('urls_fuente', fuente)}
+                                                        onChange={() => handleCheckboxListChange('urls_fuente', urlsFuentes[fuente])}
                                                     />
                                                 ))}
                                             </Form.Group>
@@ -181,8 +254,8 @@ function CrearColeccion() {
                                                             value={formData.criterio_categoria}
                                                             onChange={handleChange}
                                                         >
-                                                            {mockCategorias.map(cat => (
-                                                                <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                                                            {categorias.map(cat => (
+                                                                <option key={cat.id} value={cat.id}>{cat.detalle}</option>
                                                             ))}
                                                         </Form.Select>
                                                     </Form.Group>

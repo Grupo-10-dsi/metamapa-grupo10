@@ -13,6 +13,8 @@ public abstract class OrigenFuente {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    public String nombre;
+
     public OrigenFuente() {
     }
 
