@@ -45,6 +45,7 @@ public class SecurityConfig {
                       .pathMatchers(HttpMethod.GET, "/agregador/hechos").permitAll()
                       .pathMatchers(HttpMethod.GET, "/agregador/hechos/**").permitAll()
                       .pathMatchers(HttpMethod.GET, "/agregador/search").permitAll()
+                            .pathMatchers(HttpMethod.POST, "/dinamica/hechos").permitAll()
 
                       // --- REGLAS DE "ADMIN" (hasRole) ---
                       .pathMatchers(HttpMethod.POST, "/agregador/colecciones").hasRole("ADMIN")

@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/proxy/agregador/pom.xml" />
         <option value="$PROJECT_DIR$/normalizador/pom.xml" />
         <option value="$PROJECT_DIR$/estadistica/pom.xml" />
+        <option value="$PROJECT_DIR$/gestor-personas/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.ddsi.dinamica.models.entities.hecho;
 
-import ar.edu.utn.frba.ddsi.dinamica.models.entities.personas.Contribuyente;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -35,8 +35,6 @@ function App() {
                         <Route path="*" element={<Navigate to="/home" replace />} />
                         <Route path="/hecho/:hechoId" element={<DetailPage />} />
                         <Route path="/busqueda" element={<Busqueda />} />
-                        <Route path="/estadisticas" element={<Estadisticas/>} />
-
                         {/* rutas usuario */}
                         <Route element={<RequireAuth/>} >
                             <Route path="/perfil" element={<Perfil/> } />
@@ -48,6 +46,7 @@ function App() {
                         {/* rutas admin */}
                         <Route element={<RequireAdmin/>} >
                             <Route path="/crear-coleccion" element={<CrearColeccion/>} />
+                            <Route path="/estadisticas" element={<Estadisticas/>} />
                         </Route>
                     </Route>
                 </Routes>
