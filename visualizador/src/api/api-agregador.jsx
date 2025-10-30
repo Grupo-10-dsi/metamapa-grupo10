@@ -32,6 +32,7 @@ class ApiAgregador {
     }
 
 
+
     async obtenerHechos(filtros) {
         try {
             const response = await this.axiosInstance.get('/hechos', {
@@ -41,6 +42,16 @@ class ApiAgregador {
             return response.data
         } catch(error) {
             console.error('Error al buscar hechos:', error)
+            throw error
+        }
+    }
+
+    async obtenerColecciones() {
+        try {
+            const response = await this.axiosInstance.get('/colecciones')
+            return response.data
+        } catch(error) {
+            console.error('Error al buscar colecciones:', error)
             throw error
         }
     }
