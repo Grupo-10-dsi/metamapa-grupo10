@@ -1,4 +1,4 @@
-function SourceCard({ text, alignRight, scrollOffset, delay, imageSrc }) {
+function SourceCard({ text, alignRight, scrollOffset, delay, icon }) {
     const startPos = 150;
 
     let translateXDistance = startPos - scrollOffset;
@@ -25,18 +25,20 @@ function SourceCard({ text, alignRight, scrollOffset, delay, imageSrc }) {
         minHeight: '120px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        gap: '30px',
         flexDirection: alignRight ? 'row-reverse' : 'row',
     };
 
-    const imageStyle = {
-        backgroundColor: '#ccc',
+    const iconWrapperStyle = {
+        backgroundColor: 'transparent', // El ícono ya tiene color
         borderRadius: '50%',
         width: '80px',
         height: '80px',
         flexShrink: 0,
-        margin: alignRight ? '0 0 0 20px' : '0 20px 0 0',
-        objectFit: 'cover',
+        // Centrar el ícono dentro del wrapper
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     };
 
     return (
@@ -44,11 +46,9 @@ function SourceCard({ text, alignRight, scrollOffset, delay, imageSrc }) {
             style={{ ...transitionStyle, transitionDelay: `${delay}s` }}
             className="col-12 col-md-8 mx-auto"
         >
-            {imageSrc ? (
-                <img src={imageSrc} alt="source" style={imageStyle} />
-            ) : (
-                <div style={imageStyle} />
-            )}
+            <div className="circle-background-style">
+                {icon}
+            </div>
             <p className="mb-0 text-start">{text}</p>
         </div>
     );

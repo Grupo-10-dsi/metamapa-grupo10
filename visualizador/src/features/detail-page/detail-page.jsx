@@ -93,12 +93,12 @@ function DetailPage() {
 
                             <Col md={6} className="mb-3">
                                 <p className="mb-0 fs-5"><span title="Contribuyente">👤</span> <strong>Reportado por:</strong></p>
-                                <p className="text-muted fs-5">{hecho.contribuyente?.nombre || 'No especificado'}</p>
+                                <p className="text-muted fs-5">{hecho.contribuyente.contribuyente_nombre}</p>
                             </Col>
 
                             <Col md={6} className="mb-3 mt-md-3">
                                 <p className="mb-0 fs-5"><span title="Fuente del Reporte">💻</span> <strong>Fuente:</strong></p>
-                                <p className="text-muted fs-5">{hecho.origenFuente?.archivoProcesado?.nombre || 'No especificado'}</p>
+                                <p className="text-muted fs-5">{hecho.origenFuente?.archivoProcesado?.nombre || hecho.origenFuente.nombre}</p>
                             </Col>
 
                             <Col md={6} className="mb-3 mt-md-3">
