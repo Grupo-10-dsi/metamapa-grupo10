@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-// Todos tus imports de páginas
 import HomePage from "./features/home-page/home-page.jsx";
 import Layout from "./features/layout/layout.jsx";
 import Perfil from "./features/perfil-page/perfil.jsx";
 import DetailPage from "./features/detail-page/detail-page.jsx";
 import Busqueda from "./features/busqueda-page/busqueda.jsx";
 import RegistrarHecho from "./features/registrar-hecho/registrar-hecho.jsx";
+import ColeccionesPage  from "./features/colecciones/ColeccionesPage";
+import ColeccionesHechoPage from "./features/viewHechos-page/coleccion-page.jsx";
 import './App.css';
 import Estadisticas from "./features/estadisticas-page/estadisticas";
 import CrearColeccion from "./features/crear-coleccion/crear-coleccion.jsx";
@@ -14,12 +15,9 @@ import RequireAdmin from "./RequireAdmin.jsx";
 
 // --- CAMBIOS EN IMPORTS ---
 import Keycloak from "keycloak-js";
-// Importa 'useKeycloak'
 import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
-// Importa tu API (asegúrate que la ruta sea correcta)
 import ApiAgregador from "./api/api-agregador";
 import { useEffect } from "react";
-// --- FIN CAMBIOS ---
 
 
 const kcConfig = {
@@ -74,6 +72,9 @@ function AppRouter() {
                     <Route path="/hecho/:hechoId" element={<DetailPage />} />
                     <Route path="/busqueda" element={<Busqueda />} />
                     <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
+                    <Route path="/colecciones" element={<ColeccionesPage/>} />
+                    <Route path="/hechos" element={<ColeccionesHechoPage/>}/>
+                    <Route path="/colecciones/:id/hechos" element={<ColeccionesHechoPage/>} />
 
                     {/* rutas usuario */}
                     <Route element={<RequireAuth/>} >

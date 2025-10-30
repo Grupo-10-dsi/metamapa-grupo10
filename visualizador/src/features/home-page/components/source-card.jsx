@@ -46,10 +46,8 @@ function SourceCard({ text, alignRight, scrollOffset, delay, icon }) {
             style={{ ...transitionStyle, transitionDelay: `${delay}s` }}
             className="col-12 col-md-8 mx-auto"
         >
-            <div className="circle-background-style">
-                {icon}
-            </div>
-            <p className="mb-0 text-start">{text}</p>
+
+            <div className="text-start">{text}</div>
         </div>
     );
 };
