@@ -111,6 +111,7 @@ class ApiAgregador {
             const response = await this.axiosInstance.put(`/solicitudes/${id}`, body, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`
                 },
             })
             return response.data
@@ -125,7 +126,12 @@ class ApiAgregador {
         try {
             const body = { urls_fuente: urls, algoritmo_consenso: algoritmo}
             console.log(urls)
-            const response = await this.axiosInstance.patch(`/colecciones/${id}`, body, { headers: { 'Content-Type': 'application/json' }})
+            const response = await this.axiosInstance.patch(`/colecciones/${id}`, body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`
+                }
+            })
             console.log(response.data)
             return response.data
 
