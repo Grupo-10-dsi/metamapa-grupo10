@@ -47,6 +47,7 @@ class ApiEstadistica {
                     Id: id,
                     cantidadProvincias: cantidadProvincias
                 },
+                responseType: formato === "csv" ? "blob" : "json",
             })
             return response.data
         } catch (error) {
@@ -62,6 +63,7 @@ class ApiEstadistica {
                     formato: formato,
                     cantidadCategorias: cantidadCategorias,
                 },
+                responseType: formato === "csv" ? "blob" : "json",
             })
             return response.data
         } catch (error) {
@@ -78,6 +80,7 @@ class ApiEstadistica {
                     formato: formato,
                     cantidadProvincias: cantidadProvincias,
                 },
+                responseType: formato === "csv" ? "blob" : "json",
             })
             return response.data
         } catch (error) {
@@ -94,6 +97,7 @@ class ApiEstadistica {
                     cantidadHoras,
                     formato
                 },
+                responseType: formato === "csv" ? "blob" : "json",
             })
             return response.data
         } catch (error) {
@@ -109,6 +113,7 @@ class ApiEstadistica {
                     mostrar,
                     formato
                 },
+                responseType: formato === "csv" ? "blob" : "json",
             })
             return response.data
         } catch (error) {

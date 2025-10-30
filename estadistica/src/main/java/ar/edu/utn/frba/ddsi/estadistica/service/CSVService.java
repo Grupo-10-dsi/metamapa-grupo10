@@ -27,7 +27,7 @@ public class CSVService {
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+nombreArchivo+".csv")
-                .contentType(MediaType.valueOf("text/csv"))
+                .contentType(MediaType.parseMediaType("text/csv"))
                 .body(csvBuilder.toString());
     }
 
@@ -40,7 +40,7 @@ public class CSVService {
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+nombreArchivo+".csv")
-                .contentType(MediaType.valueOf("text/csv"))
+                .contentType(MediaType.parseMediaType("text/csv"))
                 .body(csvBuilder.toString());
     }
 
@@ -56,7 +56,7 @@ public class CSVService {
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+nombreArchivo+".csv")
-                .contentType(MediaType.valueOf("text/csv"))
+                .contentType(MediaType.parseMediaType("text/csv"))
                 .body(csvBuilder.toString());
     }
 
@@ -75,7 +75,7 @@ public class CSVService {
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+nombreArchivo+".csv")
-                .contentType(MediaType.valueOf("text/csv"))
+                .contentType(MediaType.parseMediaType("text/csv"))
                 .body(csvBuilder.toString());
     }
 

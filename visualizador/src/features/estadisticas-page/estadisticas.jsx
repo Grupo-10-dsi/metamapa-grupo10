@@ -24,6 +24,7 @@ function Estadisticas() {
     const [coleccionSeleccionada, setColeccionSeleccionada] = useState(null);
 
 
+
     const estadisticas = [
         { id: 1, titulo: "Provincia con más hechos reportados", descripcion: "De una colección, ¿en qué provincia se agrupan la mayor cantidad de hechos reportados?" },
         { id: 2, titulo: "Categoría más reportada", descripcion: "¿Cuál es la categoría con mayor cantidad de hechos reportados?" },
@@ -35,10 +36,10 @@ function Estadisticas() {
     useEffect(() => {
         const cargarCategorias = async () => {
             try {
-                const data = await ApiAgregador.obtenerCategorias();
-                setCategorias(data);
+                const data = await ApiAgregador.obtenerCategorias()
+                setCategorias(data)
             } catch (error) {
-                console.error("Error al cargar categorías:", error);
+                console.error("Error al cargar categorías:", error)
             }
         }
         cargarCategorias()
@@ -102,7 +103,6 @@ function Estadisticas() {
     const handleCantidadChange = (id, nuevaCantidad) => {
         setCantidades(prev => ({ ...prev, [id]: nuevaCantidad }));
     };
-
     useEffect(() => {
         if (initialized && keycloak.token) {
             ApiEstadistica.setToken(keycloak.token);
@@ -139,6 +139,90 @@ function Estadisticas() {
         }
     };
 
+    const apiCallMap = {
+        1: ApiEstadistica.obtenerProvinciaPorColeccion,
+        2: ApiEstadistica.obtenerCategoriaMaxHechos,
+        3: ApiEstadistica.obtenerProvinciaPorCategoria,
+        4: ApiEstadistica.obtenerHoraMaxHechos,
+        5: ApiEstadistica.obtenerSolicitudesSpam,
+    };
+
+    const getQueryParams = (id, format = null) => {
+        const cantidad = cantidades[id] || 5;
+        let params = {};
+
+        if (format) params.formato = format;
+
+        switch (id) {
+            case 1:
+                if (!coleccionSeleccionada?.id)
+                    throw new Error("Debe seleccionar una colección.");
+                params.id = coleccionSeleccionada.id;
+                params.cantidadProvincias = cantidad;
+                break;
+            case 2:
+                params.cantidadCategorias = cantidad;
+                break;
+            case 3:
+                if (!categoriaSeleccionada?.id)
+                    throw new Error("Debe seleccionar una categoría.");
+                params.id = categoriaSeleccionada.id;
+                params.cantidadProvincias = cantidad;
+                break;
+            case 4:
+                if (!categoriaSeleccionada?.id)
+                    throw new Error("Debe seleccionar una categoría.");
+                params.id = categoriaSeleccionada.id;
+                params.cantidadHoras = cantidad;
+                break;
+            case 5:
+                params.mostrar = null;
+                break;
+            default:
+                throw new Error("Estadística no válida.");
+        }
+        return params;
+    };
+
+    const descargarCSV = async (id) => {
+        try {
+            const params = getQueryParams(id, "csv");
+            const apiCall = apiCallMap[id];
+
+            if (!apiCall) throw new Error("No hay endpoint para este ID.");
+
+            // Hacemos la misma llamada, pero pidiendo CSV
+            const response = await apiCall.call(ApiEstadistica, params);
+
+            // Si el backend devuelve un blob, ya se descarga directo.
+            // Pero si devuelve texto CSV, lo transformamos:
+            const blob =
+                response instanceof Blob
+                    ? response
+                    : new Blob([response], { type: "text/csv" });
+
+            // Crear enlace de descarga
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+
+            // Nombre de archivo según tipo
+            const nombres = {
+                1: "provincia_por_coleccion.csv",
+                2: "categoria_max_hechos.csv",
+                3: "provincia_por_categoria.csv",
+                4: "hora_max_hechos.csv",
+                5: "solicitudes_spam.csv",
+            };
+            link.setAttribute("download", nombres[id] || "estadistica.csv");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Error al descargar CSV:", error);
+        }
+    };
 
 
     const renderFormulario = (id) => {
@@ -245,38 +329,37 @@ function Estadisticas() {
                                                                         {index + 1}. <strong>Provincia:</strong> {resultado.provincia || resultado}
                                                                     </>
                                                                 ) : seleccionada === 4 ? (
-                                                                    <>
-                                                                        {index + 1}. <strong>Hora: </strong>{resultado.split(":")[0]}:00
-                                                                    </>
-                                                                ) :
+                                                                        <>
+                                                                            {index + 1}. <strong>Hora: </strong>{resultado.split(":")[0]}:00
+                                                                        </>
+                                                                    ) :
                                                                     seleccionada === 5 ? (
                                                                         <>
                                                                             {index + 1}. <strong>Cantidad de solicitudes spam: </strong>{resultado.split(":")[0]}:00
                                                                         </>
                                                                     ) : (
-                                                                    typeof resultado === "object" ? (
-                                                                        <div>
-                                                                            {index + 1}.{" "}
-                                                                            {Object.entries(resultado).map(([k, v]) => (
-                                                                                <div key={k}>
-                                                                                    <strong>{k}: </strong>{v}
-                                                                                </div>
-                                                                            ))}
-                                                                        </div>
-                                                                    ) : (
-                                                                        `${index + 1}. ${resultado}`
-                                                                    )
-                                                                )}
+                                                                        typeof resultado === "object" ? (
+                                                                            <div>
+                                                                                {index + 1}.{" "}
+                                                                                {Object.entries(resultado).map(([k, v]) => (
+                                                                                    <div key={k}>
+                                                                                        <strong>{k}: </strong>{v}
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                        ) : (
+                                                                            `${index + 1}. ${resultado}`
+                                                                        )
+                                                                    )}
                                                             </ListGroup.Item>
                                                         ))}
                                                     </ListGroup>
 
                                                     <Button
-                                                        variant="outline-secondary"
-                                                        className="mt-3"
-                                                        onClick={() => console.log(`Generando CSV de la estadística ${item.id}`)}
+                                                        variant="outline-primary"
+                                                        onClick={() => descargarCSV(item.id)}
                                                     >
-                                                        Generar CSV
+                                                        Descargar CSV
                                                     </Button>
                                                 </Card.Body>
                                             </Card>

@@ -53,7 +53,7 @@ public class EstadisticaController {
         List<Categoria> resultados =  this.estadisticaService.obtenerCategoriasConMasHechos(cantidadCategorias);
 
         if(formato != null && formato.equalsIgnoreCase("csv")){
-            return this.csvService.convertirACSV(resultados, "categoria-,max-hechos;");
+            return this.csvService.convertirACSV(resultados, "categoria-max-hechos;");
         }
 
         return ResponseEntity.ok(resultados);
