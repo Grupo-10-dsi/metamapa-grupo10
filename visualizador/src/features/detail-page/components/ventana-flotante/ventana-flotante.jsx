@@ -20,7 +20,7 @@ function VentanaFlotante({ show, handleClose, hecho, onSubmit }) {
 
         // Llamamos a la función onSubmit que nos pasó el padre
         // y le pasamos el id del hecho y el motivo.
-        await onSubmit({ hechoId: hecho?.id, motivo: motivo });
+        await onSubmit({ idHecho: hecho?.id, justificacion: motivo });
 
         setIsSubmitting(false);
         setMotivo(""); // Limpiamos el campo

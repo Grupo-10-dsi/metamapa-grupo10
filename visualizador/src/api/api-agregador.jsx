@@ -76,6 +76,22 @@ class ApiAgregador {
         }
     }
 
+    async enviarSolicitudEliminacion(data) {
+        try {
+            const response = await this.axiosInstance.post(`/solicitudes`, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`,
+                }
+            })
+            return response.data
+        } catch (error) {
+            if (error.response) {
+                console.error('Error al enviar la solicitud de eliminación:', error)
+            }
+        }
+    }
+
 }
 const api = new ApiAgregador()
 export default api

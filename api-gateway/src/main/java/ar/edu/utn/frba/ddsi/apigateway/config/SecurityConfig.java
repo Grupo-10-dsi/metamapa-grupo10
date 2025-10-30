@@ -54,7 +54,6 @@ public class SecurityConfig {
 
                     .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         // --- REGLAS PÚBLICAS (permitAll) ---
-                        // Todos los GET que consultan datos
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/categorias").permitAll()
@@ -63,6 +62,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/agregador/search").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/dinamica/hechos").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/dinamica/upload/{id}").permitAll()
+                            .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").permitAll()
 
                         // --- REGLAS DE "ADMIN" (hasRole) ---
                         .pathMatchers(HttpMethod.POST, "/agregador/colecciones").hasRole("ADMIN")

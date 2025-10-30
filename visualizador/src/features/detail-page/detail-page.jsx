@@ -61,7 +61,13 @@ function DetailPage() {
     };
 
     const handleSolicitudSubmit = async (data) => {
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            console.log(data)
+            await ApiAgregador.enviarSolicitudEliminacion(data);
+            setShowModal(false);
+        } catch (error) {
+            console.error("Error al enviar la solicitud de eliminación:", error);
+        }
     };
 
     return (

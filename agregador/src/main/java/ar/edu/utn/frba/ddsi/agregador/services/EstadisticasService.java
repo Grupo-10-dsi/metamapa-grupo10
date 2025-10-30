@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.ddsi.agregador.services;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTOE;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
@@ -48,7 +49,7 @@ public class EstadisticasService {
                 .collect(Collectors.toList());
     }
 
-    public List<SolicitudDTO> obtenerSolicitudesSpam() {
+    public List<SolicitudDTOE> obtenerSolicitudesSpam() {
         List<SolicitudEliminacion> solicitudes = this.solicitudesRepository.findAllByEstado(Estado_Solicitud.SPAM);
 
         return solicitudes.stream().map(SolicitudEliminacion::toDTO).toList();

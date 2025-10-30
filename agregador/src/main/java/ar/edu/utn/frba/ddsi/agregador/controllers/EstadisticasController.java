@@ -2,6 +2,7 @@ package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTOE;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
@@ -61,7 +62,7 @@ public class EstadisticasController {
     }
 
     @GetMapping("/solicitudes/spam")
-    public List<SolicitudDTO> obtenerSolicitudesSpam() {
+    public List<SolicitudDTOE> obtenerSolicitudesSpam() {
         return this.estadisticasService.obtenerSolicitudesSpam();
     }
 }
