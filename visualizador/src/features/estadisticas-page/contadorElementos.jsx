@@ -1,24 +1,15 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 
-export default function ContadorElementos({ onChange }) {
-    const [cantidad, setCantidad] = useState(1);
+export default function ContadorElementos({ cantidadInicial = 1, onChange }) {
+    const [cantidad, setCantidad] = useState(cantidadInicial);
 
-    const incrementar = () => {
-        setCantidad(prev => {
-            const next = prev + 1;
-            onChange && onChange(next);
-            return next;
-        });
-    };
+    useEffect(() => {
+        if (onChange) onChange(cantidad);
+    }, [cantidad]);
 
-    const decrementar = () => {
-        setCantidad(prev => {
-            const next = prev > 1 ? prev - 1 : 1;
-            onChange && onChange(next);
-            return next;
-        });
-    };
+    const incrementar = () => setCantidad(prev => prev + 1);
+    const decrementar = () => setCantidad(prev => (prev > 1 ? prev - 1 : 1));
 
     return (
         <Form.Group className="mt-3 text-center">

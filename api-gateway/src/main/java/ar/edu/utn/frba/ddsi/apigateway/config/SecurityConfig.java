@@ -27,8 +27,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
-            // 1. Configura el validador de JWT para que use los roles de Keycloak con la conversion a los de Spring
+        http.cors(cors -> {})
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtSpec ->
                     jwtSpec.jwtAuthenticationConverter(jwtAuthenticationConverter())
             ))
@@ -52,6 +51,11 @@ public class SecurityConfig {
                       .pathMatchers(HttpMethod.DELETE, "/agregador/colecciones/{id}").hasRole("ADMIN")
                       .pathMatchers(HttpMethod.GET, "/agregador/solicitudes").hasRole("ADMIN")
                       .pathMatchers(HttpMethod.PUT, "/agregador/solicitudes/{id}").hasRole("ADMIN")
+                            .pathMatchers(HttpMethod.GET, "/api/estadisticas/colecciones/provincia-max-hechos").hasRole("ADMIN")
+                            .pathMatchers(HttpMethod.GET, "/api/estadisticas/hechos/max-categoria").hasRole("ADMIN")
+                            .pathMatchers(HttpMethod.GET, "/api/estadisticas/categoria/provincia-max-hechos").hasRole("ADMIN")
+                            .pathMatchers(HttpMethod.GET, "/api/estadisticas/categoria/hora").hasRole("ADMIN")
+                            .pathMatchers(HttpMethod.GET, "/api/estadisticas/solicitudes/spam").hasRole("ADMIN")
 
                       // --- REGLAS DE USUARIO AUTENTICADO (authenticated) ---
                       .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").authenticated() // Un usuario logueado crea una solicitud

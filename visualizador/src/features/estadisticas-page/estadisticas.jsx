@@ -3,6 +3,7 @@ import { Container, Card, Button, Form, ListGroup } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import ContadorElementos from "./contadorElementos.jsx";
 import "./estadisticas.css";
+import ApiEstadistica from "../../api/api-estadistica.jsx";
 
 function Estadisticas() {
     const [seleccionada, setSeleccionada] = useState(null);
@@ -10,6 +11,11 @@ function Estadisticas() {
     const [sugerencias, setSugerencias] = useState([]);
     const [campoSeleccionado, setCampoSeleccionado] = useState("");
     const contenedorRef = useRef(null);
+    const [cantidades, setCantidades] = useState({});
+    const [resultados, setResultados] = useState([]);
+
+    const idColeccion = 1;
+    const idCategoria = 4;
 
     const colecciones = [
         "Hechos ambientales 2024",
@@ -67,87 +73,79 @@ function Estadisticas() {
         return () => document.removeEventListener("mousedown", manejarClickFuera);
     }, []);
 
-    const renderFormulario = (id) => {
-        switch (id) {
-            case 1:
-                return (
-                    <Form ref={contenedorRef}>
-                        <Form.Group style={{ position: "relative", overflow: "visible" }}>
-                            <Form.Label>Seleccioná la colección:</Form.Label>
-                            <div className="input-con-icono">
-                                <FaSearch className="icono-formulario" />
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Buscar o seleccionar una colección"
-                                    value={campoSeleccionado === "coleccion" ? busqueda : ""}
-                                    onChange={(e) => handleBusqueda(e.target.value, "coleccion")}
-                                />
-                            </div>
-                            {sugerencias.length > 0 && (
-                                <ListGroup className="sugerencias-lista">
-                                    {sugerencias.map((sug, index) => (
-                                        <ListGroup.Item
-                                            key={index}
-                                            action
-                                            onClick={() => seleccionarSugerencia(sug)}
-                                        >
-                                            {sug}
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            )}
-                        </Form.Group>
+    const handleCantidadChange = (id, nuevaCantidad) => {
+        setCantidades(prev => ({ ...prev, [id]: nuevaCantidad }));
+    };
 
-                        <ContadorElementos />
-
-                        <Button variant="primary" className="mt-3">Consultar</Button>
-                    </Form>
-                );
-
-            case 3:
-            case 4:
-                return (
-                    <Form ref={contenedorRef}>
-                        <Form.Group style={{ position: "relative", overflow: "visible" }}>
-                            <Form.Label>Categoría:</Form.Label>
-                            <div className="input-con-icono">
-                                <FaSearch className="icono-formulario" />
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Buscar o seleccionar una categoría"
-                                    value={campoSeleccionado === "categoria" ? busqueda : ""}
-                                    onChange={(e) => handleBusqueda(e.target.value, "categoria")}
-                                />
-                            </div>
-                            {sugerencias.length > 0 && (
-                                <ListGroup className="sugerencias-lista">
-                                    {sugerencias.map((sug, index) => (
-                                        <ListGroup.Item
-                                            key={index}
-                                            action
-                                            onClick={() => seleccionarSugerencia(sug)}
-                                        >
-                                            {sug}
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            )}
-                        </Form.Group>
-
-                        <ContadorElementos />
-
-                        <Button variant="primary" className="mt-3">Consultar</Button>
-                    </Form>
-                );
-
-            default:
-                return (
-                    <div className="text-center mt-3">
-                        <ContadorElementos />
-                        <Button variant="primary" className="mt-3">Consultar</Button>
-                    </div>
-                );
+    const handleConsultar = async (id) => {
+        const cantidad = cantidades[id] || 5;
+        let datos = [];
+        try {
+            switch (id) {
+                case 1:
+                    datos = await ApiEstadistica.obtenerProvinciaPorColeccion({ id: idColeccion, formato: null, cantidadProvincias: cantidad });
+                    break;
+                case 2:
+                    datos = await ApiEstadistica.obtenerCategoriaMaxHechos({formato: null, cantidadCategorias: cantidad});
+                    break;
+                case 3:
+                    datos = await ApiEstadistica.obtenerProvinciaPorCategoria({ id: idCategoria, formato: null, cantidadProvincias: cantidad });
+                    break;
+                case 4:
+                    datos = await ApiEstadistica.obtenerHoraMaxHechos({ id: idCategoria, cantidadHoras: cantidad });
+                    break;
+                case 5:
+                    datos = await ApiEstadistica.obtenerSolicitudesSpam({ mostrar:null, cantidadSolicitudes: cantidad });
+                    break;
+                default:
+                    break;
+            }
+            setResultados(datos);
+            console.log("Resultados:", datos);
+        } catch (error) {
+            console.error("Error al consultar la estadística:", error);
         }
+    };
+
+
+
+    const renderFormulario = (id) => {
+        return (
+            <Form ref={contenedorRef}>
+                {(id === 1 || id === 3 || id === 4) && (
+                    <Form.Group style={{ position: "relative", overflow: "visible" }}>
+                        <Form.Label>{id === 1 ? "Seleccioná la colección:" : "Categoría:"}</Form.Label>
+                        <div className="input-con-icono">
+                            <FaSearch className="icono-formulario" />
+                            <Form.Control
+                                type="text"
+                                placeholder={id === 1 ? "Buscar o seleccionar una colección" : "Buscar o seleccionar una categoría"}
+                                value={campoSeleccionado === (id === 1 ? "coleccion" : "categoria") ? busqueda : ""}
+                                onChange={(e) => handleBusqueda(e.target.value, id === 1 ? "coleccion" : "categoria")}
+                            />
+                        </div>
+                        {sugerencias.length > 0 && (
+                            <ListGroup className="sugerencias-lista">
+                                {sugerencias.map((sug, index) => (
+                                    <ListGroup.Item key={index} action onClick={() => seleccionarSugerencia(sug)}>
+                                        {sug}
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                        )}
+                    </Form.Group>
+                )}
+
+                <ContadorElementos
+                    cantidadInicial={cantidades[id] || 5}
+                    onChange={(nuevaCantidad) => handleCantidadChange(id, nuevaCantidad)}
+                />
+
+                <Button variant="primary" className="mt-3" onClick={() => handleConsultar(id)}>
+                    Consultar
+                </Button>
+            </Form>
+        );
     };
 
     return (
@@ -164,9 +162,16 @@ function Estadisticas() {
 
                                 <Button
                                     variant={seleccionada === item.id ? "secondary" : "outline-primary"}
-                                    onClick={() =>
-                                        setSeleccionada(seleccionada === item.id ? null : item.id)
-                                    }
+                                    onClick={() => {
+                                        if (seleccionada === item.id) {
+                                            setSeleccionada(null);
+                                            setResultados([]);
+                                        } else {
+                                            setSeleccionada(item.id);
+                                            setResultados([]);
+                                            setCantidades(prev => ({ ...prev, [item.id]: prev[item.id] || 5 }));
+                                        }
+                                    }}
                                     className="me-2"
                                 >
                                     {seleccionada === item.id ? "Cerrar" : "Ver más"}
@@ -178,13 +183,56 @@ function Estadisticas() {
                                             {renderFormulario(item.id)}
                                         </div>
 
-                                        <Button
-                                            variant="outline-secondary"
-                                            className="mt-2"
-                                            onClick={() => console.log(`Generando CSV de la estadística ${item.id}`)}
-                                        >
-                                            Generar CSV
-                                        </Button>
+                                        {resultados.length > 0 && (
+                                            <Card className="mt-3 shadow-sm border-0">
+                                                <Card.Header className="bg-light fw-semibold">
+                                                    Resultados obtenidos
+                                                </Card.Header>
+                                                <Card.Body>
+                                                    <ListGroup variant="flush">
+                                                        {resultados.map((resultado, index) => (
+                                                            <ListGroup.Item key={index} className="px-3 py-2">
+                                                                {seleccionada === 2 ? (
+                                                                    <>
+                                                                        {index + 1}. <strong>Categoría:</strong> {resultado.detalle}
+                                                                    </>
+                                                                ) : seleccionada === 1 || seleccionada === 3 ? (
+                                                                    // Para estadística 1 y 3 (provincias)
+                                                                    <>
+                                                                        {index + 1}. <strong>Provincia:</strong> {resultado.provincia || resultado}
+                                                                    </>
+                                                                ) : seleccionada === 4 ? (
+                                                                    <>
+                                                                        {index + 1}. <strong>Hora: </strong>{resultado.split(":")[0]}:00
+                                                                    </>
+                                                                ) :(
+                                                                    typeof resultado === "object" ? (
+                                                                        <div>
+                                                                            {index + 1}.{" "}
+                                                                            {Object.entries(resultado).map(([k, v]) => (
+                                                                                <div key={k}>
+                                                                                    <strong>{k}: </strong>{v}
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    ) : (
+                                                                        `${index + 1}. ${resultado}`
+                                                                    )
+                                                                )}
+                                                            </ListGroup.Item>
+                                                        ))}
+                                                    </ListGroup>
+
+                                                    <Button
+                                                        variant="outline-secondary"
+                                                        className="mt-3"
+                                                        onClick={() => console.log(`Generando CSV de la estadística ${item.id}`)}
+                                                    >
+                                                        Generar CSV
+                                                    </Button>
+                                                </Card.Body>
+                                            </Card>
+                                        )}
                                     </>
                                 )}
                             </Card.Body>
