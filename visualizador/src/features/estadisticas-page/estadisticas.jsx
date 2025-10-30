@@ -20,14 +20,8 @@ function Estadisticas() {
     const { keycloak, initialized } = useKeycloak();
     const idColeccion = 1;
     const idCategoria = 4;
-
-    const colecciones = [
-        "Hechos ambientales 2024",
-        "Violencia de género",
-        "Deforestación Chaco",
-        "Contaminación del Riachuelo",
-        "Emergencias urbanas"
-    ];
+    const [colecciones, setColecciones] = useState([])
+    const [coleccionSeleccionada, setColeccionSeleccionada] = useState(null);
 
 
     const estadisticas = [
@@ -41,13 +35,25 @@ function Estadisticas() {
     useEffect(() => {
         const cargarCategorias = async () => {
             try {
-                const data = await ApiAgregador.obtenerCategorias()
-                setCategorias(data)
+                const data = await ApiAgregador.obtenerCategorias();
+                setCategorias(data);
             } catch (error) {
-                console.error("Error al cargar categorías:", error)
+                console.error("Error al cargar categorías:", error);
             }
         }
         cargarCategorias()
+    }, [])
+
+    useEffect(() => {
+        const cargarColecciones = async () => {
+            try {
+                const data = await ApiAgregador.obtenerColecciones();
+                setColecciones(data);
+            } catch (error) {
+                console.error("Error al cargar colecciones:", error);
+            }
+        }
+        cargarColecciones()
     }, [])
 
     const handleBusqueda = (valor, tipo) => {
@@ -57,7 +63,7 @@ function Estadisticas() {
         let listaFiltrada = [];
         if (tipo === "coleccion") {
             listaFiltrada = colecciones.filter(c =>
-                c.toLowerCase().includes(valor.toLowerCase())
+                c.titulo.toLowerCase().includes(valor.toLowerCase())
             );
         } else if (tipo === "categoria") {
             listaFiltrada = categorias.filter(cat =>
@@ -70,8 +76,13 @@ function Estadisticas() {
 
     const seleccionarSugerencia = (item) => {
         if (typeof item === "object" && item.id) {
-            setCategoriaSeleccionada(item);
-            setBusqueda(item.detalle);
+            if (campoSeleccionado === "categoria") {
+                setCategoriaSeleccionada(item);
+                setBusqueda(item.detalle || "");
+            } else if (campoSeleccionado === "coleccion") {
+                setColeccionSeleccionada(item);
+                setBusqueda(item.titulo || "");
+            }
         } else {
             setBusqueda(item);
         }
@@ -91,20 +102,10 @@ function Estadisticas() {
     const handleCantidadChange = (id, nuevaCantidad) => {
         setCantidades(prev => ({ ...prev, [id]: nuevaCantidad }));
     };
+
     useEffect(() => {
-        // Se ejecuta cuando Keycloak está inicializado Y ya tenemos un token
         if (initialized && keycloak.token) {
-
-            // ¡ESTA ES LA LÍNEA CLAVE!
-            // Inyecta el token en tu instancia de ApiEstadistica.
-            // (Esto asume que ya modificaste api-estadistica.jsx
-            // para que tenga el método setToken() y el interceptor)
             ApiEstadistica.setToken(keycloak.token);
-
-            // Si ApiAgregador también necesita token, hazlo aquí
-            // if (ApiAgregador.setToken) {
-            //     ApiAgregador.setToken(keycloak.token);
-            // }
         }
     }, [initialized, keycloak.token]);
 
@@ -114,7 +115,7 @@ function Estadisticas() {
         try {
             switch (id) {
                 case 1:
-                    datos = await ApiEstadistica.obtenerProvinciaPorColeccion({ id: idColeccion, formato: null, cantidadProvincias: cantidad });
+                    datos = await ApiEstadistica.obtenerProvinciaPorColeccion({ id: coleccionSeleccionada.id, formato: null, cantidadProvincias: cantidad });
                     break;
                 case 2:
                     datos = await ApiEstadistica.obtenerCategoriaMaxHechos({formato: null, cantidadCategorias: cantidad});
@@ -123,7 +124,7 @@ function Estadisticas() {
                     datos = await ApiEstadistica.obtenerProvinciaPorCategoria({ id: categoriaSeleccionada.id, formato: null, cantidadProvincias: cantidad });
                     break;
                 case 4:
-                    datos = await ApiEstadistica.obtenerHoraMaxHechos({ id: idCategoria, cantidadHoras: cantidad });
+                    datos = await ApiEstadistica.obtenerHoraMaxHechos({ id: categoriaSeleccionada.id, cantidadHoras: cantidad });
                     break;
                 case 5:
                     datos = await ApiEstadistica.obtenerSolicitudesSpam({ mostrar:null, formato: null });
@@ -157,13 +158,15 @@ function Estadisticas() {
                         </div>
                         {sugerencias.length > 0 && (
                             <ListGroup className="sugerencias-lista">
-                                {sugerencias.map((cat) => (
+                                {sugerencias.map((item) => (
                                     <ListGroup.Item
-                                        key={cat.id}
+                                        key={item.id}
                                         action
-                                        onClick={() => seleccionarSugerencia(cat)}
+                                        onClick={() => seleccionarSugerencia(item)}
                                     >
-                                        {cat.detalle}
+                                        {campoSeleccionado === "coleccion"
+                                            ? item.titulo
+                                            : item.detalle}
                                     </ListGroup.Item>
                                 ))}
                             </ListGroup>
