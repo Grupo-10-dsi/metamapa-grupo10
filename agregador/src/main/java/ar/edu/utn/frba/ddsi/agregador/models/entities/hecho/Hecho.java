@@ -24,6 +24,8 @@ public abstract class Hecho {
     private Integer id;
 
     private String titulo;
+
+    @Column(length = 1000)
     private String descripcion;
 
     @ManyToOne

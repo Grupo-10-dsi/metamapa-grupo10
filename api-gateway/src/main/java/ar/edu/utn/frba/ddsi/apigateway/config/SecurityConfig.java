@@ -70,6 +70,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PATCH, "/agregador/colecciones/{id}").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.DELETE, "/agregador/colecciones/{id}").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/agregador/solicitudes").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.GET, "/agregador/solicitudes/pendientes").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.PUT, "/agregador/solicitudes/{id}").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/estadisticas/categorias").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/estadisticas/colecciones/provincia-max-hechos").hasRole("ADMIN")

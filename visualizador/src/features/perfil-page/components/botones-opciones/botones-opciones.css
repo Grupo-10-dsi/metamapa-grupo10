@@ -19,7 +19,7 @@
 .opcion-button-style {
     font-size: 150%;
     height: 64px;
-    width: 50%;
+    width: auto;
     border-radius: 15px;
     border: 0.1px solid #787879;
     background-color: #E8E8E8;
@@ -41,7 +41,7 @@
     background-color: #D9D9D9;
     font-size: 150%;
     height: 64px;
-    width: 50%;
+    width: auto;
     border-radius: 15px;
     border-color: grey;
     color: black;

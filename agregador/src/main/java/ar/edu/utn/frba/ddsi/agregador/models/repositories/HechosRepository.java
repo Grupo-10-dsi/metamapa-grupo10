@@ -26,7 +26,7 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
     List<HechoSearchDTO> findByTexto(@Param("texto") String texto);
 
     @Query( value = """
-            SELECT h.id, h.descripcion, h.latitud, h.longitud
+            SELECT h.id, h.latitud, h.longitud
             FROM hecho h
         """,
             nativeQuery = true)

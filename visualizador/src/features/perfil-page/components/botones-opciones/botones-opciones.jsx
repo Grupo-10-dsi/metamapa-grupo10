@@ -32,7 +32,7 @@ function BotonesOpciones ({ mostrarEnPantalla }) {
                 }
                 onClick={() => handleClick('colecciones')}
             >
-                colecciones
+                Colecciones
             </Button>
         </div>
     )

@@ -16,7 +16,8 @@ import jakarta.persistence.*;
 @Entity
 @DiscriminatorValue("TEXTUAL")
 public class HechoTextual extends Hecho {
-    @Column(name = "Cuerpo")
+
+    @Column(name = "Cuerpo", length = 1000)
     private String cuerpo;
 
     public HechoTextual(String titulo,

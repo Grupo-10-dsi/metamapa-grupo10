@@ -7,10 +7,6 @@ import api from "../../../../api/api-agregador";
 import './coleccion-card.css'
 import VentanaConfiguracion from "../../components/ventana-configuracion/ventana-configuracion.jsx";
 
-
-
-
-
 const ColeccionCard = ({coleccion, coleccionId, handleEliminarColeccion}) => {
     const [showEliminarColeccion, setShowEliminarColeccion] = useState(false)
     const [showConfig, setShowConfig] = useState(false)
@@ -41,8 +37,6 @@ const ColeccionCard = ({coleccion, coleccionId, handleEliminarColeccion}) => {
             setShowConfig(false)
         }
     }
-
-
 
     const tiposDeFuente = ["ESTATICA", "DINAMICA", "PROXY"];
 

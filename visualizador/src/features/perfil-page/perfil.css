@@ -1,108 +1,59 @@
-
-.principal {
-    display: flex;
-    flex-direction: row;
-    background-color: white;
-    height: 100vh;
-    padding: 0;
+/* Contenedor principal del perfil */
+.perfil-container {
+    /* Fondo redondeado como en tu imagen */
+    background-color: #FFFBEB; /* Un amarillo muy pálido, similar al de tu imagen */
+    border-radius: 16px;
+    padding: 2rem;
+    min-height: 80vh;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
+/* Estilo para los "botones" de navegación de la izquierda */
+.perfil-nav-link {
+    /* Apariencia de botón */
+    background-color: #ffffff;
+    border: 1px solid rgba(218, 155, 60, 0.5); /* Borde dorado sutil */
+    color: #a5742c; /* Texto dorado oscuro */
 
+    border-radius: 8px;
+    margin-bottom: 0.5rem; /* Espacio entre botones */
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: center;
 
-.contenedor-botones {
-    display: flex;
-    flex-direction: column;
-    background-color: white ;
-    max-width: 30%;
-    align-items: center;
-    box-shadow: 0 6px 6px rgba(0,1,0,0.12);
-
-
+    transition: all 0.2s ease-in-out;
 }
 
-
-
-.contenedor-informacion{
-    margin: 0 0 0 0;
-    background-color: white;
-    align-items: center;
-    justify-content: center;
+/* Efecto al pasar el mouse */
+.perfil-nav-link:hover {
+    background-color: #fefcf0; /* Amarillo muy pálido */
+    color: #a5742c;
+    border-color: #DA9B3C;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-
-.contenedor-botoness{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    margin: 3% 0 3%;
-    gap:12px;
+/* --- ¡Este es el estilo del botón ACTIVO! --- */
+.perfil-nav-link.active {
+    background-color: #DA9B3C; /* Color primario (dorado) */
+    color: #ffffff; /* Texto blanco */
+    border-color: #DA9B3C;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(218, 155, 60, 0.3);
 }
 
-.contenedor-botones-coleccion{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    margin: 3% 0 3%;
-    gap: 12px;
+/* Contenedor del contenido derecho */
+.perfil-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #f0f0f0;
+    min-height: 50vh;
 }
 
-
-
-
-.contenedor-tarjeta{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 50px;
-    width: 50%;
-    background-color: #E8E8E8;
-    border-color: #E8E8E8;
+/* Asegura que los headers tengan el color correcto */
+.perfil-content h3 {
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
 }
-
-
-
-
-
-
-
-.contenedor-tarjeta-coleccion{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 50px;
-    width: 70%;
-    background-color: #E8E8E8;
-    border-color: #E8E8E8;
-}
-
-.contenedor-tarjeta-solicitud{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 50px;
-    width: 70%;
-    background-color: #E8E8E8;
-    border-color: #E8E8E8;
-}
-
-.contenedor-tarjetas{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-}
-
-
-
-
-
-
-

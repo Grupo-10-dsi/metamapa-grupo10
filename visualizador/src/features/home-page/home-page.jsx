@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import homeBG from "../../images/home_background.jpg";
-import { Container } from "react-bootstrap";
+import {Container, Spinner} from "react-bootstrap";
 import SourceCard from "./components/source-card.jsx";
 import Mapa from "./components/mapa.jsx";
 import ApiAgregador from "../../api/api-agregador";
@@ -22,10 +22,11 @@ function HomePage() {
         ApiAgregador.obtenerUbicaciones()
                 .then((data) => {
                         setHechosMapa(data)
-                        setLoadingHechos(false)
-                        console.log(data)
                     }
-                )
+                ).finally( () => {
+            setLoadingHechos(false);
+            console.log('done')
+        })
     }, [])
 
     useEffect(() => {
@@ -130,9 +131,7 @@ function HomePage() {
                     minHeight: '80vh',
                     padding: '20px',
                     position: 'relative',
-                    transform: `scale(${scale})`,
-                    transition: 'transform 0.1s ease-out',
-                    transformOrigin: 'top center',
+
                 }}
                 className="d-flex flex-column justify-content-center align-items-center text-center"
             >
@@ -150,7 +149,10 @@ function HomePage() {
                         backgroundColor: 'rgba(0, 0, 0, 0.4)',
                         padding: '20px 40px',
                         borderRadius: '10px',
-                        backdropFilter: 'blur(3px)'
+                        backdropFilter: 'blur(3px)',
+                        transform: `scale(${scale})`,
+                        transition: 'transform 0.1s ease-out',
+                        transformOrigin: 'top center',
                     }}
                 >
                     <h1 style={{ color: '#F5F5DC', fontWeight: 'bold' }}>
@@ -164,7 +166,12 @@ function HomePage() {
 
             {/* --- SECCIÓN 2: MAPA --- */}
             <Container style={{ opacity: mapOpacity, transition: 'opacity 0.5s ease-in' }}>
-                {loadingHechos ? <p> cargando hechos </p> : <Mapa hechosMapa={hechosMapa} />}
+                {loadingHechos ?
+                    <div className="text-center mt-5">
+                        <Spinner animation="border" role="status" />
+                        <p className="mt-3">Cargando hechos...</p>
+                    </div>
+                    : <Mapa hechosMapa={hechosMapa} />}
             </Container>
 
             {/* --- SECCIÓN 3: FUENTES --- */}

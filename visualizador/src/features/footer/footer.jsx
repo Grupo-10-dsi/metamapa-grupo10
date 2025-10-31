@@ -2,6 +2,7 @@ import React from 'react';
 
 const Footer = () => {
     const customBgColor = {
+
         backgroundColor: '#335C67'
     };
 

@@ -71,7 +71,12 @@ class ApiAgregador {
 
     async eliminarColeccion(id){
         try {
-            const response = await this.axiosInstance.delete(`/colecciones/${id}`)
+            const response = await this.axiosInstance.delete(`/colecciones/${id}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.tokenAuth}`
+                    },})
             return response.data
         } catch(error) {
             console.error('Error al eliminar coleccion:', error)
@@ -81,7 +86,12 @@ class ApiAgregador {
 
     async obtenerSolicitudes(){
         try {
-            const response = await this.axiosInstance.get('/solicitudes/pendientes')
+            const response = await this.axiosInstance.get('/solicitudes/pendientes', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`
+                },
+            })
             return response.data
         } catch(error) {
             console.error('Error al trar solicitudes:', error)
@@ -96,6 +106,7 @@ class ApiAgregador {
             const response = await this.axiosInstance.put(`/solicitudes/${id}`, body, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`
                 },
             })
             return response.data

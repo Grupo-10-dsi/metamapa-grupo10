@@ -1,33 +1,54 @@
-import Container from 'react-bootstrap/Container';
-import MostrarSolicitudes from './components/mostrar-solicitudes.jsx';
-import MostrarColecciones from "./components/mostrar-colecciones";
-import Button from 'react-bootstrap/Button';
+import React, { useState } from 'react';
+import {
+    Container,
+    Row,
+    Col,
+    Nav,
+} from 'react-bootstrap';
+
 import './perfil.css';
-import BotonesOpciones from './components/botones-opciones/botones-opciones.jsx';
 
-/*import {Card} from "react-bootstrap";
-import { useState } from 'react';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ToggleButton from 'react-bootstrap/ToggleButton';*/
+import MostrarSolicitudes from './components/mostrar-solicitudes.jsx'; // Ajusta la ruta si es necesario
+import MostrarColecciones from "./components/mostrar-colecciones.jsx" //Ajusta la ruta si es necesario
 
+function PerfilPage() {
+    const [activeView, setActiveView] = useState('solicitudes'); // 'solicitudes' o 'colecciones'
 
-
-export default function Perfil ({mostrarEnPantalla}){
 
     return (
-        <Container as="div" fluid className="principal" >
-            <Container as="div" fluid className="contenedor-botones">
-                <BotonesOpciones activo={mostrarEnPantalla}></BotonesOpciones>
-            </Container>
-            <Container as="div"  fluid className="contenedor-informacion">
-                <Container as="div" fluid className="contenedor-tarjetas">
-                    {mostrarEnPantalla === 'solicitudes' ? (
-                        <MostrarSolicitudes />
-                    ) : mostrarEnPantalla === 'colecciones' ? (
-                        <MostrarColecciones/>
-                    ) : null}
-                </Container>
-            </Container>
-        </Container>
+        <Container fluid="lg" className="mt-4 perfil-container">
+            <Row>
+                {/* --- COLUMNA IZQUIERDA (Menú) --- */}
+                <Col md={3}>
+                    <Nav
+                        className="flex-column perfil-nav"
+                        activeKey={activeView}
+                        onSelect={(selectedKey) => setActiveView(selectedKey)}
+                    >
+                        <Nav.Link eventKey="solicitudes" className="perfil-nav-link">
+                            Solicitudes
+                        </Nav.Link>
+                        <Nav.Link eventKey="colecciones" className="perfil-nav-link">
+                            Colecciones
+                        </Nav.Link>
+                    </Nav>
+                </Col>
 
-    )}
+                {/* --- COLUMNA DERECHA (Contenido) --- */}
+                <Col md={9}>
+                    <div className="perfil-content">
+                        {/* Aquí está la magia.
+                          Simplemente renderizamos un componente o el otro.
+                          Cada uno de ellos mostrará su propio spinner
+                          y manejará sus propios datos.
+                        */}
+                        {activeView === 'solicitudes' && <MostrarSolicitudes />}
+                        {activeView === 'colecciones' && <MostrarColecciones />}
+                    </div>
+                </Col>
+            </Row>
+        </Container>
+    );
+}
+
+export default PerfilPage;

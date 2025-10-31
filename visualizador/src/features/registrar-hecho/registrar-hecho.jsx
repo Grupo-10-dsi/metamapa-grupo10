@@ -20,7 +20,10 @@ function RegistrarHecho() {
     const {keycloak, initialized} = useKeycloak();
     const [anonimo, setAnonimo] = useState(false)
 
-    const [formData, setFormData] = useState({
+    const [showModal, setShowModal] = useState(false);
+    const [nuevoIdHecho, setNuevoIdHecho] = useState(null);
+
+    const estadoInicialForm = {
         titulo: '',
         descripcion: '',
         categoria: '',
@@ -31,7 +34,9 @@ function RegistrarHecho() {
         etiquetas: '',
         cuerpo: '',
         contenidoMultimedia: []
-    });
+    };
+
+    const [formData, setFormData] = useState(estadoInicialForm);
 
     const [activeTab, setActiveTab] = useState('multimedia');
     const [isSubmitting, setIsSubmitting] = useState(false);

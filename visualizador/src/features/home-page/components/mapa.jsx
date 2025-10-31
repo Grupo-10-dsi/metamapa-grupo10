@@ -2,11 +2,12 @@
 import {Button, Card} from "react-bootstrap";
 import React from "react";
 import { useEffect, useState } from 'react'
-import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
+import {MapContainer, TileLayer, Marker, Popup, CircleMarker} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './mapa.css'
 import L from 'leaflet'
 import {useNavigate} from "react-router-dom";
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import ApiAgregador from "../../../api/api-agregador";
 
 /* fix para que cargue el icono, dsp poner personalizado */
@@ -17,7 +18,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
-
+const myRenderer = L.canvas({ padding: 0.5 });
 
 
 function Mapa ({hechosMapa}) {
@@ -36,23 +37,27 @@ function Mapa ({hechosMapa}) {
             <h4 className="text-center pt-3 pb-3 mb-0">Mapa de hechos registrados</h4>
             <div style={{height: '450px', width: '100%'}}>
                 <MapContainer
+                    preferCanvas={true}
+                    renderer={myRenderer}
                     center={center}
                     zoom={10}>
                     <TileLayer
                         url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
+                    <MarkerClusterGroup chunkedLoading>
                     {hechosMapa.map(unHecho =>
-                        <Marker position={{
+                        <CircleMarker center={{
                             lat: unHecho.latitud,
                             lng: unHecho.longitud
                         }}> {/* icono no carga, ver esto */}
                             <Popup>
-                                <p>{unHecho.descripcion}</p>
+                                <p></p>
                                 <Button onClick={() => navigateToHecho(unHecho.id)}> Ver mas </Button>
                             </Popup>
-                        </Marker>
+                        </CircleMarker>
                     )}
+                        </MarkerClusterGroup>
                 </MapContainer>
             </div>
         </Card.Body>
