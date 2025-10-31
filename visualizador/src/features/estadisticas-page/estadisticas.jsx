@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Container, Card, Button, Form, ListGroup } from "react-bootstrap";
+import { Container, Card, Button, Form, ListGroup, Alert } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import ContadorElementos from "./contadorElementos.jsx";
 import "./estadisticas.css";
@@ -22,11 +22,12 @@ function Estadisticas() {
     const idCategoria = 4;
     const [colecciones, setColecciones] = useState([])
     const [coleccionSeleccionada, setColeccionSeleccionada] = useState(null);
+    const [errorMensaje, setErrorMensaje] = useState(null);
 
 
 
     const estadisticas = [
-        { id: 1, titulo: "Provincia con más hechos reportados", descripcion: "De una colección, ¿en qué provincia se agrupan la mayor cantidad de hechos reportados?" },
+        { id: 1, titulo: "Provincia con más hechos reportados por coleccion", descripcion: "De una colección, ¿en qué provincia se agrupan la mayor cantidad de hechos reportados?" },
         { id: 2, titulo: "Categoría más reportada", descripcion: "¿Cuál es la categoría con mayor cantidad de hechos reportados?" },
         { id: 3, titulo: "Provincia con más hechos por categoría", descripcion: "¿En qué provincia se presenta la mayor cantidad de hechos de una cierta categoría?" },
         { id: 4, titulo: "Hora del día con más hechos", descripcion: "¿A qué hora del día ocurren la mayor cantidad de hechos de una cierta categoría?" },
@@ -112,6 +113,14 @@ function Estadisticas() {
     const handleConsultar = async (id) => {
         const cantidad = cantidades[id] || 5;
         let datos = [];
+        setErrorMensaje(null);
+        const params = getQueryParams(id,null);
+
+        if (params.error) {
+            setErrorMensaje(`Error de consulta: ${params.error} Faltan completar campos para la estadística.`);
+            return;
+        }
+
         try {
             switch (id) {
                 case 1:
@@ -134,6 +143,7 @@ function Estadisticas() {
             }
             setResultados(datos);
             console.log("Resultados:", datos);
+            setErrorMensaje(null);
         } catch (error) {
             console.error("Error al consultar la estadística:", error);
         }
@@ -155,8 +165,9 @@ function Estadisticas() {
 
         switch (id) {
             case 1:
-                if (!coleccionSeleccionada?.id)
-                    throw new Error("Debe seleccionar una colección.");
+                if (!coleccionSeleccionada?.id) {
+                    return { error: "Debe seleccionar una colección." };
+                }
                 params.id = coleccionSeleccionada.id;
                 params.cantidadProvincias = cantidad;
                 break;
@@ -164,14 +175,16 @@ function Estadisticas() {
                 params.cantidadCategorias = cantidad;
                 break;
             case 3:
-                if (!categoriaSeleccionada?.id)
-                    throw new Error("Debe seleccionar una categoría.");
+                if (!categoriaSeleccionada?.id) {
+                    return { error: "Debe seleccionar una categoría." };
+                }
                 params.id = categoriaSeleccionada.id;
                 params.cantidadProvincias = cantidad;
                 break;
             case 4:
-                if (!categoriaSeleccionada?.id)
-                    throw new Error("Debe seleccionar una categoría.");
+                if (!categoriaSeleccionada?.id) {
+                    return { error: "Debe seleccionar una categoría." };
+                }
                 params.id = categoriaSeleccionada.id;
                 params.cantidadHoras = cantidad;
                 break;
@@ -225,9 +238,19 @@ function Estadisticas() {
     };
 
 
-    const renderFormulario = (id) => {
+    const renderFormulario = (id, errorMensaje, setErrorMensaje) => {
         return (
             <Form ref={contenedorRef}>
+                {errorMensaje && (
+                    <Alert
+                        variant="danger"
+                        onClose={() => setErrorMensaje(null)}
+                        dismissible
+                        className="mb-3"
+                    >
+                        {errorMensaje}
+                    </Alert>
+                )}
                 {(id === 1 || id === 3 || id === 4) && (
                     <Form.Group style={{ position: "relative", overflow: "visible" }}>
                         <Form.Label>{id === 1 ? "Seleccioná la colección:" : "Categoría:"}</Form.Label>
@@ -310,34 +333,40 @@ function Estadisticas() {
                                             {renderFormulario(item.id)}
                                         </div>
 
-                                        {resultados.length > 0 && (
+                                        {((Array.isArray(resultados) && resultados.length > 0) || (seleccionada === 5 && typeof resultados === 'number')) && (
                                             <Card className="mt-3 shadow-sm border-0">
                                                 <Card.Header className="bg-light fw-semibold">
                                                     Resultados obtenidos
                                                 </Card.Header>
                                                 <Card.Body>
-                                                    <ListGroup variant="flush">
-                                                        {resultados.map((resultado, index) => (
-                                                            <ListGroup.Item key={index} className="px-3 py-2">
-                                                                {seleccionada === 2 ? (
-                                                                    <>
-                                                                        {index + 1}. <strong>Categoría:</strong> {resultado.detalle}
-                                                                    </>
-                                                                ) : seleccionada === 1 || seleccionada === 3 ? (
-                                                                    // Para estadística 1 y 3 (provincias)
-                                                                    <>
-                                                                        {index + 1}. <strong>Provincia:</strong> {resultado.provincia || resultado}
-                                                                    </>
-                                                                ) : seleccionada === 4 ? (
+
+                                                    {seleccionada === 5 ? (
+                                                        // 🚨 RENDERIZADO PARA CASO SINGULAR (ID 5)
+                                                        <ListGroup variant="flush">
+                                                            <ListGroup.Item className="px-3 py-2">
+                                                                <strong>Cantidad de solicitudes spam: </strong>{resultados}
+                                                            </ListGroup.Item>
+                                                        </ListGroup>
+                                                    ) : (
+                                                        // 🚀 RENDERIZADO PARA CASOS MÚLTIPLES (ID 1, 2, 3, 4)
+                                                        <ListGroup variant="flush">
+                                                            {resultados.map((resultado, index) => (
+                                                                <ListGroup.Item key={index} className="px-3 py-2">
+                                                                    {seleccionada === 2 ? (
+                                                                        <>
+                                                                            {index + 1}. <strong>Categoría:</strong> {resultado.detalle}
+                                                                        </>
+                                                                    ) : seleccionada === 1 || seleccionada === 3 ? (
+                                                                        // Para estadística 1 y 3 (provincias)
+                                                                        <>
+                                                                            {index + 1}. <strong>Provincia:</strong> {resultado.provincia || resultado}
+                                                                        </>
+                                                                    ) : seleccionada === 4 ? (
                                                                         <>
                                                                             {index + 1}. <strong>Hora: </strong>{resultado.split(":")[0]}:00
                                                                         </>
-                                                                    ) :
-                                                                    seleccionada === 5 ? (
-                                                                        <>
-                                                                            {index + 1}. <strong>Cantidad de solicitudes spam: </strong>{resultado.split(":")[0]}:00
-                                                                        </>
                                                                     ) : (
+                                                                        // Fallback para objetos o strings en otros casos
                                                                         typeof resultado === "object" ? (
                                                                             <div>
                                                                                 {index + 1}.{" "}
@@ -351,13 +380,15 @@ function Estadisticas() {
                                                                             `${index + 1}. ${resultado}`
                                                                         )
                                                                     )}
-                                                            </ListGroup.Item>
-                                                        ))}
-                                                    </ListGroup>
+                                                                </ListGroup.Item>
+                                                            ))}
+                                                        </ListGroup>
+                                                    )}
 
                                                     <Button
                                                         variant="outline-primary"
-                                                        onClick={() => descargarCSV(item.id)}
+                                                        onClick={() => descargarCSV(seleccionada)}
+                                                        className="mt-3"
                                                     >
                                                         Descargar CSV
                                                     </Button>
