@@ -84,10 +84,10 @@ public class AgregadorService {
         if(fuenteExistente == null){
             FuenteEstatica fuenteEstatica = new FuenteEstatica( "ESTATICA", "http://localhost:8081/api/estatica/hechos", new ArrayList<>());
             Fuente dinamica = new Fuente("http://localhost:8082/api/dinamica/hechos", "DINAMICA");
-            //Fuente proxy = new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY");
+            Fuente proxy = new Fuente("http://localhost:8083/api/proxy/hechos", "PROXY");
             fuentesRepository.saveAndFlush(fuenteEstatica);
             fuentesRepository.saveAndFlush(dinamica);
-            //fuentesRepository.saveAndFlush(proxy);
+            fuentesRepository.saveAndFlush(proxy);
         }
 
 
