@@ -153,8 +153,15 @@ function DetailPage() {
                         <Carousel id="carouselHecho" className="mt-3" interval={null}>
                             {hecho.contenidoMultimedia.map((url, index) => (
                                 <Carousel.Item key={index}>
-                                    <img className="d-block w-100" src={"https://ycewwqszmnadqvimhdpx.supabase.co/storage/v1/object/public/multimedia/" + url} alt={`Multimedia ${index + 1}`} style={carouselImageStyle} />
-                                </Carousel.Item>
+                                    <img
+                                        className="d-block w-100"
+                                        src={(url.startsWith('http://') || url.startsWith('https://'))
+                                            ? url
+                                            : "https://ycewwqszmnadqvimhdpx.supabase.co/storage/v1/object/public/multimedia/" + url
+                                        }
+                                        alt={`Multimedia ${index + 1}`}
+                                        style={carouselImageStyle}
+                                    />                                </Carousel.Item>
                             ))}
                         </Carousel>
                     </>

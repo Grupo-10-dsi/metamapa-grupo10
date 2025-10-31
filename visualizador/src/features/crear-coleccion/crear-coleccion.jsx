@@ -47,7 +47,6 @@ function CrearColeccion() {
         criterio_fecha_hasta: '',
         criterio_titulo: '',
         criterio_descripcion: '',
-        criterio_categoria_nueva: ''
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,17 +79,33 @@ function CrearColeccion() {
     const handleCheckboxListChange = (listName, value) => {
         setFormData(prevData => {
             const currentList = prevData[listName];
+            let updatedList;
+            let updatedCategoria = prevData.criterio_categoria; // Mantiene el valor actual por defecto
+
             if (currentList.includes(value)) {
-                return {
-                    ...prevData,
-                    [listName]: currentList.filter(item => item !== value)
-                };
+                // --- Se está desmarcando un checkbox ---
+                updatedList = currentList.filter(item => item !== value);
+
+                // Si se desmarca 'Categoria', limpiamos su valor
+                if (value === 'Categoria') {
+                    updatedCategoria = '';
+                }
             } else {
-                return {
-                    ...prevData,
-                    [listName]: [...currentList, value]
-                };
+                // --- Se está marcando un checkbox ---
+                updatedList = [...currentList, value];
+
+
+                if (value === 'Categoria' && categorias.length > 0) {
+
+                    updatedCategoria = categorias[0].detalle;
+                }
             }
+
+            return {
+                ...prevData,
+                [listName]: updatedList,
+                criterio_categoria: updatedCategoria // Actualiza el estado de la categoría
+            };
         });
     };
 
@@ -255,7 +270,7 @@ function CrearColeccion() {
                                                             onChange={handleChange}
                                                         >
                                                             {categorias.map(cat => (
-                                                                <option key={cat.id} value={cat.id}>{cat.detalle}</option>
+                                                                <option key={cat.id} value={cat.detalle}>{cat.detalle}</option>
                                                             ))}
                                                         </Form.Select>
                                                     </Form.Group>
