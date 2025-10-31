@@ -29,8 +29,8 @@ public interface EstadisticasRepository extends JpaRepository<Hecho, Integer> { 
     // La instanciara directo a la categoria?
     @Query( value = """ 
             SELECT c.id, c.detalle
-            FROM Hecho h
-            JOIN Categoria c ON h.categoria_id = c.id
+            FROM hecho h
+            JOIN categoria c ON h.categoria_id = c.id
             GROUP BY c.id, c.detalle
             ORDER BY count(h.categoria_id) DESC 
             Limit ?1
@@ -72,7 +72,7 @@ public interface EstadisticasRepository extends JpaRepository<Hecho, Integer> { 
 
     @Query( value = """
            select HOUR(h.fecha_acontecimiento)
-           from Hecho h
+           from hecho h
            WHERE h.categoria_id = ?1
            group by hour(h.fecha_acontecimiento)
            order by count(*) desc
