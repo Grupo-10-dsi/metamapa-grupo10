@@ -4,25 +4,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
-public class Categoria {
+public class Solicitud_Cantidad {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String detalle;
+
+    private Integer cantidad;
+
     private LocalDateTime fecha;
 
-    public Categoria() {}
-
-    public Categoria(String detalle) {
-        this.detalle = detalle;
-        this.fecha = LocalDateTime.now();
+    public Solicitud_Cantidad() {
     }
 
+    public Solicitud_Cantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+        this.fecha = LocalDateTime.now();
+    }
 }

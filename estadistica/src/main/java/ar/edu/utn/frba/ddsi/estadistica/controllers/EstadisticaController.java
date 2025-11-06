@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.ddsi.estadistica.controllers;
 
 import ar.edu.utn.frba.ddsi.estadistica.models.entities.Categoria;
+import ar.edu.utn.frba.ddsi.estadistica.models.entities.Provincia;
 import ar.edu.utn.frba.ddsi.estadistica.models.entities.SolicitudDTO;
+import ar.edu.utn.frba.ddsi.estadistica.models.repositories.ProvinciaRepository;
 import ar.edu.utn.frba.ddsi.estadistica.service.CSVService;
 import ar.edu.utn.frba.ddsi.estadistica.service.EstadisticaService;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +42,6 @@ public class EstadisticaController {
     public ResponseEntity<?> obtenerProvinciaDeColeccion(@RequestParam(required = false) Integer Id, @RequestParam(required = false) String formato, @RequestParam Integer cantidadProvincias) {
 
         List<String> resultados =  this.estadisticaService.obtenerProvinciaDeColeccion(Id, cantidadProvincias);
-
         if (formato != null && formato.equalsIgnoreCase("csv")){
             return this.csvService.convertirProvinciasACSV(resultados, "provincia_max_hechos-coleccion");
         }

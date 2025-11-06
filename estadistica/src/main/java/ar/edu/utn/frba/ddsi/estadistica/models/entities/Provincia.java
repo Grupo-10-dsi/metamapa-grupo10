@@ -11,18 +11,24 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+
 @Entity
-public class Categoria {
+public class Provincia {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String detalle;
+
     private LocalDateTime fecha;
 
-    public Categoria() {}
+    private Integer categoria_id;
 
-    public Categoria(String detalle) {
+    public  Provincia() {
+    }
+
+    public Provincia(String detalle, Integer categoria_id) {
+        this.categoria_id = categoria_id;
         this.detalle = detalle;
         this.fecha = LocalDateTime.now();
     }
-
 }

@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.ddsi.estadistica.service;
 
 import ar.edu.utn.frba.ddsi.estadistica.models.entities.*;
+import ar.edu.utn.frba.ddsi.estadistica.models.repositories.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
@@ -22,6 +23,19 @@ import java.util.stream.Collectors;
 public class EstadisticaService {
 
     private final AgregadorClient agregadorClient = new AgregadorClient("http://localhost:8080/agregador");
+    private final ProvinciaRepository provinciaRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final ProvinciaColeccionRepository provinciaColeccionRepository;
+    private final HoraFrecuenteRepository horaFrecuenteRepository;
+    private final SolicitudCantidadRepository solicitudCantidadRepository;
+
+    public EstadisticaService(ProvinciaRepository provinciaRepository, CategoriaRepository categoriaRepository, ProvinciaColeccionRepository provinciaColeccionRepository, HoraFrecuenteRepository horaFrecuenteRepository, SolicitudCantidadRepository solicitudCantidadRepository) {
+        this.provinciaRepository = provinciaRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.provinciaColeccionRepository = provinciaColeccionRepository;
+        this.horaFrecuenteRepository = horaFrecuenteRepository;
+        this.solicitudCantidadRepository = solicitudCantidadRepository;
+    }
 
     public List<String> obtenerProvinciaDeColeccion(Integer Id, Integer cantidadProvincias) {
         if(cantidadProvincias == null) {
@@ -29,7 +43,13 @@ public class EstadisticaService {
         }
         List<Ubicacion> ubicacionesCategoria = agregadorClient.obtenerUbicacionesDeColeccion(Id);
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
-        return provinciasMasFrecuente(provincias, cantidadProvincias);
+        List<String> prov_frecuentes = provinciasMasFrecuente(provincias, cantidadProvincias);
+
+        prov_frecuentes.forEach(provincia -> {;
+            ProvinciaColeccion nuevaProvincia = new ProvinciaColeccion(provincia, Id);
+            provinciaColeccionRepository.save(nuevaProvincia);
+        });
+        return prov_frecuentes;
     }
 
 //    public String obtenerProvinciaPorColeccion() {
@@ -41,7 +61,12 @@ public class EstadisticaService {
         if (cantidadCategorias == null) {
             cantidadCategorias = 1;
         }
-        return this.agregadorClient.obtenerCategoriaConMasHechos(cantidadCategorias);
+        List<Categoria> categorias =  this.agregadorClient.obtenerCategoriaConMasHechos(cantidadCategorias);
+        categorias.forEach(categoria -> {
+            Categoria nuevaCategoria = new Categoria(categoria.getDetalle());
+            categoriaRepository.save(nuevaCategoria);
+        });
+        return categorias;
     }
 
     public List<String> obtenerProvinciasDeCategoria(Integer Id, Integer cantidadProvincias) {
@@ -50,14 +75,27 @@ public class EstadisticaService {
         }
         List<Ubicacion> ubicacionesCategoria = agregadorClient.obtenerUbicacionesDeCategoria(Id);
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
-        return provinciasMasFrecuente(provincias, cantidadProvincias);
+        List<String> prov_frecuentes = provinciasMasFrecuente(provincias, cantidadProvincias);
+
+        prov_frecuentes.forEach(provincia -> {;
+            Provincia nuevaProvincia = new Provincia(provincia, Id);
+            provinciaRepository.save(nuevaProvincia);
+        });
+        return prov_frecuentes;
+
     }
 
     public List<LocalTime> obtenerHorasMasFrecuentesDeCategoria(Integer Id, Integer cantidadHoras) {
         if(cantidadHoras == null) {
             cantidadHoras = 1;
         }
-        return this.agregadorClient.obtenerHorasMasFrecuentesDeCategoria(Id, cantidadHoras);
+        List<LocalTime> horas = this.agregadorClient.obtenerHorasMasFrecuentesDeCategoria(Id, cantidadHoras);
+        horas.forEach(hora -> {
+            Hora_Frecuente nuevaHora = new Hora_Frecuente(hora, Id);
+            horaFrecuenteRepository.save(nuevaHora);
+        });
+
+        return horas;
     }
 
     /* La request deberia tener esto en el body por ejemplo:
@@ -127,7 +165,14 @@ public class EstadisticaService {
 
     public List<SolicitudDTO> obtenerCantidadDeSolicitudesSpam() {
 
-        return this.agregadorClient.obtenerSolicitudesSpam();
+        List<SolicitudDTO> solicitudes = this.agregadorClient.obtenerSolicitudesSpam();
+
+        solicitudes.forEach(solicitud -> {
+            Solicitud_Cantidad nuevaSolicitud = new Solicitud_Cantidad(solicitudes.size());
+            solicitudCantidadRepository.save(nuevaSolicitud);
+        });
+
+        return solicitudes;
     }
 
     public List<String> provinciasMasFrecuente(List<String> provincias, Integer top) {
