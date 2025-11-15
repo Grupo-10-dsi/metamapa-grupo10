@@ -15,7 +15,7 @@ public class ContribuyenteRepository {
 
     private WebClient webClient;
 
-    @Value("${contribuyente.url}/internal/usuarios")
+    @Value("${gestor-personas.url.url}/internal/usuarios")
     private String baseUrl;
 
     public ContribuyenteRepository() {
