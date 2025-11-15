@@ -1,0 +1,72 @@
+type Query {
+    hechos: [Hecho!]!
+    hecho(id: Int!): Hecho
+}
+
+interface Hecho {
+    id: Int!
+    titulo: String!
+    descripcion: String
+    categoria: Categoria
+    ubicacion: Ubicacion
+    fechaAcontecimiento: String!
+    fechaCarga: String!
+    origenFuente: OrigenFuente!
+    etiquetas: [Etiqueta!]!
+    contribuyente: Contribuyente!
+}
+
+type HechoTextual implements Hecho {
+    id: Int!
+    titulo: String!
+    descripcion: String
+    categoria: Categoria
+    ubicacion: Ubicacion
+    fechaAcontecimiento: String!
+    fechaCarga: String!
+    origenFuente: OrigenFuente!
+    etiquetas: [Etiqueta!]!
+    contribuyente: Contribuyente!
+    cuerpo: String!
+}
+
+type HechoMultimedia implements Hecho {
+    id: Int!
+    titulo: String!
+    descripcion: String
+    categoria: Categoria
+    ubicacion: Ubicacion
+    fechaAcontecimiento: String!
+    fechaCarga: String!
+    origenFuente: OrigenFuente!
+    etiquetas: [Etiqueta!]!
+    contribuyente: Contribuyente!
+    contenidoMultimedia: String!
+}
+
+type Categoria {
+    id: Int!
+    nombre: String!
+}
+
+type Ubicacion {
+    latitud: Float!
+    longitud: Float!
+}
+
+type Etiqueta {
+    id: Int!
+    nombre: String!
+}
+
+type Contribuyente {
+    id: Int!
+    nombre: String!
+    apellido: String!
+}
+
+enum OrigenFuente {
+    ESTATICA
+    TWITTER
+    REDDIT
+}

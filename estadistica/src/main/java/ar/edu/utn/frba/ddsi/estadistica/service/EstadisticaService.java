@@ -23,22 +23,28 @@ import java.util.stream.Collectors;
 @Service
 public class EstadisticaService {
 
-    @Value("${agregador.url}")
-    private String agregadorUrl;
 
-    private final AgregadorClient agregadorClient = new AgregadorClient(agregadorUrl + "/agregador");
+    private final AgregadorClient agregadorClient;
     private final ProvinciaRepository provinciaRepository;
     private final CategoriaRepository categoriaRepository;
     private final ProvinciaColeccionRepository provinciaColeccionRepository;
     private final HoraFrecuenteRepository horaFrecuenteRepository;
     private final SolicitudCantidadRepository solicitudCantidadRepository;
 
-    public EstadisticaService(ProvinciaRepository provinciaRepository, CategoriaRepository categoriaRepository, ProvinciaColeccionRepository provinciaColeccionRepository, HoraFrecuenteRepository horaFrecuenteRepository, SolicitudCantidadRepository solicitudCantidadRepository) {
+    public EstadisticaService(
+            ProvinciaRepository provinciaRepository,
+            CategoriaRepository categoriaRepository,
+            ProvinciaColeccionRepository provinciaColeccionRepository,
+            HoraFrecuenteRepository horaFrecuenteRepository,
+            SolicitudCantidadRepository solicitudCantidadRepository,
+            @Value("${agregador.url}") String agregadorUrl
+    ) {
         this.provinciaRepository = provinciaRepository;
         this.categoriaRepository = categoriaRepository;
         this.provinciaColeccionRepository = provinciaColeccionRepository;
         this.horaFrecuenteRepository = horaFrecuenteRepository;
         this.solicitudCantidadRepository = solicitudCantidadRepository;
+        this.agregadorClient = new AgregadorClient(agregadorUrl + "/agregador");
     }
 
     public List<String> obtenerProvinciaDeColeccion(Integer Id, Integer cantidadProvincias) {
