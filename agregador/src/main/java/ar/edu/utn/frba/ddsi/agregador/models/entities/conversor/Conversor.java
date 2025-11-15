@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.conversor;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoMultimediaDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoTextualDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.*;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
@@ -65,14 +67,14 @@ public class Conversor {
 
     public Hecho creacionHecho(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
 
-        if (hechoDTO.getContenidoMultimedia() != null) {
-            return crearHechoMultimediaBase(hechoDTO, origen, categoria);
+        if (hechoDTO instanceof HechoMultimediaDTO) {
+            return crearHechoMultimediaBase((HechoMultimediaDTO) hechoDTO, origen, categoria);
         } else {
-            return crearHechoTextualBase(hechoDTO, origen, categoria);
+            return crearHechoTextualBase((HechoTextualDTO) hechoDTO, origen, categoria);
         }
     }
 
-    private Hecho crearHechoTextualBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+    private Hecho crearHechoTextualBase(HechoTextualDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
         Hecho hecho =  new HechoTextual(
                 hechoDTO.getTitulo(),
                 hechoDTO.getDescripcion(),
@@ -88,7 +90,7 @@ public class Conversor {
         return hecho;
     }
 
-    public Hecho crearHechoMultimediaBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+    public Hecho crearHechoMultimediaBase(HechoMultimediaDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
         Hecho hecho = new HechoMultimedia(
                 hechoDTO.getTitulo(),
                 hechoDTO.getDescripcion(),
@@ -104,15 +106,6 @@ public class Conversor {
         return hecho;
     }
 
-//    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO, ContribuyenteRepository contribuyenteRepository) {
-//        if (contribuyenteHechoDTO instanceof Anonimo) {
-//            return contribuyenteRepository.findContribuyenteById(1);
-//        } else {
-//            Contribuyente nuevoRegistrado = new Registrado(contribuyenteHechoDTO.getNombre());
-//            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
-//            return nuevoRegistrado;
-//        }
-//    }
 
 }
 

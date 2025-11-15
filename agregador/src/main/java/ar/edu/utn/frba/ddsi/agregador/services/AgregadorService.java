@@ -363,7 +363,7 @@ public class AgregadorService {
         return solicitudes;
     }
 
-    public Integer crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
+    public Integer crearSolicitudEliminacion(SolicitudDTOE solicitudDTO) {
 
         SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion();
 

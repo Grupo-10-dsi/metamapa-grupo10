@@ -1,19 +1,19 @@
 package ar.edu.utn.frba.ddsi.agregador.controllers;
 
 
+import ar.edu.utn.frba.ddsi.agregador.mappers.CategoriaMapper;
+import ar.edu.utn.frba.ddsi.agregador.mappers.ColeccionMapper;
+import ar.edu.utn.frba.ddsi.agregador.mappers.HechoMapper;
+import ar.edu.utn.frba.ddsi.agregador.mappers.SolicitudMapper;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.*;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +22,17 @@ import java.util.stream.Collectors;
 @RestController
 public class AgregadorController {
     private final AgregadorService agregadorService;
+    private final ColeccionMapper coleccionMapper;
+    private final CategoriaMapper categoriaMapper;
+    private final HechoMapper hechoMapper;
+    private final SolicitudMapper solicitudMapper;
 
-    public AgregadorController(AgregadorService agregadorService) {
+    public AgregadorController(AgregadorService agregadorService, ColeccionMapper coleccionMapper, CategoriaMapper categoriaMapper, HechoMapper hechoMapper, SolicitudMapper solicitudMapper) {
         this.agregadorService = agregadorService;
+        this.coleccionMapper = coleccionMapper;
+        this.categoriaMapper = categoriaMapper;
+        this.hechoMapper = hechoMapper;
+        this.solicitudMapper = solicitudMapper;
     }
 
     // <----------------- OPERACIONES CRUD SOBRE COLECCIONES ----------------->
@@ -39,8 +47,8 @@ public class AgregadorController {
     }
 
     @GetMapping("/hechos/{id}")
-    public Hecho obtenerHechoPorId(@PathVariable Integer id) {
-        return this.agregadorService.obtenerHechoPorId(id);
+    public HechoDTO obtenerHechoPorId(@PathVariable Integer id) {
+        return this.hechoMapper.toHechoDTO(this.agregadorService.obtenerHechoPorId(id));
     }
 
     /**
@@ -49,21 +57,27 @@ public class AgregadorController {
      */
 
     @GetMapping("/colecciones")
-    public List<Coleccion> obtenerColecciones(){
-        return this.agregadorService.obtenerColecciones();
+    public List<ColeccionDTO> obtenerColecciones(){
+        return this.agregadorService.obtenerColecciones()
+                .stream()
+                .map(coleccionMapper::toColeccionDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/categorias")
-    public List<Categoria> obtenerCategorias(){
-        return this.agregadorService.obtenerCategorias();
+    public List<CategoriaDTO> obtenerCategorias(){
+        return this.agregadorService.obtenerCategorias()
+                .stream()
+                .map(categoriaMapper::toCategoriaDTO)
+                .collect(Collectors.toList());
     }
     /**
      * Devuelve una coleccion en particular a partir de su ID.
      * Si no se encuentra la coleccion, devuelve un error 404.
      */
     @GetMapping("/colecciones/{id}")
-    public Coleccion obtenerColeccion(@PathVariable Integer id){
-        return this.agregadorService.obtenerColeccion(id);
+    public ColeccionDTO obtenerColeccion(@PathVariable Integer id){
+        return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
     }
 
     /**
@@ -91,16 +105,16 @@ public class AgregadorController {
      //Endpoint para modificar coleccion
 
     @PatchMapping("/colecciones/{id}")
-    public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
+    public ColeccionDTO modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
 
         if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
-            this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
+            this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso()));
         } if (actualizacionColeccion.getUrls_fuente() != null) {
-            this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
+            this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente()));
         } else {
             throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
         }
-        return this.agregadorService.obtenerColeccion(id);
+        return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
     }
 
 
@@ -112,7 +126,7 @@ public class AgregadorController {
     // Navegacion de forma irrestricta -> No se aplica curacion
 
     @GetMapping("/colecciones/{id}/hechos")
-    public List<Hecho> obtenerHechosPorColeccion(@PathVariable Integer id,
+    public List<HechoDTO> obtenerHechosPorColeccion(@PathVariable Integer id,
                 @RequestParam(required = false) String categoria,
                 @RequestParam(required = false) String fecha_reporte_desde,
                 @RequestParam(required = false) String fecha_reporte_hasta,
@@ -137,9 +151,15 @@ public class AgregadorController {
         }
 
         if(tipoNavegacion.equals("irrestricta")) {
-            return this.agregadorService.encontrarHechosPorColeccion(id, filtros);
+            return this.agregadorService.encontrarHechosPorColeccion(id, filtros)
+                    .stream()
+                    .map(hechoMapper::toHechoDTO)
+                    .collect(Collectors.toList());
         } else if (tipoNavegacion.equals("curada")) {
-            return this.agregadorService.obtenerHechosCurados(id, filtros);
+            return this.agregadorService.obtenerHechosCurados(id, filtros)
+                    .stream()
+                    .map(hechoMapper::toHechoDTO)
+                    .collect(Collectors.toList());
         } else {
             throw new IllegalArgumentException("Tipo de navegacion no soportado: " + tipoNavegacion);
         }
@@ -147,35 +167,41 @@ public class AgregadorController {
 
 
     @GetMapping("/solicitudes")
-    public List<SolicitudEliminacion> obtenerSolicitudes() {
-        return agregadorService.encontrarSolicitudes();
+    public List<SolicitudDTOE> obtenerSolicitudes() {
+        return agregadorService.encontrarSolicitudes()
+                .stream()
+                .map(solicitudMapper::toSolicitudDTOE)
+                .collect(Collectors.toList());
     }
 
     //  ENDPOINT PARA BUSCAR SOLICITUDES PENDIENTES
 
     @GetMapping("/solicitudes/pendientes")
-    public List<SolicitudEliminacion> obtenerSolicitudesPendientes() {
-        return agregadorService.encontrarSolicitudesPendientes();
+    public List<SolicitudDTOE> obtenerSolicitudesPendientes() {
+        return agregadorService.encontrarSolicitudesPendientes()
+                .stream()
+                .map(solicitudMapper::toSolicitudDTOE)
+                .collect(Collectors.toList());
     }
 
 
     // Endpoint para generar solicitudes de eliminacion de hechos le pega metamapa
     @PostMapping("/solicitudes")
-    public Integer generarSolicitudEliminacion(@RequestBody SolicitudDTO solicitudEliminacion) {
+    public Integer generarSolicitudEliminacion(@RequestBody SolicitudDTOE solicitudEliminacion) {
         return agregadorService.crearSolicitudEliminacion(solicitudEliminacion);
     }
 
     // Endpoint para aceptar/rechazar solicitudes de eliminacion
 
     @PutMapping("/solicitudes/{id}")
-    public SolicitudEliminacion modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
-        return agregadorService.modificarEstadoSolicitud(id, nuevoEstado);
+    public SolicitudDTOE modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
+        return this.solicitudMapper.toSolicitudDTOE(agregadorService.modificarEstadoSolicitud(id, nuevoEstado));
 
     }
 
 
     @GetMapping("/hechos")
-    public List<Hecho> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
+    public List<HechoDTO> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
                                              @RequestParam(required = false) String fecha_reporte_desde,
                                              @RequestParam(required = false) String fecha_reporte_hasta,
                                              @RequestParam(required = false) String fecha_acontecimiento_desde,
@@ -195,7 +221,10 @@ public class AgregadorController {
         );
 
         List<Hecho> unosHechos = this.agregadorService.obtenerTodosLosHechos();
-        return this.agregadorService.hechosFiltrados(unosHechos, filtros);
+        return this.agregadorService.hechosFiltrados(unosHechos, filtros)
+                .stream()
+                .map(hechoMapper::toHechoDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/search")
