@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+
+  api-gateway:
+    build: ./api-gateway  # Carpeta donde está el Dockerfile
+    restart: always
+    ports:
+      # Puerto del Host (EC2) : Puerto del Contenedor (App)
+      # Esto expone tu gateway al mundo en el puerto 8080.
+      - "8080:8089"
+    environment:
+      # URLs internas que tu Gateway usará para encontrar los otros servicios
+      estadistica.url: 'http://estadistica:8088'
+      dinamica.url: 'http://dinamica:8082'
+      agregador.url: 'http://agregador:8080'
+      #spring.security.oauth2.resourceserver.jwt.issuer-uri: 'https://metamapa-keycloak.onrender.com/realms/MetaMapa'
+      #TODO: visualizador.url: 'http://visualizador:3000'
+
+
+
+  gestor-personas:
+    build: ./gestor-personas
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/gestor_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+      SPRING_DATASOURCE_USERNAME: 'admin'
+      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
+
+
+  agregador:
+    build: ./agregador
+    restart: always
+    # Este servicio no parece necesitar DB, si la necesita, añade las variables de arriba
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/agregador_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+      SPRING_DATASOURCE_USERNAME: 'admin'
+      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
+      estatica.url: 'http://estatica:8081'
+      dinamica.url: 'http://dinamica:8082'
+      proxy.url: 'http://proxy:8083'
+      normalizador.url: 'http://normalizador:8087'
+
+  estatica:
+    build: ./estatica
+    restart: always
+
+  dinamica:
+    build: ./dinamica
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/dinamica_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+      SPRING_DATASOURCE_USERNAME: 'admin'
+      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
+      gestor-personas.url: 'http://gestor-personas:8091'
+
+  proxy:
+    build: ./proxy
+    restart: always
+    environment:
+      metamapa.instancia.url: 'http://proxyEjemplo:8092'
+
+  normalizador:
+    build: ./normalizador
+    restart: always
+
+  estadistica:
+    build: ./estadistica
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/estadistica_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+      SPRING_DATASOURCE_USERNAME: 'admin'
+      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
+      agregador.url: 'http://agregador:8080'
+
+  proxyEjemplo:
+    build: ./proxyEjemplo
+    restart: always

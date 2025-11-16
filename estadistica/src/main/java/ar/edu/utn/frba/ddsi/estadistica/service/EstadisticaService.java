@@ -135,12 +135,12 @@ public class EstadisticaService {
 
 
         for (Ubicacion ubicacion : ubicaciones) {
-             JSONObject obj = new JSONObject();
-             obj.put("lat", ubicacion.getLatitud());
-             obj.put("lon", ubicacion.getLongitud());
-             obj.put("campos", "basico");
-             obj.put("aplanar", true);
-             ubicacionesArray.put(obj);
+            JSONObject obj = new JSONObject();
+            obj.put("lat", ubicacion.getLatitud());
+            obj.put("lon", ubicacion.getLongitud());
+            obj.put("campos", "basico");
+            obj.put("aplanar", true);
+            ubicacionesArray.put(obj);
         }
         body.put("ubicaciones", ubicacionesArray);
 

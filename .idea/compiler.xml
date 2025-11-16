@@ -12,6 +12,7 @@
         <module name="proxy" />
         <module name="agregador" />
         <module name="normalizador" />
+        <module name="proxyEjemplo" />
         <module name="api-gateway" />
         <module name="estatica" />
       </profile>
@@ -40,6 +41,7 @@
       <module name="metamapa" options="" />
       <module name="normalizador" options="-parameters" />
       <module name="proxy" options="-parameters" />
+      <module name="proxyEjemplo" options="-parameters" />
     </option>
   </component>
 </project>
