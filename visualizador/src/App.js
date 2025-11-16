@@ -23,7 +23,7 @@ const keyCloakBaseUrl = process.env.REACT_APP_KEYCLOAK_URL_BASE || "http://local
 const kcConfig = {
     url: keyCloakBaseUrl,
     realm: "MetaMapa",
-    clientId: "metamapa-frontend"
+    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "metamapa-frontend"
 };
 
 export const kc = new Keycloak(kcConfig);

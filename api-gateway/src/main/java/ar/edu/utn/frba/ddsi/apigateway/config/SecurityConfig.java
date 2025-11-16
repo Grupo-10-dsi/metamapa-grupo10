@@ -13,18 +13,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
 import java.util.List;
 import java.util.Map;
-
-import static org.springframework.security.config.Customizer.withDefaults;
-
 
 @Configuration
 @EnableWebFluxSecurity
@@ -39,25 +34,21 @@ public class SecurityConfig {
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtSpec ->
                     jwtSpec.jwtAuthenticationConverter(jwtAuthenticationConverter())
             ))
-
-                // sin esto no puedo hacer post a los endpoints que requieren roles especificos
-                .cors(cors -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of(visualizadorUrl));
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-                    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    source.registerCorsConfiguration("/**", config);
-                    cors.configurationSource(source);
-                })
-
-
-                // 2. Definir las reglas de autorización (BASADO EN TU CONTROLLER)
-                .authorizeExchange(exchanges ->
+            // sin esto no puedo hacer post a los endpoints que requieren roles especificos
+            .cors(cors -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(List.of(visualizadorUrl));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
+                cors.configurationSource(source);
+            })
+            // 2. Definir las reglas de autorizacion (BASADO EN TU CONTROLLER)
+            .authorizeExchange(exchanges ->
                     exchanges
-
-                    .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        // --- REGLAS PÚBLICAS (permitAll) ---
+                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                        // --- REGLAS PUBLICAS (permitAll) ---
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/categorias").permitAll()
@@ -66,9 +57,9 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/agregador/search").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/dinamica/hechos").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/dinamica/upload/{id}").permitAll()
-                            .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").permitAll()
-                            .pathMatchers(HttpMethod.GET, "/agregador/colecciones/{id}/hechos").permitAll()
-                            .pathMatchers(HttpMethod.GET, "/agregador/colecciones/{id}").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/agregador/colecciones/{id}/hechos").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/agregador/colecciones/{id}").permitAll()
                         // --- REGLAS DE "ADMIN" (hasRole) ---
                         .pathMatchers(HttpMethod.POST, "/agregador/colecciones").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.PATCH, "/agregador/colecciones/{id}").hasRole("ADMIN")
@@ -87,29 +78,26 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").authenticated() // Un usuario logueado crea una solicitud
                         .pathMatchers("/perfil/**").authenticated()
 
-                    // --- REGLA FINAL (Catch-All) ---
-                    .anyExchange().authenticated()
-                )
-
-                .csrf(ServerHttpSecurity.CsrfSpec::disable); // Deshabilitar CSRF para APIs
+                        // --- REGLA FINAL (Catch-All) ---
+                        .anyExchange().authenticated()
+            )
+            .csrf(ServerHttpSecurity.CsrfSpec::disable); // Deshabilitar CSRF para APIs
 
         return http.build();
     }
 
-
     /**
-     * Esta clase sirve para configurar los roles del JWT que me vienen de Keycloak ==> (Son distintos los nombres de los de Keycloak a los de Spring Security)
+     * Configura roles del JWT de Keycloak a Spring Security.
      */
     @Bean
     public Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthenticationConverter() {
         ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter()); //
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
         return jwtAuthenticationConverter;
     }
 
-
     /**
-     * Esta clase hace una conversion de los permisos de Keycloak a los que maneja Spring Security.
+     * Convierte realm roles de Keycloak a autoridades de Spring Security.
      */
     static class KeycloakRealmRoleConverter implements Converter<Jwt, Flux<GrantedAuthority>> {
 

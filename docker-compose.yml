@@ -1,78 +1,170 @@
-version: '3.8'
-
 services:
 
-  api-gateway:
-    build: ./api-gateway  # Carpeta donde está el Dockerfile
+  # MySQL para entorno demo/prod (usar RDS gestionado en cloud real)
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_AGREGADOR}
     ports:
-      # Puerto del Host (EC2) : Puerto del Contenedor (App)
-      # Esto expone tu gateway al mundo en el puerto 8080.
-      - "8080:8089"
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./readmes/init-databases.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.4
+    command: start-dev --http-port 9090 --hostname-strict=false
     environment:
-      # URLs internas que tu Gateway usará para encontrar los otros servicios
-      estadistica.url: 'http://estadistica:8088'
-      dinamica.url: 'http://dinamica:8082'
-      agregador.url: 'http://agregador:8080'
-      #spring.security.oauth2.resourceserver.jwt.issuer-uri: 'https://metamapa-keycloak.onrender.com/realms/MetaMapa'
-      #TODO: visualizador.url: 'http://visualizador:3000'
-
-
-
-  gestor-personas:
-    build: ./gestor-personas
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    ports:
+      - "9090:9090"
     restart: always
-    environment:
-      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/gestor_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
-      SPRING_DATASOURCE_USERNAME: 'admin'
-      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
 
-
-  agregador:
-    build: ./agregador
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
     restart: always
-    # Este servicio no parece necesitar DB, si la necesita, añade las variables de arriba
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/agregador_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
-      SPRING_DATASOURCE_USERNAME: 'admin'
-      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
-      estatica.url: 'http://estatica:8081'
-      dinamica.url: 'http://dinamica:8082'
-      proxy.url: 'http://proxy:8083'
-      normalizador.url: 'http://normalizador:8087'
+      estadistica.url: http://estadistica:8088
+      dinamica.url: http://dinamica:8082
+      agregador.url: http://agregador:8080
+      keycloak.url: ${KEYCLOAK_URL}
+    depends_on:
+      keycloak:
+        condition: service_started
+      agregador:
+        condition: service_started
+      dinamica:
+        condition: service_started
+      estadistica:
+        condition: service_started
+    ports:
+      - "${GATEWAY_PORT}:8089"
 
   estatica:
     build: ./estatica
+    container_name: estatica
     restart: always
 
   dinamica:
     build: ./dinamica
+    container_name: dinamica
     restart: always
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/dinamica_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
-      SPRING_DATASOURCE_USERNAME: 'admin'
-      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
-      gestor-personas.url: 'http://gestor-personas:8091'
+      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_DINAMICA}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      gestor-personas.url: http://gestor-personas:8091
+      supabase.url: ${SUPABASE_URL}
+      supabase.bucket: ${SUPABASE_BUCKET}
+      supabase.service-key: ${SUPABASE_SERVICE_KEY}
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   proxy:
     build: ./proxy
+    container_name: proxy
     restart: always
     environment:
-      metamapa.instancia.url: 'http://proxyEjemplo:8092'
-
-  normalizador:
-    build: ./normalizador
-    restart: always
-
-  estadistica:
-    build: ./estadistica
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: 'jdbc:mysql://[PLACEHOLDER_RDS_ENDPOINT]/estadistica_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
-      SPRING_DATASOURCE_USERNAME: 'admin'
-      SPRING_DATASOURCE_PASSWORD: '[PLACEHOLDER_RDS_PASSWORD]'
-      agregador.url: 'http://agregador:8080'
+      metamapa.instancia.url: http://proxyEjemplo:8092
 
   proxyEjemplo:
     build: ./proxyEjemplo
+    image: metamapa-grupo10-proxyejemplo
+    container_name: proxyEjemplo
     restart: always
+
+  normalizador:
+    build: ./normalizador
+    container_name: normalizador
+    restart: always
+
+  agregador:
+    build: ./agregador
+    container_name: agregador
+    restart: always
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_AGREGADOR}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      estatica.url: http://estatica:8081
+      dinamica.url: http://dinamica:8082
+      proxy.url: http://proxy:8083
+      normalizador.url: http://normalizador:8087
+    depends_on:
+      mysql:
+        condition: service_healthy
+      estatica:
+        condition: service_started
+      dinamica:
+        condition: service_started
+      proxy:
+        condition: service_started
+      normalizador:
+        condition: service_started
+
+  estadistica:
+    build: ./estadistica
+    container_name: estadistica
+    restart: always
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_ESTADISTICA}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      agregador.url: http://agregador:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+      agregador:
+        condition: service_started
+
+  gestor-personas:
+    build: ./gestor-personas
+    container_name: gestor-personas
+    restart: always
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_GESTOR}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build: ./visualizador
+    image: metamapa-grupo10-frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      api-gateway:
+        condition: service_started
+
+volumes:
+  mysql_data:
+  keycloak_data:

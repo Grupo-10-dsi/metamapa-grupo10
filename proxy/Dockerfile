@@ -14,6 +14,6 @@ WORKDIR /app
 # Tomamos el JAR ya construido desde la etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 # Puerto expuesto por el servicio
-EXPOSE 8087
+EXPOSE 8083
 # Arranque del servicio
 ENTRYPOINT ["java","-jar","/app/app.jar"]

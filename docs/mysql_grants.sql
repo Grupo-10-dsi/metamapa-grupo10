@@ -1,0 +1,11 @@
+﻿CREATE DATABASE IF NOT EXISTS dinamica_db;
+CREATE DATABASE IF NOT EXISTS agregador_db;
+CREATE DATABASE IF NOT EXISTS estadistica_db;
+CREATE DATABASE IF NOT EXISTS usuarios_db;
+CREATE DATABASE IF NOT EXISTS gestor_db;
+GRANT ALL PRIVILEGES ON dinamica_db.* TO "admin"@"%";
+GRANT ALL PRIVILEGES ON agregador_db.* TO "admin"@"%";
+GRANT ALL PRIVILEGES ON estadistica_db.* TO "admin"@"%";
+GRANT ALL PRIVILEGES ON usuarios_db.* TO "admin"@"%";
+GRANT ALL PRIVILEGES ON gestor_db.* TO "admin"@"%";
+FLUSH PRIVILEGES;
