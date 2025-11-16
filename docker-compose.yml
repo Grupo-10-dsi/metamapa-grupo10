@@ -14,7 +14,9 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      # Este script inicializa las bases de datos necesarias
       - ./readmes/init-databases.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    # Los commandos adicionales configuran el conjunto de caracteres por defecto a utf8mb4
     command: >
       --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
