@@ -2,8 +2,9 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.archivoProcesado.ArchivoProcesado;
 import jakarta.persistence.*;
+import lombok.Getter;
 
-
+@Getter
 @Entity
 @Table(name="origen_fuente")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

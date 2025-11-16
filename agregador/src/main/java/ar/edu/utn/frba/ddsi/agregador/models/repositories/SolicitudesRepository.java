@@ -15,6 +15,9 @@ public interface SolicitudesRepository extends JpaRepository<SolicitudEliminacio
     SolicitudEliminacion findSolicitudEliminacionByHecho_Id(Integer hechoId);
 
     List<SolicitudEliminacion> findAllByEstado(Estado_Solicitud estado);
+
+    // Nuevo: chequear si existe al menos una solicitud con estado dado para un hecho
+    boolean existsByHecho_IdAndEstado(Integer hechoId, Estado_Solicitud estado);
     /*
     private final List<SolicitudEliminacion> solicitudes = new ArrayList<>();
 

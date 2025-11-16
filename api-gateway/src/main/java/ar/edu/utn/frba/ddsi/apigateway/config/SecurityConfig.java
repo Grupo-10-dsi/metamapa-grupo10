@@ -45,7 +45,7 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(visualizadorUrl));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-                    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                     source.registerCorsConfiguration("/**", config);
                     cors.configurationSource(source);
@@ -57,6 +57,10 @@ public class SecurityConfig {
                     exchanges
 
                     .pathMatchers(HttpMethod.OPTIONS).permitAll()
+
+                        .pathMatchers(HttpMethod.GET, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/graphiql", "/graphiql/**").permitAll()
                         // --- REGLAS PÚBLICAS (permitAll) ---
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()

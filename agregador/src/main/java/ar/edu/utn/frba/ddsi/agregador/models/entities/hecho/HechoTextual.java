@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.EtiquetaDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import lombok.Getter;
 import lombok.Setter;
