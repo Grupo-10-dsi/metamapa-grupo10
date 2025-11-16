@@ -452,8 +452,8 @@ public class AgregadorService {
                     return latOk && lonOk;
                 })
                 .filter(hecho -> {
-                     SolicitudEliminacion solicitud = solicitudesRepository.findSolicitudEliminacionByHecho_Id(hecho.getId());
-                        return solicitud == null || solicitud.getEstado() != Estado_Solicitud.ACEPTADA;
+                     boolean aceptada = solicitudesRepository.existsByHecho_IdAndEstado(hecho.getId(), Estado_Solicitud.ACEPTADA);
+                     return !aceptada;
                 })
                 .collect(Collectors.toList());
     }
