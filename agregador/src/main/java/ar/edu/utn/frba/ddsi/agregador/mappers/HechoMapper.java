@@ -29,7 +29,6 @@ public interface HechoMapper {
     @Mapping(target = "origenFuente", expression = "java(mapOrigenFuente(hecho.getOrigenFuente()))")
     HechoMultimediaDTO toDTO(HechoMultimedia hecho);
 
-    // Mapping method for collection elements (fixes the error)
     EtiquetaDTO map(Etiqueta value);
 
     default Origen_Fuente_VIEJO mapOrigenFuente(OrigenFuente origen) {

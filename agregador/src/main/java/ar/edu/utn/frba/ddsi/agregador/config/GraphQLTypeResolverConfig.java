@@ -20,7 +20,7 @@ public class GraphQLTypeResolverConfig {
                     if (src instanceof HechoMultimediaDTO) {
                         return env.getSchema().getObjectType("HechoMultimedia");
                     }
-                    return null; // or throw to surface unknown subtype
+                    return null;
                 }));
     }
 }

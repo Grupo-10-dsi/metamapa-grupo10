@@ -26,7 +26,6 @@ public class Conversor {
 
     public Hecho convertirHecho(HechoDTO hechoDTO, OrigenFuente origen, ContribuyenteRepository contribuyenteRepository, CategoriaRepository categoriaRepository) {
         HechoDTO hechoNormalizado = this.aplicarNormalizacion(hechoDTO);
-        //System.out.println("Convirtiendo hecho: " + hechoNormalizado.getTitulo() + " de la fuente: " + hechoDTO.getOrigenFuente());
 
         Categoria categoriaNormalizada = categoriaRepository.findCategoriaByDetalle(hechoNormalizado.getCategoria().getDetalle());
         if (categoriaNormalizada == null) {
@@ -58,7 +57,7 @@ public class Conversor {
 
     public HechoDTO aplicarNormalizacion(HechoDTO hecho) {
         WebClient webClient = WebClient.create(normalizadorUrl);
-        // Determine the correct class type for deserialization
+
         Class<? extends HechoDTO> dtoClass;
         if (hecho instanceof HechoMultimediaDTO) {
             dtoClass = HechoMultimediaDTO.class;
@@ -84,8 +83,6 @@ public class Conversor {
         } else if (hechoDTO instanceof HechoTextualDTO) {
             return crearHechoTextualBase((HechoTextualDTO) hechoDTO, origen, categoria);
         } else {
-            // Handle base HechoDTO from normalizador - determine type by content
-            // If it has multimedia content, treat as multimedia, otherwise as textual
             if (esHechoMultimedia(hechoDTO)) {
                 return crearHechoMultimediaDesdeBase(hechoDTO, origen, categoria);
             } else {
@@ -95,16 +92,11 @@ public class Conversor {
     }
 
     private boolean esHechoMultimedia(HechoDTO hechoDTO) {
-        // Check if the DTO has multimedia content
-        // This is a simple heuristic - you may need to adjust based on your business logic
         return hechoDTO instanceof HechoMultimediaDTO ||
                (!(hechoDTO instanceof HechoTextualDTO) && hasMultimediaContent(hechoDTO));
     }
 
     private boolean hasMultimediaContent(HechoDTO hechoDTO) {
-        // Use reflection or add a getter to check for multimedia content
-        // For now, assume if it's not explicitly textual and has certain properties, it's multimedia
-        // This is a placeholder - adjust based on your actual data structure
         try {
             java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
             Object result = method.invoke(hechoDTO);

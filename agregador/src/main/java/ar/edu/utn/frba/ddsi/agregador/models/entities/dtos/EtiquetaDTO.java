@@ -15,7 +15,6 @@ public class EtiquetaDTO {
         this.descripcion = descripcion;
     }
 
-    // Optional alias if GraphQL schema still uses 'nombre'
     public String getNombre() {
         return descripcion;
     }
