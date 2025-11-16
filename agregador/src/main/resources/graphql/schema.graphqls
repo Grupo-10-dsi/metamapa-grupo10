@@ -1,6 +1,14 @@
 type Query {
     hechos: [Hecho!]!
     hecho(id: Int!): Hecho
+    hechosPorContribuyente(contribuyenteId: Int!): [Hecho!]!
+    colecciones: [Coleccion!]!
+    coleccion(id: Int!): Coleccion
+    solicitudes: [SolicitudEliminacion!]!
+    solicitudesPendientes: [SolicitudEliminacion!]!
+    solicitud(id: Int!): SolicitudEliminacion
+    contribuyente(id: Int!): Contribuyente
+    hechosPorEtiquetas(nombres: [String!]!, match: EtiquetaMatch = ANY): [Hecho!]!
 }
 
 interface Hecho {
@@ -56,17 +64,56 @@ type Ubicacion {
 
 type Etiqueta {
     id: Int!
-    nombre: String!
+    descripcion: String!
 }
 
 type Contribuyente {
-    id: Int!
-    nombre: String!
-    apellido: String!
+    contribuyente_id: Int!
+    contribuyente_nombre: String!
 }
 
 enum OrigenFuente {
     ESTATICA
     TWITTER
     REDDIT
+}
+
+type Coleccion {
+    id: Int!
+    titulo: String!
+    descripcion: String
+    algoritmoConsenso: AlgoritmoConsenso!
+    urlsFuente: [String!]!
+    criterios: [Criterio!]!
+}
+
+type Criterio {
+    tipo: String!
+    valor: String!
+}
+
+type SolicitudEliminacion {
+    id: Int!
+    idHecho: Int!
+    justificacion: String!
+    estado: EstadoSolicitud!
+}
+
+enum AlgoritmoConsenso {
+    MULTIPLES_MENCIONES
+    MAYORIA_SIMPLE
+    ABSOLUTA
+    NINGUNO
+}
+
+enum EstadoSolicitud {
+    ACEPTADA
+    PENDIENTE
+    RECHAZADA
+    SPAM
+}
+
+enum EtiquetaMatch {
+    ANY
+    ALL
 }

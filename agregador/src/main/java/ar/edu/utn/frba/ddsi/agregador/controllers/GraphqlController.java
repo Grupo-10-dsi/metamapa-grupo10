@@ -1,7 +1,13 @@
 package ar.edu.utn.frba.ddsi.agregador.controllers;
 
+import ar.edu.utn.frba.ddsi.agregador.mappers.ColeccionMapper;
 import ar.edu.utn.frba.ddsi.agregador.mappers.HechoMapper;
+import ar.edu.utn.frba.ddsi.agregador.mappers.SolicitudMapper;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ContribuyenteDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTOE;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -15,10 +21,15 @@ public class GraphqlController {
 
     private final AgregadorService agregadorService;
     private final HechoMapper hechoMapper;
+    private final ColeccionMapper coleccionMapper;
+    private final SolicitudMapper solicitudMapper;
 
-    public GraphqlController(AgregadorService agregadorService, HechoMapper hechoMapper) {
+    public GraphqlController(AgregadorService agregadorService, HechoMapper hechoMapper,
+                            ColeccionMapper coleccionMapper, SolicitudMapper solicitudMapper) {
         this.agregadorService = agregadorService;
         this.hechoMapper = hechoMapper;
+        this.coleccionMapper = coleccionMapper;
+        this.solicitudMapper = solicitudMapper;
     }
 
     @QueryMapping
@@ -29,5 +40,66 @@ public class GraphqlController {
     @QueryMapping
     public HechoDTO hecho(@Argument Integer id) {
         return hechoMapper.toHechoDTO(agregadorService.obtenerHechoPorId(id));
+    }
+
+    @QueryMapping
+    public List<HechoDTO> hechosPorContribuyente(@Argument Integer contribuyenteId) {
+        return agregadorService.obtenerHechosPorContribuyente(contribuyenteId).stream()
+                .map(hechoMapper::toHechoDTO)
+                .collect(Collectors.toList());
+    }
+
+    @QueryMapping
+    public List<ColeccionDTO> colecciones() {
+        return agregadorService.obtenerColecciones().stream()
+                .map(coleccionMapper::toColeccionDTO)
+                .collect(Collectors.toList());
+    }
+
+    @QueryMapping
+    public ColeccionDTO coleccion(@Argument Integer id) {
+        return coleccionMapper.toColeccionDTO(agregadorService.obtenerColeccion(id));
+    }
+
+    @QueryMapping
+    public List<SolicitudDTOE> solicitudes() {
+        return agregadorService.encontrarSolicitudes().stream()
+                .map(solicitudMapper::toSolicitudDTOE)
+                .collect(Collectors.toList());
+    }
+
+    @QueryMapping
+    public List<SolicitudDTOE> solicitudesPendientes() {
+        return agregadorService.encontrarSolicitudesPendientes().stream()
+                .map(solicitudMapper::toSolicitudDTOE)
+                .collect(Collectors.toList());
+    }
+
+    @QueryMapping
+    public SolicitudDTOE solicitud(@Argument Integer id) {
+        return solicitudMapper.toSolicitudDTOE(
+            agregadorService.encontrarSolicitudes().stream()
+                .filter(s -> s.getId().equals(id))
+                .findFirst()
+                .orElse(null)
+        );
+    }
+
+    @QueryMapping
+    public ContribuyenteDTO contribuyente(@Argument Integer id) {
+        Contribuyente contribuyente = agregadorService.obtenerContribuyente(id);
+        if (contribuyente == null) {
+            return null;
+        }
+        return new ContribuyenteDTO(contribuyente.getId(), contribuyente.getNombre());
+    }
+
+    @QueryMapping
+    public List<HechoDTO> hechosPorEtiquetas(@Argument List<String> nombres, @Argument(name = "match") String match) {
+        boolean matchAll = "ALL".equalsIgnoreCase(match);
+        return agregadorService.obtenerHechosPorEtiquetas(nombres, matchAll)
+                .stream()
+                .map(hechoMapper::toHechoDTO)
+                .collect(Collectors.toList());
     }
 }

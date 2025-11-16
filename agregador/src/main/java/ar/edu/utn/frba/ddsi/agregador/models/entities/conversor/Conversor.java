@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.conversor;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.EtiquetaDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoMultimediaDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoTextualDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class Conversor {
@@ -83,7 +85,7 @@ public class Conversor {
                 hechoDTO.getFechaAcontecimiento(),
                 hechoDTO.getFechaCarga(),
                 origen,
-                hechoDTO.getEtiquetas(),
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
                 null,
                 hechoDTO.getCuerpo()
         );
@@ -99,13 +101,23 @@ public class Conversor {
                 hechoDTO.getFechaAcontecimiento(),
                 hechoDTO.getFechaCarga(),
                 origen,
-                hechoDTO.getEtiquetas(),
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
                 null,
                 hechoDTO.getContenidoMultimedia()
         );
         return hecho;
     }
 
-
+    private List<Etiqueta> convertirEtiquetas(List<EtiquetaDTO> etiquetasDTO) {
+        if (etiquetasDTO == null) return new ArrayList<>();
+        return etiquetasDTO.stream()
+                .map(dto -> {
+                    Etiqueta etiqueta = new Etiqueta();
+                    etiqueta.setId(dto.getId());
+                    etiqueta.setDescripcion(dto.getDescripcion());
+                    return etiqueta;
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
 }
 

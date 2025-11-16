@@ -462,6 +462,14 @@ public class AgregadorService {
         return this.hechosRepository.findAll();
     }
 
+    public List<Hecho> obtenerHechosPorContribuyente(Integer contribuyenteId) {
+        return this.hechosRepository.findByContribuyenteId(contribuyenteId);
+    }
+
+    public Contribuyente obtenerContribuyente(Integer id) {
+        return this.contribuyenteRepository.findById(id).orElse(null);
+    }
+
 
     public List<HechoSearchDTO> buscarTextoLibre(String texto) {
 
@@ -471,7 +479,13 @@ public class AgregadorService {
     public List<UbicacionParaMapaDTO> obtenerUbicaciones() {
         return this.hechosRepository.obtenerUbicaciones();
     }
+
+    public List<Hecho> obtenerHechosPorEtiquetas(List<String> nombres, boolean matchAll) {
+        if (nombres == null || nombres.isEmpty()) return List.of();
+        if (matchAll) {
+            return hechosRepository.findByEtiquetasAll(nombres, nombres.size());
+        } else {
+            return hechosRepository.findByEtiquetasAny(nombres);
+        }
+    }
 }
-
-
-

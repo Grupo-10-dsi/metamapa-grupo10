@@ -6,14 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
-
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.time.LocalTime;
 import java.util.Map;
@@ -55,7 +50,7 @@ public class EstadisticaService {
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
         List<String> prov_frecuentes = provinciasMasFrecuente(provincias, cantidadProvincias);
 
-        prov_frecuentes.forEach(provincia -> {;
+        prov_frecuentes.forEach(provincia -> {
             ProvinciaColeccion nuevaProvincia = new ProvinciaColeccion(provincia, Id);
             provinciaColeccionRepository.save(nuevaProvincia);
         });
@@ -87,7 +82,7 @@ public class EstadisticaService {
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
         List<String> prov_frecuentes = provinciasMasFrecuente(provincias, cantidadProvincias);
 
-        prov_frecuentes.forEach(provincia -> {;
+        prov_frecuentes.forEach(provincia -> {
             Provincia nuevaProvincia = new Provincia(provincia, Id);
             provinciaRepository.save(nuevaProvincia);
         });
