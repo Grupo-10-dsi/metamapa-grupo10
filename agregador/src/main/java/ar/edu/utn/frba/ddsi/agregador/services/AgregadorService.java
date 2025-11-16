@@ -240,7 +240,11 @@ public class AgregadorService {
     }
 
     public Hecho obtenerHechoPorId(Integer id) {
-        return this.hechosRepository.findHechoById(id);
+        Hecho hecho = this.hechosRepository.findHechoById(id);
+        if (hecho == null) {
+            throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Hecho no encontrado con ID: " + id);
+        }
+        return hecho;
     }
 
     public List<Hecho> encontrarHechosPorColeccion(
@@ -275,12 +279,24 @@ public class AgregadorService {
     /**
      * Busca una colección por su ID.
      */
-    public Coleccion obtenerColeccion(Integer id){ return this.coleccionRepository.findColeccionById(id);}
+    public Coleccion obtenerColeccion(Integer id){
+        Coleccion coleccion = this.coleccionRepository.findColeccionById(id);
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
+        return coleccion;
+    }
 
     /**
      * Elimina una colección por su ID.
      */
-    public void eliminarColeccionPorId(Integer id) { this.coleccionRepository.deleteById(id);}
+    public void eliminarColeccionPorId(Integer id) {
+        Coleccion coleccion = this.coleccionRepository.findColeccionById(id);
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
+        this.coleccionRepository.deleteById(id);
+    }
 
     /**
      * Actualiza una colección existente con los datos del DTO proporcionado.
@@ -381,7 +397,7 @@ public class AgregadorService {
         Hecho hechoAeliminar = hechosRepository.findById(solicitudDTO.getIdHecho()).orElse(null);
 
         if (hechoAeliminar == null) {
-            throw new IllegalArgumentException("Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
         }
 
         nuevaSolicitudEliminacion.setHecho(hechoAeliminar);
@@ -396,7 +412,7 @@ public class AgregadorService {
         SolicitudEliminacion solicitudAEditar = solicitudesRepository.findById(id).orElse(null);
 
         if (solicitudAEditar == null) {
-            throw new IllegalArgumentException("Solicitud no encontrada con ID: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Solicitud no encontrada con ID: " + id);
         }
 
         solicitudAEditar.setEstado(nuevoEstado);
@@ -467,7 +483,11 @@ public class AgregadorService {
     }
 
     public Contribuyente obtenerContribuyente(Integer id) {
-        return this.contribuyenteRepository.findById(id).orElse(null);
+        Contribuyente contribuyente = this.contribuyenteRepository.findById(id).orElse(null);
+        if (contribuyente == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contribuyente no encontrado con ID: " + id);
+        }
+        return contribuyente;
     }
 
 
