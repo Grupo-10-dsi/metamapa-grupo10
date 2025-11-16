@@ -58,11 +58,21 @@ public class Conversor {
 
     public HechoDTO aplicarNormalizacion(HechoDTO hecho) {
         WebClient webClient = WebClient.create(normalizadorUrl);
+        // Determine the correct class type for deserialization
+        Class<? extends HechoDTO> dtoClass;
+        if (hecho instanceof HechoMultimediaDTO) {
+            dtoClass = HechoMultimediaDTO.class;
+        } else if (hecho instanceof HechoTextualDTO) {
+            dtoClass = HechoTextualDTO.class;
+        } else {
+            dtoClass = HechoDTO.class;
+        }
+
         return webClient.patch()
                 .uri("/normalizador/normalizar")
                 .bodyValue(hecho)
                 .retrieve()
-                .bodyToMono(HechoDTO.class)
+                .bodyToMono(dtoClass)
                 .block();
     }
 
@@ -71,9 +81,87 @@ public class Conversor {
 
         if (hechoDTO instanceof HechoMultimediaDTO) {
             return crearHechoMultimediaBase((HechoMultimediaDTO) hechoDTO, origen, categoria);
-        } else {
+        } else if (hechoDTO instanceof HechoTextualDTO) {
             return crearHechoTextualBase((HechoTextualDTO) hechoDTO, origen, categoria);
+        } else {
+            // Handle base HechoDTO from normalizador - determine type by content
+            // If it has multimedia content, treat as multimedia, otherwise as textual
+            if (esHechoMultimedia(hechoDTO)) {
+                return crearHechoMultimediaDesdeBase(hechoDTO, origen, categoria);
+            } else {
+                return crearHechoTextualDesdeBase(hechoDTO, origen, categoria);
+            }
         }
+    }
+
+    private boolean esHechoMultimedia(HechoDTO hechoDTO) {
+        // Check if the DTO has multimedia content
+        // This is a simple heuristic - you may need to adjust based on your business logic
+        return hechoDTO instanceof HechoMultimediaDTO ||
+               (!(hechoDTO instanceof HechoTextualDTO) && hasMultimediaContent(hechoDTO));
+    }
+
+    private boolean hasMultimediaContent(HechoDTO hechoDTO) {
+        // Use reflection or add a getter to check for multimedia content
+        // For now, assume if it's not explicitly textual and has certain properties, it's multimedia
+        // This is a placeholder - adjust based on your actual data structure
+        try {
+            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
+            Object result = method.invoke(hechoDTO);
+            return result != null && result instanceof java.util.List && !((java.util.List<?>) result).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Hecho crearHechoTextualDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+        String cuerpo = null;
+        try {
+            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getCuerpo");
+            Object result = method.invoke(hechoDTO);
+            cuerpo = (String) result;
+        } catch (Exception e) {
+            // No cuerpo field available
+        }
+
+        return new HechoTextual(
+                hechoDTO.getTitulo(),
+                hechoDTO.getDescripcion(),
+                categoria,
+                hechoDTO.getUbicacion(),
+                hechoDTO.getFechaAcontecimiento(),
+                hechoDTO.getFechaCarga(),
+                origen,
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
+                null,
+                cuerpo
+        );
+    }
+
+    private Hecho crearHechoMultimediaDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+        java.util.List<String> contenidoMultimedia = new java.util.ArrayList<>();
+        try {
+            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
+            Object result = method.invoke(hechoDTO);
+            if (result instanceof java.util.List) {
+                contenidoMultimedia = (java.util.List<String>) result;
+            }
+        } catch (Exception e) {
+            // No contenidoMultimedia field available
+        }
+
+        return new HechoMultimedia(
+                hechoDTO.getTitulo(),
+                hechoDTO.getDescripcion(),
+                categoria,
+                hechoDTO.getUbicacion(),
+                hechoDTO.getFechaAcontecimiento(),
+                hechoDTO.getFechaCarga(),
+                origen,
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
+                null,
+                contenidoMultimedia
+        );
     }
 
     private Hecho crearHechoTextualBase(HechoTextualDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
