@@ -54,7 +54,7 @@ type HechoMultimedia implements Hecho {
 
 type Categoria {
     id: Int!
-    nombre: String!
+    detalle: String!
 }
 
 type Ubicacion {
@@ -74,16 +74,16 @@ type Contribuyente {
 
 enum OrigenFuente {
     ESTATICA
-    TWITTER
-    REDDIT
+    DINAMICA
+    INTERMEDIARIA
 }
 
 type Coleccion {
     id: Int!
     titulo: String!
     descripcion: String
-    algoritmoConsenso: AlgoritmoConsenso!
-    urlsFuente: [String!]!
+    algoritmo_consenso: Algoritmo_Consenso!
+    urls_fuente: [String!]!
     criterios: [Criterio!]!
 }
 
@@ -99,7 +99,7 @@ type SolicitudEliminacion {
     estado: EstadoSolicitud!
 }
 
-enum AlgoritmoConsenso {
+enum Algoritmo_Consenso {
     MULTIPLES_MENCIONES
     MAYORIA_SIMPLE
     ABSOLUTA
