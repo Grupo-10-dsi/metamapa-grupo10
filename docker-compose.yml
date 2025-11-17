@@ -16,7 +16,6 @@ services:
       - mysql_data:/var/lib/mysql
       # Este script inicializa las bases de datos necesarias
       - ./readmes/init-databases.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    # Los commandos adicionales configuran el conjunto de caracteres por defecto a utf8mb4
     command: >
       --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
@@ -26,14 +25,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s # Incrementamos el start_period por seguridad
+      start_period: 30s
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.4.2
     command: start --import-realm
     env_file: .env
     environment:
-      # 1. Configuración de Base de Datos (Esto está bien)
       KC_DB: mysql
       KC_DB_URL_HOST: mysql
       KC_DB_URL_DATABASE: keycloak_db
@@ -42,16 +40,13 @@ services:
 
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      # 2. Configuración de Host (Esto está bien)
       KC_HOSTNAME: localhost
       KC_HTTP_PORT: 9090
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
 
-      # 3. ELIMINADAS LAS LÍNEAS DE BOOTSTRAP ADMIN EN CONFLICTO
 
     volumes:
-      # 4. LA RUTA DE VOLUMEN CORRECTA para la importación
       - ./keycloak-config:/opt/keycloak/data/import:ro
 
     ports:
