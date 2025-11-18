@@ -194,11 +194,14 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./visualizador
+    build:
+      context: ./visualizador
+      args:
+        REACT_APP_API_GATEWAY_URL_BASE: ${REACT_APP_API_GATEWAY_URL_BASE}
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        REACT_APP_KEYCLOAK_CLIENT_ID: ${REACT_APP_KEYCLOAK_CLIENT_ID}
     image: metamapa-grupo10-frontend
     container_name: frontend
-    environment:
-      REACT_APP_API_GATEWAY_URL_BASE: ${REACT_APP_API_GATEWAY_URL_BASE}
     restart: always
     ports:
       - "${FRONTEND_PORT}:80"
