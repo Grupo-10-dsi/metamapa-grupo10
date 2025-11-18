@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # URL del realm que estamos esperando.
-# Usa el nombre del servicio de Docker ('keycloak')
-KEYCLOAK_URL="http://keycloak:9090/realms/MetaMapa"
+# Usa variable de entorno o fallback a Docker Compose local
+KEYCLOAK_URL="${KEYCLOAK_URL:-http://keycloak:9090/realms/MetaMapa}"
 
 echo "------ Esperando a Keycloak en $KEYCLOAK_URL ------"
 
