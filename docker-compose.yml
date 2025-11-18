@@ -194,11 +194,22 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./visualizador
+    build:
+      context: ./visualizador
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_GATEWAY_URL_BASE: ${REACT_APP_API_GATEWAY_URL_BASE}
+        REACT_APP_KEYCLOAK_URL: ${REACT_APP_KEYCLOAK_URL}
+        REACT_APP_KEYCLOAK_CLIENT_ID: ${REACT_APP_KEYCLOAK_CLIENT_ID}
+        REACT_APP_KEYCLOAK_REALM: ${REACT_APP_KEYCLOAK_REALM}
     image: metamapa-grupo10-frontend
     container_name: frontend
+    env_file: .env
     environment:
-      REACT_APP_API_GATEWAY_URL_BASE: ${REACT_APP_API_GATEWAY_URL_BASE}
+      - REACT_APP_API_GATEWAY_URL_BASE=${REACT_APP_API_GATEWAY_URL_BASE}
+      - REACT_APP_KEYCLOAK_URL=${REACT_APP_KEYCLOAK_URL}
+      - REACT_APP_KEYCLOAK_CLIENT_ID=${REACT_APP_KEYCLOAK_CLIENT_ID}
+      - REACT_APP_KEYCLOAK_REALM=${REACT_APP_KEYCLOAK_REALM}
     restart: always
     ports:
       - "${FRONTEND_PORT}:80"

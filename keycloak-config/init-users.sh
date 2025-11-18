@@ -1,8 +1,3 @@
-#!/bin/bash
-
-# Script para crear usuarios de prueba en Keycloak
-# Se ejecuta después de que Keycloak está completamente iniciado
-
 KEYCLOAK_URL="http://keycloak:9090"
 REALM="MetaMapa"
 ADMIN_USER="admin"
@@ -16,7 +11,6 @@ done
 
 echo "Keycloak está listo. Iniciando creación de usuarios..."
 
-# Obtener token de administrador
 echo "Obteniendo token de acceso..."
 ACCESS_TOKEN=$(curl -s -X POST "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -32,7 +26,6 @@ fi
 
 echo "Token obtenido exitosamente."
 
-# Función para crear usuario
 create_user() {
   local username=$1
   local password=$2
@@ -53,7 +46,6 @@ create_user() {
 
   echo "Creando usuario '$username'..."
 
-  # Crear usuario
   CREATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$KEYCLOAK_URL/admin/realms/$REALM/users" \
     -H "Authorization: Bearer $ACCESS_TOKEN" \
     -H "Content-Type: application/json" \
@@ -76,17 +68,14 @@ create_user() {
   if [ "$HTTP_CODE" == "201" ]; then
     echo "Usuario '$username' creado exitosamente."
 
-    # Obtener ID del usuario recién creado
     USER_ID=$(curl -s -X GET "$KEYCLOAK_URL/admin/realms/$REALM/users?username=$username" \
       -H "Authorization: Bearer $ACCESS_TOKEN" \
       -H "Content-Type: application/json" | jq -r '.[0].id')
 
-    # Obtener ID del rol
     ROLE_ID=$(curl -s -X GET "$KEYCLOAK_URL/admin/realms/$REALM/roles/$role" \
       -H "Authorization: Bearer $ACCESS_TOKEN" \
       -H "Content-Type: application/json" | jq -r '.id')
 
-    # Asignar rol al usuario
     echo "Asignando rol '$role' al usuario '$username'..."
     curl -s -X POST "$KEYCLOAK_URL/admin/realms/$REALM/users/$USER_ID/role-mappings/realm" \
       -H "Authorization: Bearer $ACCESS_TOKEN" \
@@ -102,7 +91,6 @@ create_user() {
   fi
 }
 
-# Crear usuarios de prueba
 echo ""
 echo "=== Creando usuarios de prueba ==="
 echo ""
