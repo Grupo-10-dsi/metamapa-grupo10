@@ -3,7 +3,15 @@ include:
 
 services:
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
   # MySQL para entorno demo/prod (usar RDS gestionado en cloud real)
+
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -74,6 +82,8 @@ services:
       KEYCLOAK_JWK_SET_URI: ${KEYCLOAK_JWK_SET_URI}
       KEYCLOAK_VALID_ISSUERS: ${KEYCLOAK_VALID_ISSUERS}
       REACT_APP_API_URL: ${REACT_APP_API_URL}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     depends_on:
       keycloak:
         condition: service_started
