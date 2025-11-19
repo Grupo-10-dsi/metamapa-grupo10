@@ -51,17 +51,17 @@ services:
 
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: localhost
-      KC_HTTP_PORT: 9090
+      KC_HOSTNAME: localhost # CAMBIAR A LA IP DEL SERVIDOR CUANDO DEPLOYEAS!!!
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
 
 
     volumes:
       - ./keycloak-config:/opt/keycloak/data/import:ro
 
     ports:
-      - "9090:9090"
+      - "9090:8080"
     restart: always
     depends_on:
       mysql:
