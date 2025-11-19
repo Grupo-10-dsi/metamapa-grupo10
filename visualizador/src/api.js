@@ -3,7 +3,7 @@ import axios from 'axios';
 // visualizador/src/api.js
 // deberia estar la url de la api en un .env
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export async function getHechosPorColeccion({ id, filtros, consenso }) {
     const params = {

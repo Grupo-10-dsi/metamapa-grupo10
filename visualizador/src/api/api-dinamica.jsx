@@ -6,7 +6,7 @@ class ApiDinamica {
     constructor() {
         this.tokenAuth = null
         this.axiosInstance = axios.create({
-            baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/dinamica` || 'http://localhost:8089/api/dinamica',
+            baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/dinamica`,
         })
     }
 
