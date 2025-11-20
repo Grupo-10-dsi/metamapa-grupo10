@@ -140,4 +140,3 @@ function App() {
 }
 
 export default App;
-cd
