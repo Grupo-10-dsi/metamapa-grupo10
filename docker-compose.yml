@@ -51,11 +51,10 @@ services:
 
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: localhost # CAMBIAR A LA IP DEL SERVIDOR CUANDO DEPLOYEAS!!!
+
+      KC_HOSTNAME: 13.58.90.244
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
-
 
     volumes:
       - ./keycloak-config:/opt/keycloak/data/import:ro
