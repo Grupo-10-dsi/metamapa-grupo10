@@ -691,18 +691,18 @@
       "clientId": "metamapa-frontend",
       "name": "",
       "description": "",
-      "rootUrl": "http://localhost:3000/",
-      "adminUrl": "http://localhost:3000/",
-      "baseUrl": "http://localhost:3000/",
+      "rootUrl": "https://13.58.90.244",
+      "adminUrl": "https://13.58.90.244",
+      "baseUrl": "https://13.58.90.244",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:3000/*"
+        "https://13.58.90.244/*"
       ],
       "webOrigins": [
-        "http://localhost:3000"
+        "https://13.58.90.244"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -719,10 +719,10 @@
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
         "standard.token.exchange.enabled": "false",
-        "post.logout.redirect.uris": "http://localhost:3000/*",
         "frontchannel.logout.session.required": "true",
-        "oauth2.device.authorization.grant.enabled": "false",
+        "post.logout.redirect.uris": "https://13.58.90.244/*",
         "display.on.consent.screen": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
         "dpop.bound.access.tokens": "false"
       },

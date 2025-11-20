@@ -3,14 +3,30 @@ include:
 
 services:
 
+  reverse-proxy:
+    image: nginx:alpine
+    container_name: reverse-proxy
+    volumes:
+      - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./reverse-proxy/certs:/etc/nginx/certs:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - api-gateway
+      - keycloak
+    networks:
+      - metamapa-net
+
   redis:
     image: redis:alpine
     container_name: redis
     restart: always
-    ports:
-      - "6379:6379"
-
-  # MySQL para entorno demo/prod (usar RDS gestionado en cloud real)
+    expose:
+      - "6379"
+    networks:
+      - metamapa-net
 
   mysql:
     image: mysql:8.0
@@ -21,25 +37,27 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB_AGREGADOR}
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      # Este script inicializa las bases de datos necesarias
       - ./readmes/init-databases.sql:/docker-entrypoint-initdb.d/init.sql:ro
     command: >
       --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_PASSWORD}"] # Usamos -uroot
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
+    networks:
+      - metamapa-net
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.4.2
+    container_name: keycloak
     command: start --import-realm
     env_file: .env
     environment:
@@ -52,19 +70,23 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
 
-      KC_HOSTNAME: 13.58.90.244
       KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: ${PUBLIC_IP}
       KC_HOSTNAME_STRICT: "false"
-
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_PROXY_HEADERS: xforwarded
+      KC_PROXY: edge
     volumes:
       - ./keycloak-config:/opt/keycloak/data/import:ro
 
-    ports:
-      - "9090:8080"
+    expose:
+      - "8080"
     restart: always
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - metamapa-net
 
   api-gateway:
     build: ./api-gateway
@@ -80,9 +102,10 @@ services:
       KEYCLOAK_URL: ${KEYCLOAK_URL}
       KEYCLOAK_JWK_SET_URI: ${KEYCLOAK_JWK_SET_URI}
       KEYCLOAK_VALID_ISSUERS: ${KEYCLOAK_VALID_ISSUERS}
-      REACT_APP_API_URL: ${REACT_APP_API_URL}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
+    expose:
+      - "8089"
     depends_on:
       keycloak:
         condition: service_started
@@ -92,13 +115,17 @@ services:
         condition: service_started
       estadistica:
         condition: service_started
-    ports:
-      - "${GATEWAY_PORT}:8089"
+    networks:
+      - metamapa-net
 
   estatica:
     build: ./estatica
     container_name: estatica
     restart: always
+    expose:
+      - "8081"
+    networks:
+      - metamapa-net
 
   dinamica:
     build: ./dinamica
@@ -109,13 +136,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_DINAMICA}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      GESTOR_PERSONAS_URL: ${GESTOR_PERSONAS_URL}
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_BUCKET: ${SUPABASE_BUCKET}
       SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
     depends_on:
       mysql:
         condition: service_healthy
+    expose:
+      - "8082"
+    networks:
+      - metamapa-net
 
   proxy:
     build: ./proxy
@@ -124,19 +154,30 @@ services:
     environment:
       METAMAPA_INSTANCIA_URL: ${METAMAPA_INSTANCIA_URL}
     depends_on:
-      proxyEjemplo:
+      proxyejemplo:
         condition: service_started
+    expose:
+      - "8083"
+    networks:
+      - metamapa-net
 
-  proxyEjemplo:
+  proxyejemplo:
     build: ./proxyEjemplo
-    image: metamapa-grupo10-proxyejemplo
-    container_name: proxyEjemplo
+    container_name: proxyejemplo
     restart: always
+    expose:
+      - "8084"
+    networks:
+      - metamapa-net
 
   normalizador:
     build: ./normalizador
     container_name: normalizador
     restart: always
+    expose:
+      - "8087"
+    networks:
+      - metamapa-net
 
   agregador:
     build: ./agregador
@@ -147,37 +188,22 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_AGREGADOR}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      ESTATICA_URL: ${ESTATICA_URL}
-      DINAMICA_URL: ${DINAMICA_URL}
-      PROXY_URL: ${PROXY_URL}
-      NORMALIZADOR_URL: ${NORMALIZADOR_URL}
     depends_on:
       mysql:
         condition: service_healthy
-      estatica:
-        condition: service_started
-      dinamica:
-        condition: service_started
-      proxy:
-        condition: service_started
-      normalizador:
-        condition: service_started
+    expose:
+      - "8080"
+    networks:
+      - metamapa-net
 
   estadistica:
     build: ./estadistica
     container_name: estadistica
     restart: always
-    env_file: .env
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_ESTADISTICA}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      AGREGADOR_URL: ${AGREGADOR_URL}
-    depends_on:
-      mysql:
-        condition: service_healthy
-      agregador:
-        condition: service_started
+    expose:
+      - "8088"
+    networks:
+      - metamapa-net
 
   gestor-personas:
     build: ./gestor-personas
@@ -191,6 +217,10 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    expose:
+      - "8086"
+    networks:
+      - metamapa-net
 
   frontend:
     build:
@@ -201,20 +231,16 @@ services:
         REACT_APP_KEYCLOAK_URL: ${REACT_APP_KEYCLOAK_URL}
         REACT_APP_KEYCLOAK_CLIENT_ID: ${REACT_APP_KEYCLOAK_CLIENT_ID}
         REACT_APP_API_URL: ${REACT_APP_API_URL}
-    image: metamapa-grupo10-frontend
     container_name: frontend
-    env_file: .env
-    environment:
-      - REACT_APP_API_GATEWAY_URL_BASE=${REACT_APP_API_GATEWAY_URL_BASE}
-      - REACT_APP_KEYCLOAK_URL=${REACT_APP_KEYCLOAK_URL}
-      - REACT_APP_KEYCLOAK_CLIENT_ID=${REACT_APP_KEYCLOAK_CLIENT_ID}
-      - REACT_APP_API_URL=${REACT_APP_API_URL}
     restart: always
-    ports:
-      - "${FRONTEND_PORT}:80"
-    depends_on:
-      api-gateway:
-        condition: service_started
+    expose:
+      - "80"
+    networks:
+      - metamapa-net
+
+networks:
+  metamapa-net:
+    driver: bridge
 
 volumes:
   mysql_data:

@@ -18,12 +18,12 @@ import { Spinner } from "react-bootstrap";
 import ColeccionesPage  from "./features/colecciones/ColeccionesPage";
 import ColeccionesHechoPage from "./features/viewHechos-page/coleccion-page.jsx";
 
-const keyCloakBaseUrl = process.env.REACT_APP_KEYCLOAK_URL;
+//const keyCloakBaseUrl = "http://3.15.225.114:9090";
 
 const kcConfig = {
-    url: keyCloakBaseUrl,
+    url: "https://13.58.90.244",
     realm: "MetaMapa",
-    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "metamapa-frontend"
+    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID
 };
 
 export const kc = new Keycloak(kcConfig);
@@ -110,13 +110,34 @@ function AppRouter() {
 }
 
 
+// Opciones de init pensadas para HTTP y sin tanto "magia" de iframes
+const keycloakInitOptions = {
+    onLoad: "check-sso",       // ni bien entra, fuerza login
+    checkLoginIframe: false,        // desactiva iframe de sesión (molesta en HTTP)
+    silentCheckSsoFallback: false,  // no intentes check-sso silencioso
+    pkceMethod: "S256",             // suele ser el default, lo explicitamos igual
+};
+
 function App() {
     return (
-        <ReactKeycloakProvider authClient={kc}>
+        <ReactKeycloakProvider
+            authClient={kc}
+            initOptions={keycloakInitOptions}
+            // Para ver si kc.init falla por algo (lo verías en la consola del navegador)
+            onInitError={(error) => {
+                console.error("Keycloak init error:", error);
+                try {
+                    // último recurso: forzá un login manual
+                    kc.login();
+                } catch (e) {
+                    console.error("Keycloak manual login error:", e);
+                }
+            }}
+        >
             <AppRouter />
         </ReactKeycloakProvider>
     );
 }
 
 export default App;
-
+cd
