@@ -1,12 +1,18 @@
-KEYCLOAK_URL="http://keycloak:9090"
-REALM="MetaMapa"
-ADMIN_USER="admin"
-ADMIN_PASSWORD="admin"
+#!/bin/bash
+set -e
 
-echo "Esperando a que Keycloak esté listo..."
-until curl -sf "$KEYCLOAK_URL/realms/$REALM" > /dev/null 2>&1; do
-  echo "Keycloak aún no está disponible. Reintentando en 15 segundos..."
-  sleep 15
+# Usar la variable de entorno que viene de docker-compose
+KEYCLOAK_URL=${KEYCLOAK_URL:-"http://keycloak:8080"}
+# Eliminar trailing slash si existe
+KEYCLOAK_URL="${KEYCLOAK_URL%/}"
+
+REALM="MetaMapa"
+ADMIN_USER=${KEYCLOAK_ADMIN:-"admin"}
+ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-"admin"}
+
+until curl -sf "${KEYCLOAK_URL}/realms/master" > /dev/null 2>&1; do
+  echo "Waiting for Keycloak... Looking at ${KEYCLOAK_URL}/realms/master"
+  sleep 5
 done
 
 echo "Keycloak está listo. Iniciando creación de usuarios..."
@@ -25,6 +31,8 @@ if [ "$ACCESS_TOKEN" == "null" ] || [ -z "$ACCESS_TOKEN" ]; then
 fi
 
 echo "Token obtenido exitosamente."
+
+
 
 create_user() {
   local username=$1

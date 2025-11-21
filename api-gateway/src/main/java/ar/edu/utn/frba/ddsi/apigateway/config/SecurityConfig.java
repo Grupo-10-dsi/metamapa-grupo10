@@ -102,6 +102,9 @@ public class SecurityConfig {
             .authorizeExchange(exchanges ->
                     exchanges
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
+
+                        .pathMatchers("/actuator/prometheus", "actuator/health").permitAll()
+
                         // --- REGLAS PUBLICAS (permitAll) ---
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()

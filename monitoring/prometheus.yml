@@ -1,0 +1,48 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'api-gateway'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['api-gateway:8089']
+
+  - job_name: 'agregador'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['agregador:8080']
+
+  - job_name: 'dinamica'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['dinamica:8082']
+
+  - job_name: 'estadistica'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['estadistica:8088']
+
+  - job_name: 'estatica'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['estatica:8081']
+
+  - job_name: 'gestor-personas'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['gestor-personas:8086']
+
+  - job_name: 'normalizador'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['normalizador:8087']
+
+  - job_name: 'proxy'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['proxy:8083']
