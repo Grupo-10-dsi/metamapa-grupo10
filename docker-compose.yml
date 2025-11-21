@@ -204,6 +204,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_ESTADISTICA}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      AGREGADOR_URL: ${AGREGADOR_URL}
     depends_on:
       mysql:
         condition: service_healthy
