@@ -691,18 +691,18 @@
       "clientId": "metamapa-frontend",
       "name": "",
       "description": "",
-      "rootUrl": "https://13.58.90.244",
-      "adminUrl": "https://13.58.90.244",
-      "baseUrl": "https://13.58.90.244",
+      "rootUrl": "https://metamapa.page",
+      "adminUrl": "https://metamapa.page",
+      "baseUrl": "https://metamapa.page",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://13.58.90.244/*"
+        "https://metamapa.page/*"
       ],
       "webOrigins": [
-        "https://13.58.90.244"
+        "https://metamapa.page"
       ],
       "notBefore": 0,
       "bearerOnly": false,
