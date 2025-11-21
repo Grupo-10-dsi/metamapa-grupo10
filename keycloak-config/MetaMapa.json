@@ -720,7 +720,7 @@
         "backchannel.logout.session.required": "true",
         "standard.token.exchange.enabled": "false",
         "frontchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "https://13.58.90.244/*",
+        "post.logout.redirect.uris": "https://metamapa.page/*",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
