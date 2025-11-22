@@ -3,6 +3,14 @@ include:
 
 services:
 
+  metamapa_logs:
+    image: busybox
+    container_name: metamapa_logs
+    volumes:
+      - metamapa_logs:/var/log/metamapa:ro
+    networks:
+      - metamapa-net
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -12,6 +20,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
     ports:
       - "3000:3000"
     depends_on:
@@ -25,10 +34,30 @@ services:
     restart: always
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    expose:
-      - "9090"
+    ports:
+      - "9090:9090"
     networks:
       - metamapa-net
+
+  loki:
+    image: grafana/loki:2.8.2
+    container_name: loki
+    volumes:
+      - metamapa_loki_data:/loki
+      - ./monitoring/loki-config.yaml:/etc/loki/local-config.yaml:ro
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:2.8.2
+    container_name: promtail
+    volumes:
+      - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+      - ./logs:/tmp/metamapa/logs:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log:ro
+    command: -config.file=/etc/promtail/promtail-config.yaml
 
   reverse-proxy:
     image: nginx:alpine
@@ -291,3 +320,5 @@ volumes:
   mysql_data:
   keycloak_data:
   grafana_data:
+  metamapa_logs:
+  metamapa_loki_data:

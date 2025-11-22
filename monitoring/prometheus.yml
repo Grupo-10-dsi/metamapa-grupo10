@@ -11,6 +11,9 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['api-gateway:8089']
+    basic_auth:
+      username: 'prometheus'
+      password: 'prom_pass'
 
   - job_name: 'agregador'
     metrics_path: '/actuator/prometheus'

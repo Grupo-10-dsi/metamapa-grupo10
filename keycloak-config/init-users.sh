@@ -15,7 +15,7 @@ until curl -sf "${KEYCLOAK_URL}/realms/master" > /dev/null 2>&1; do
   sleep 5
 done
 
-echo "Keycloak está listo. Iniciando creación de usuarios..."
+echo "Keycloak estÃ¡ listo. Iniciando creaciÃ³n de usuarios..."
 
 echo "Obteniendo token de acceso..."
 ACCESS_TOKEN=$(curl -s -X POST "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" \
@@ -48,7 +48,7 @@ create_user() {
     -H "Content-Type: application/json" | jq '. | length')
 
   if [ "$USER_EXISTS" -gt 0 ]; then
-    echo "El usuario '$username' ya existe. Omitiendo creación."
+    echo "El usuario '$username' ya existe. Omitiendo creaciÃ³n."
     return
   fi
 
@@ -95,7 +95,7 @@ create_user() {
 
     echo "Rol '$role' asignado exitosamente a '$username'."
   else
-    echo "Error al crear usuario '$username'. Código HTTP: $HTTP_CODE"
+    echo "Error al crear usuario '$username'. CÃ³digo HTTP: $HTTP_CODE"
   fi
 }
 
@@ -111,3 +111,4 @@ echo "=== Proceso completado ==="
 echo "Usuarios creados:"
 echo "  - admin / admin (rol: admin)"
 echo "  - test123 / test123 (rol: user)"
+
