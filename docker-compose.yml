@@ -1,5 +1,3 @@
-include:
-  - keycloak-config/docker-compose.init.yml
 
 services:
 
