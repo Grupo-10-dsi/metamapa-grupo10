@@ -48,16 +48,19 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
+    networks:
+        - metamapa-net
 
   promtail:
     image: grafana/promtail:2.8.2
     container_name: promtail
     volumes:
       - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
-      - ./logs:/tmp/metamapa/logs:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/log:/var/log:ro
+      - ./logs:/var/log/metamapa
     command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - metamapa-net
 
   reverse-proxy:
     image: nginx:alpine

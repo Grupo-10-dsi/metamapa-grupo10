@@ -5,8 +5,8 @@ positions:
 clients:
   - url: http://loki:3100/loki/api/v1/push
 scrape_configs:
-  - job_name: metamapa-files
+  - job_name: application-logs
     static_configs:
       - labels:
           job: application-logs
-          __path__: /var/log/metamapa/*/*.log
+          __path__: /var/log/metamapa/**/*.log
