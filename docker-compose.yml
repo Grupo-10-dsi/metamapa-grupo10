@@ -1,6 +1,3 @@
-include:
-  - keycloak-config/docker-compose.init.yml
-
 services:
 
   metamapa_logs:
