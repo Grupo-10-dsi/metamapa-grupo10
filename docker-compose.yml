@@ -43,7 +43,7 @@ services:
     image: grafana/loki:2.8.2
     container_name: loki
     volumes:
-      - metamapa_loki_data:/loki
+      - metamapa_loki_data:/wal
       - ./monitoring/loki-config.yaml:/etc/loki/local-config.yaml:ro
     command: -config.file=/etc/loki/local-config.yaml
     ports:
@@ -59,6 +59,8 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./logs:/var/log/metamapa
     command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
     networks:
       - metamapa-net
 
