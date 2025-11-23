@@ -1,6 +1,9 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.conversor;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.EtiquetaDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoMultimediaDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoTextualDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.*;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.Estatica;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class Conversor {
@@ -22,7 +26,6 @@ public class Conversor {
 
     public Hecho convertirHecho(HechoDTO hechoDTO, OrigenFuente origen, ContribuyenteRepository contribuyenteRepository, CategoriaRepository categoriaRepository) {
         HechoDTO hechoNormalizado = this.aplicarNormalizacion(hechoDTO);
-        //System.out.println("Convirtiendo hecho: " + hechoNormalizado.getTitulo() + " de la fuente: " + hechoDTO.getOrigenFuente());
 
         Categoria categoriaNormalizada = categoriaRepository.findCategoriaByDetalle(hechoNormalizado.getCategoria().getDetalle());
         if (categoriaNormalizada == null) {
@@ -54,25 +57,106 @@ public class Conversor {
 
     public HechoDTO aplicarNormalizacion(HechoDTO hecho) {
         WebClient webClient = WebClient.create(normalizadorUrl);
+
+        Class<? extends HechoDTO> dtoClass;
+        if (hecho instanceof HechoMultimediaDTO) {
+            dtoClass = HechoMultimediaDTO.class;
+        } else if (hecho instanceof HechoTextualDTO) {
+            dtoClass = HechoTextualDTO.class;
+        } else {
+            dtoClass = HechoDTO.class;
+        }
+
         return webClient.patch()
                 .uri("/normalizador/normalizar")
                 .bodyValue(hecho)
                 .retrieve()
-                .bodyToMono(HechoDTO.class)
+                .bodyToMono(dtoClass)
                 .block();
     }
 
 
     public Hecho creacionHecho(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
 
-        if (hechoDTO.getContenidoMultimedia() != null) {
-            return crearHechoMultimediaBase(hechoDTO, origen, categoria);
+        if (hechoDTO instanceof HechoMultimediaDTO) {
+            return crearHechoMultimediaBase((HechoMultimediaDTO) hechoDTO, origen, categoria);
+        } else if (hechoDTO instanceof HechoTextualDTO) {
+            return crearHechoTextualBase((HechoTextualDTO) hechoDTO, origen, categoria);
         } else {
-            return crearHechoTextualBase(hechoDTO, origen, categoria);
+            if (esHechoMultimedia(hechoDTO)) {
+                return crearHechoMultimediaDesdeBase(hechoDTO, origen, categoria);
+            } else {
+                return crearHechoTextualDesdeBase(hechoDTO, origen, categoria);
+            }
         }
     }
 
-    private Hecho crearHechoTextualBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+    private boolean esHechoMultimedia(HechoDTO hechoDTO) {
+        return hechoDTO instanceof HechoMultimediaDTO ||
+               (!(hechoDTO instanceof HechoTextualDTO) && hasMultimediaContent(hechoDTO));
+    }
+
+    private boolean hasMultimediaContent(HechoDTO hechoDTO) {
+        try {
+            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
+            Object result = method.invoke(hechoDTO);
+            return result != null && result instanceof java.util.List && !((java.util.List<?>) result).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Hecho crearHechoTextualDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+        String cuerpo = null;
+        try {
+            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getCuerpo");
+            Object result = method.invoke(hechoDTO);
+            cuerpo = (String) result;
+        } catch (Exception e) {
+            // No cuerpo field available
+        }
+
+        return new HechoTextual(
+                hechoDTO.getTitulo(),
+                hechoDTO.getDescripcion(),
+                categoria,
+                hechoDTO.getUbicacion(),
+                hechoDTO.getFechaAcontecimiento(),
+                hechoDTO.getFechaCarga(),
+                origen,
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
+                null,
+                cuerpo
+        );
+    }
+
+    private Hecho crearHechoMultimediaDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+        java.util.List<String> contenidoMultimedia = new java.util.ArrayList<>();
+        try {
+            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
+            Object result = method.invoke(hechoDTO);
+            if (result instanceof java.util.List) {
+                contenidoMultimedia = (java.util.List<String>) result;
+            }
+        } catch (Exception e) {
+            // No contenidoMultimedia field available
+        }
+
+        return new HechoMultimedia(
+                hechoDTO.getTitulo(),
+                hechoDTO.getDescripcion(),
+                categoria,
+                hechoDTO.getUbicacion(),
+                hechoDTO.getFechaAcontecimiento(),
+                hechoDTO.getFechaCarga(),
+                origen,
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
+                null,
+                contenidoMultimedia
+        );
+    }
+
+    private Hecho crearHechoTextualBase(HechoTextualDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
         Hecho hecho =  new HechoTextual(
                 hechoDTO.getTitulo(),
                 hechoDTO.getDescripcion(),
@@ -81,14 +165,14 @@ public class Conversor {
                 hechoDTO.getFechaAcontecimiento(),
                 hechoDTO.getFechaCarga(),
                 origen,
-                hechoDTO.getEtiquetas(),
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
                 null,
                 hechoDTO.getCuerpo()
         );
         return hecho;
     }
 
-    public Hecho crearHechoMultimediaBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+    public Hecho crearHechoMultimediaBase(HechoMultimediaDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
         Hecho hecho = new HechoMultimedia(
                 hechoDTO.getTitulo(),
                 hechoDTO.getDescripcion(),
@@ -97,22 +181,23 @@ public class Conversor {
                 hechoDTO.getFechaAcontecimiento(),
                 hechoDTO.getFechaCarga(),
                 origen,
-                hechoDTO.getEtiquetas(),
+                convertirEtiquetas(hechoDTO.getEtiquetas()),
                 null,
                 hechoDTO.getContenidoMultimedia()
         );
         return hecho;
     }
 
-//    public Contribuyente instanciarContribuyente(Contribuyente contribuyenteHechoDTO, ContribuyenteRepository contribuyenteRepository) {
-//        if (contribuyenteHechoDTO instanceof Anonimo) {
-//            return contribuyenteRepository.findContribuyenteById(1);
-//        } else {
-//            Contribuyente nuevoRegistrado = new Registrado(contribuyenteHechoDTO.getNombre());
-//            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
-//            return nuevoRegistrado;
-//        }
-//    }
-
+    private List<Etiqueta> convertirEtiquetas(List<EtiquetaDTO> etiquetasDTO) {
+        if (etiquetasDTO == null) return new ArrayList<>();
+        return etiquetasDTO.stream()
+                .map(dto -> {
+                    Etiqueta etiqueta = new Etiqueta();
+                    etiqueta.setId(dto.getId());
+                    etiqueta.setDescripcion(dto.getDescripcion());
+                    return etiqueta;
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
 }
 

@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.services;
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTOE;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.UbicacionDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;

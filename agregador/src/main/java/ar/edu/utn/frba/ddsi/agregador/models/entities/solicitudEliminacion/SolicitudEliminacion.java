@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion;
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTOE;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import lombok.Getter;

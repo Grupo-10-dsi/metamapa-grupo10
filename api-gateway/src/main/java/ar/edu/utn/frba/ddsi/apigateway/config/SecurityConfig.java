@@ -90,24 +90,32 @@ public class SecurityConfig {
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtSpec ->
                     jwtSpec.jwtAuthenticationConverter(jwtAuthenticationConverter())
             ))
-            // sin esto no puedo hacer post a los endpoints que requieren roles especificos
-            .cors(cors -> {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of(visualizadorUrl));
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-                config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", config);
-                cors.configurationSource(source);
-            })
-            // 2. Definir las reglas de autorizacion (BASADO EN TU CONTROLLER)
-            .authorizeExchange(exchanges ->
+
+                // sin esto no puedo hacer post a los endpoints que requieren roles especificos
+                .cors(cors -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of(visualizadorUrl));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/**", config);
+                    cors.configurationSource(source);
+                })
+
+
+                // 2. Definir las reglas de autorización (BASADO EN TU CONTROLLER)
+                .authorizeExchange(exchanges ->
                     exchanges
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
 
                         .pathMatchers("/actuator/prometheus", "/actuator/health").permitAll()
 
-                        // --- REGLAS PUBLICAS (permitAll) ---
+                    .pathMatchers(HttpMethod.OPTIONS).permitAll()
+
+                        .pathMatchers(HttpMethod.GET, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/graphiql", "/graphiql/**").permitAll()
+                        // --- REGLAS PÚBLICAS (permitAll) ---
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/categorias").permitAll()
