@@ -36,6 +36,12 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
 
     Hecho findHechoById(Integer id);
 
+    @Query( value = """
+            ALTER TABLE hecho ADD FULLTEXT INDEX ft_titulo_descripcion (titulo, descripcion);
+        """,
+            nativeQuery = true)
+    void crearFullText();
+
     /**
      * Por ahora las fuentes se hardcodean aca. Eventualmente se
      * vera si se pueden agregar/sacar usando requests.

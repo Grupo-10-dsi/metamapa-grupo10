@@ -40,6 +40,7 @@ public class HechosServices {
     }
 
     public List<Hecho> findAllHechos(String ultimaConsulta) {
+        log.info("Buscando todos los hechos desde: {}", ultimaConsulta);
         List<Hecho> hechos = new ArrayList<>(this.hechosRepository.findAll());
         hechos.addAll(this.obtenerHechosMetaMapa(
                 new FiltroRequest(null, null, null, null, null, null, null, ultimaConsulta)));
