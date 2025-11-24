@@ -17,3 +17,6 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8087
 # Arranque del servicio
 ENTRYPOINT ["java","-jar","/app/app.jar"]
+
+RUN mkdir -p /var/log/normalizador \
+    && ln -s /var/log/normalizador /app/logs || true

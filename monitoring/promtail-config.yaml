@@ -13,3 +13,51 @@ scrape_configs:
       - labels:
           job: application-logs
           __path__: /var/log/metamapa/**/*.log
+  - job_name: agregador
+    static_configs:
+      - targets: ['localhost']
+      - labels:
+          job: agregador-logs
+          __path__: /var/log/agregador/*.log
+  - job_name: dinamica
+    static_configs:
+      - targets: ['localhost']
+        labels:
+          job: dinamica
+          __path__: /var/log/dinamica/*.log
+  - job_name: estadistica
+    static_configs:
+      - targets: ['localhost']
+        labels:
+          job: estadistica
+          __path__: /var/log/estadistica/*.log
+  - job_name: estatica
+    static_configs:
+      - targets: [ 'localhost' ]
+        labels:
+          job: estatica
+          __path__: /var/log/estatica/*.log
+  - job_name: normalizador
+    static_configs:
+      - targets: [ 'localhost' ]
+        labels:
+          job: normalizador
+          __path__: /var/log/normalizador/*.log
+  - job_name: gestor-personas
+    static_configs:
+      - targets: [ 'localhost' ]
+        labels:
+          job: gestor-personas
+          __path__: /var/log/gestor-personas/*.log
+  - job_name: proxy
+    static_configs:
+      - targets: [ 'localhost' ]
+        labels:
+          job: proxy
+          __path__: /var/log/proxy/*.log
+  - job_name: api-gateway
+    static_configs:
+      - targets: [ 'localhost' ]
+        labels:
+          job: api-gateway
+          __path__: /var/log/api-gateway/*.log

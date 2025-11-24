@@ -55,6 +55,14 @@ services:
       - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./logs:/var/log/metamapa
+      - ./agregador/logs:/var/log/agregador
+      - ./dinamica/logs:/var/log/dinamica
+      - ./estadistica/logs:/var/log/estadistica
+      - ./estatica/logs:/var/log/estatica
+      - ./normalizador/logs:/var/log/normalizador
+      - ./gestor-personas/logs:/var/log/gestor-personas
+      - ./proxy/logs:/var/log/proxy
+      - ./api-gateway/logs:/var/log/api-gateway
     command: -config.file=/etc/promtail/promtail-config.yaml
     depends_on:
       - loki
@@ -177,6 +185,8 @@ services:
         condition: service_started
     networks:
       - metamapa-net
+    volumes:
+      - ./api-gateway/logs:/app/logs
 
   estatica:
     build: ./estatica
@@ -186,6 +196,8 @@ services:
       - "8081"
     networks:
       - metamapa-net
+    volumes:
+      - ./estatica/logs:/app/logs
 
   dinamica:
     build: ./dinamica
@@ -206,6 +218,8 @@ services:
       - "8082"
     networks:
       - metamapa-net
+    volumes:
+      - ./dinamica/logs:/app/logs
 
   proxy:
     build: ./proxy
@@ -220,6 +234,8 @@ services:
       - "8083"
     networks:
       - metamapa-net
+    volumes:
+      - ./proxy/logs:/app/logs
 
   proxyejemplo:
     build: ./proxyEjemplo
@@ -238,6 +254,8 @@ services:
       - "8087"
     networks:
       - metamapa-net
+    volumes:
+      - ./normalizador/logs:/app/logs
 
   agregador:
     build: ./agregador
@@ -261,6 +279,8 @@ services:
       - "8080"
     networks:
       - metamapa-net
+    volumes:
+      - ./agregador/logs:/app/logs
 
   estadistica:
     build: ./estadistica
@@ -280,6 +300,8 @@ services:
       - "8088"
     networks:
       - metamapa-net
+    volumes:
+      - ./estadistica/logs:/app/logs
 
   gestor-personas:
     build: ./gestor-personas
@@ -297,6 +319,8 @@ services:
       - "8086"
     networks:
       - metamapa-net
+    volumes:
+      - ./gestor-personas/logs:/app/logs
 
   frontend:
     build:
