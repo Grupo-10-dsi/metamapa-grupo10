@@ -4,6 +4,8 @@ import ar.edu.utn.frba.ddsi.estatica.models.entities.ArchivoProcesado.ArchivoPro
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.Importador;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Repository
 public class HechosRepository {
+    private static Logger log = LoggerFactory.getLogger(HechosRepository.class);
 
     private final List<ArchivoProcesado> hechos = new ArrayList<>();
     private final Importador importador;
@@ -32,17 +35,18 @@ public class HechosRepository {
     }
 
     public void importarHechosSin(List<String> nombresArchivos) {
-        //System.out.println("Importando hechos sin: " + nombresArchivos);
         importador.setArchivosProcesados(nombresArchivos);
         this.importarHechos();
     }
 
     public void importarHechos() {
         this.hechos.clear();
-        System.out.println("Importando hechos...");
+        log.debug("Importando hechos...");
         List<ArchivoProcesado> hechosImportados = importador.importarHechos();
 
         this.addHechos(hechosImportados);
+
+        log.info("Se importaron {} hechos de {} archivos procesados.", hechosImportados.stream().mapToInt(a -> a.getHechos().size()).sum(), hechosImportados.size());
     }
 
 }

@@ -117,7 +117,7 @@ public class AgregadorService {
 
         //Contribuyente anonimoGestionado = contribuyenteRepository.findById(1).orElse(null);
 
-        fuentes.forEach(fuente -> System.out.println(fuente.getUrl()));
+        fuentes.forEach(fuente -> logger.debug("Fuente {} URL: {}" , fuente.getNombre(),fuente.getUrl()));
 
         fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta, contribuyenteRepository, archivoProcesadoRepository, origenFuenteRepository, categoriaRepository));
         System.out.print("Ultima consulta: ");
@@ -280,43 +280,10 @@ public class AgregadorService {
     /**
      * Elimina una colección por su ID.
      */
-    public void eliminarColeccionPorId(Integer id) { this.coleccionRepository.deleteById(id);}
-
-    /**
-     * Actualiza una colección existente con los datos del DTO proporcionado.
-     */
-//    public Coleccion actualizarColeccion(Integer id, ColeccionDTO coleccionDTO) {
-//        // Buscar la colección existente
-//        Coleccion coleccionExistente = coleccionRepository.findColeccionById(id);
-//
-//        if (coleccionExistente == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
-//        }
-//
-//        // Actualizar propiedades
-//        coleccionExistente.setTitulo(coleccionDTO.getTitulo());
-//        coleccionExistente.setDescripcion(coleccionDTO.getDescripcion());
-//        coleccionExistente.setAlgoritmo_consenso(coleccionDTO.getAlgoritmo_consenso());
-//
-//        // Actualizar fuentes
-//        List<Fuente> fuentes = new ArrayList<>();
-//        coleccionDTO.getUrls_fuente().forEach(urlFuente -> {
-//            Fuente fuente = fuentesRepository.findFuenteByUrl(urlFuente);
-//            if (fuente != null) {
-//                fuentes.add(fuente);
-//            }
-//        });
-//        coleccionExistente.setFuentes(fuentes);
-//
-//        // Actualizar criterios
-//        List<CriterioPertenencia> criterios = coleccionDTO.getCriterios().stream()
-//                .map(this::criterioFromDTO)
-//                .toList();
-//        coleccionExistente.setCriterios(criterios);
-//
-//        // Guardar la colección actualizada
-//        return coleccionRepository.save(coleccionExistente);
-//    }
+    public void eliminarColeccionPorId(Integer id) {
+        logger.info("Coleccion con ID {} eliminada.", id);
+        this.coleccionRepository.deleteById(id);
+    }
 
     /**
      * Modifica el algoritmo de consenso de una colección existente a partir de su ID.

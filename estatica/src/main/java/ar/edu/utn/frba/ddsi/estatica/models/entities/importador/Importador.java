@@ -4,6 +4,8 @@ import ar.edu.utn.frba.ddsi.estatica.models.entities.ArchivoProcesado.ArchivoPro
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.lector.Lector;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.importador.lector.LectorCSV;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -21,7 +23,7 @@ public class Importador {
     private final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
     private final Map<String, Lector> lectores = new HashMap<>();
     private List<String> archivosProcesados;
-
+    private Logger log = LoggerFactory.getLogger(Importador.class);
     public Importador() {
         // TODO decidir cuando / donde instanciar los lectores
         this.lectorCSV = new LectorCSV();
@@ -51,7 +53,7 @@ public class Importador {
                         );
 
                     } catch (Exception e) {
-                        System.err.println("Error al procesar el recurso " + filename + ": " + e.getMessage());
+                        log.error("Error al procesar el recurso {}: {}", filename, e.getMessage());
                     }
             }
         } catch (Exception e) {

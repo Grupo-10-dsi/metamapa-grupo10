@@ -21,9 +21,6 @@ public class NormalizadorCategorias implements INormalizador {
 
         Map<String, Categoria> mapaDeEquivalencias = equivalenciasCategoriasRepo.obtenerEquivalencias();
 
-        //System.out.println("Categoria original: " + hechoCrudo.getCategoria().getDetalle());
-        //System.out.println("Mapa de equivalencias: \n" + mapaDeEquivalencias);
-
         Categoria categoriaAsociada = mapaDeEquivalencias.get(hechoCrudo.getCategoria().getDetalle().toLowerCase());
 
         if(categoriaAsociada != null) {

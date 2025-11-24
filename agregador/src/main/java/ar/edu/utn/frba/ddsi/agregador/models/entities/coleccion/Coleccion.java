@@ -52,8 +52,6 @@ public class Coleccion {
     }
 
     public List<Hecho> mostrarHechos() {
-        //System.out.println("Criterios: ");
-        //this.criterios.forEach(criterio -> System.out.println(criterio));
 
         return this.fuentes.stream()
                 .flatMap(fuente -> fuente.getHechos().stream())

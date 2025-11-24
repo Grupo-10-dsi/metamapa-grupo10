@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.ddsi.estadistica.models.entities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,7 +14,7 @@ import java.util.List;
 
 public class AgregadorClient {
     private final WebClient webClient;
-
+    private static Logger log = LoggerFactory.getLogger(AgregadorClient.class);
     public AgregadorClient(String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
@@ -47,7 +49,7 @@ public class AgregadorClient {
     }
 
     public List<Categoria> obtenerCategoriaConMasHechos(Integer cantidadCategorias) {
-        System.out.println("Llamando a la API de agregador para obtener la categoria con mas hechos...\n");
+        log.debug("Llamando a la API de agregador para obtener la categoria con mas hechos...");
         List<Categoria> categoriaConMasHechos = webClient.get()
                                 .uri("/estadisticas/hechos/max-categoria/{cantidadCategorias}", cantidadCategorias)
                                 .retrieve()
