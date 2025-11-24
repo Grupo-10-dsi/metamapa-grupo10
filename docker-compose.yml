@@ -6,6 +6,7 @@ services:
     container_name: reverse-proxy
     volumes:
       - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./reverse-proxy/blocklist.conf:/etc/nginx/blocklist.conf:ro
       - /etc/letsencrypt/live/metamapa.page/fullchain.pem:/etc/nginx/certs/cert.pem:ro
       - /etc/letsencrypt/live/metamapa.page/privkey.pem:/etc/nginx/certs/key.pem:ro
       - ./reverse-proxy/www:/var/www/certbot:ro
