@@ -15,13 +15,13 @@ import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
 import ApiAgregador from "./api/api-agregador";
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import ColeccionesPage  from "./features/colecciones/ColeccionesPage";
+import ColeccionesPage from "./features/colecciones/ColeccionesPage";
 import ColeccionesHechoPage from "./features/viewHechos-page/coleccion-page.jsx";
 
 //const keyCloakBaseUrl = "http://3.15.225.114:9090";
 
 const kcConfig = {
-    url: "https://13.58.90.244",
+    url: "https://metamapa.page",
     realm: "MetaMapa",
     clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID
 };
@@ -69,7 +69,7 @@ function AppRouter() {
         <>
             {showLoader && (
                 <div className={`loader-container ${isFadingOut ? 'fade-out' : ''}`}>
-                    <Spinner animation="grow" variant="primary" className="loader-spinner"/>
+                    <Spinner animation="grow" variant="primary" className="loader-spinner" />
                     <div className="loader-text">Autenticando...</div>
                 </div>
             )}
@@ -77,29 +77,29 @@ function AppRouter() {
             {initialized && (
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Layout/>}>
+                        <Route path="/" element={<Layout />}>
                             {/* rutas públicas */}
                             <Route path="/home" element={<HomePage />} />
                             <Route path="/" element={<Navigate to="/home" replace />} />
                             <Route path="*" element={<Navigate to="/home" replace />} />
                             <Route path="/hecho/:hechoId" element={<DetailPage />} />
                             <Route path="/busqueda" element={<Busqueda />} />
-                            <Route path="/registrar-hecho" element={<RegistrarHecho/>} />
-                            <Route path="/colecciones" element={<ColeccionesPage/>} />
-                            <Route path="/hechos" element={<ColeccionesHechoPage/>}/>
-                            <Route path="/colecciones/:id/hechos" element={<ColeccionesHechoPage/>} />
+                            <Route path="/registrar-hecho" element={<RegistrarHecho />} />
+                            <Route path="/colecciones" element={<ColeccionesPage />} />
+                            <Route path="/hechos" element={<ColeccionesHechoPage />} />
+                            <Route path="/colecciones/:id/hechos" element={<ColeccionesHechoPage />} />
 
                             {/* rutas usuario */}
-                            <Route element={<RequireAuth/>} >
-                                <Route path="perfil/solicitudes" element={<Perfil mostrarEnPantalla={'solicitudes'} /> }/>
-                                <Route path="perfil/colecciones" element={<Perfil mostrarEnPantalla={'colecciones'}/> } />
+                            <Route element={<RequireAuth />} >
+                                <Route path="perfil/solicitudes" element={<Perfil mostrarEnPantalla={'solicitudes'} />} />
+                                <Route path="perfil/colecciones" element={<Perfil mostrarEnPantalla={'colecciones'} />} />
                             </Route>
 
                             {/* rutas admin */}
-                            <Route element={<RequireAdmin/>} >
-                                <Route path="/panel-control" element={<Perfil/> } />
-                                <Route path="/crear-coleccion" element={<CrearColeccion/>} />
-                                <Route path="/estadisticas" element={<Estadisticas/>} />
+                            <Route element={<RequireAdmin />} >
+                                <Route path="/panel-control" element={<Perfil />} />
+                                <Route path="/crear-coleccion" element={<CrearColeccion />} />
+                                <Route path="/estadisticas" element={<Estadisticas />} />
                             </Route>
                         </Route>
                     </Routes>
