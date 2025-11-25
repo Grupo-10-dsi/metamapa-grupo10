@@ -1,8 +1,11 @@
 package ar.edu.utn.frba.ddsi.estatica.controllers;
 
+import ar.edu.utn.frba.ddsi.estatica.EstaticaApplication;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.dtos.ArchivoProcesadoDTO;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.estatica.services.HechosServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +18,7 @@ import java.util.List;
 public class EstaticaController {
 
     private final HechosServices hechosServices;
+    private static Logger log = LoggerFactory.getLogger(EstaticaController.class);
 
     public EstaticaController(HechosServices hechosServices) {
         this.hechosServices = hechosServices;
@@ -22,6 +26,7 @@ public class EstaticaController {
 
     @GetMapping("/hechos")
     public List<ArchivoProcesadoDTO> listarHechos(@RequestParam() List<String> archivosProcesados) {
+        log.info("Listando hechos para los archivos: {}", archivosProcesados);
         return hechosServices.obtenerHechos(archivosProcesados);
     }
 

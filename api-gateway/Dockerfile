@@ -32,3 +32,4 @@ EXPOSE 8089
 # CAMBIO: El Entrypoint ahora es el script de espera.
 # Este script se encargará de ejecutar "java -jar /app/app.jar" cuando Keycloak esté listo.
 ENTRYPOINT ["/app/wait-for-keycloak.sh"]
+

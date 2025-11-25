@@ -1,6 +1,76 @@
 
 services:
 
+  metamapa_logs:
+    image: busybox
+    container_name: metamapa_logs
+    volumes:
+      - metamapa_logs:/var/log/metamapa:ro
+    networks:
+      - metamapa-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - metamapa-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - metamapa-net
+
+  loki:
+    image: grafana/loki:2.8.2
+    container_name: loki
+    volumes:
+      - loki_data:/loki
+      - ./monitoring/loki-config.yaml:/etc/loki/local-config.yaml:ro
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+        - metamapa-net
+
+  promtail:
+    image: grafana/promtail:2.8.2
+    container_name: promtail
+    volumes:
+      - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./logs:/var/log/metamapa
+      - agregador_logs:/var/log/agregador
+      - dinamica_logs:/var/log/dinamica
+      - estadistica_logs:/var/log/estadistica
+      - estatica_logs:/var/log/estatica
+      - normalizador_logs:/var/log/normalizador
+      - gestor_personas_logs:/var/log/gestor-personas
+      - proxy_logs:/var/log/proxy
+      - api_gateway_logs:/var/log/api-gateway
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
+    networks:
+      - metamapa-net
+
   reverse-proxy:
     image: nginx:alpine
     container_name: reverse-proxy
@@ -48,14 +118,13 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_PASSWORD}"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
     networks:
       - metamapa-net
-
   keycloak:
     image: quay.io/keycloak/keycloak:26.4.2
     container_name: keycloak
@@ -77,9 +146,12 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: "true"
       KC_PROXY_HEADERS: xforwarded
       KC_PROXY: edge
+
+      # Habilitar health checks
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
     volumes:
       - ./keycloak-config:/opt/keycloak/data/import:ro
-
     expose:
       - "8080"
     restart: always
@@ -118,15 +190,22 @@ services:
         condition: service_started
     networks:
       - metamapa-net
+    volumes:
+      - api_gateway_logs:/var/log/api-gateway
 
   estatica:
     build: ./estatica
     container_name: estatica
+    labels:
+      logging: "promtail"
+      logging_jobname: "estatica"
     restart: always
     expose:
       - "8081"
     networks:
       - metamapa-net
+    volumes:
+      - estatica_logs:/var/log/estatica
 
   dinamica:
     build: ./dinamica
@@ -147,6 +226,8 @@ services:
       - "8082"
     networks:
       - metamapa-net
+    volumes:
+      - dinamica_logs:/var/log/dinamica
 
   proxy:
     build: ./proxy
@@ -161,6 +242,8 @@ services:
       - "8083"
     networks:
       - metamapa-net
+    volumes:
+      - proxy_logs:/var/log/proxy
 
   proxyejemplo:
     build: ./proxyEjemplo
@@ -179,6 +262,8 @@ services:
       - "8087"
     networks:
       - metamapa-net
+    volumes:
+      - normalizador_logs:/var/log/normalizador
 
   agregador:
     build: ./agregador
@@ -192,10 +277,18 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
     expose:
       - "8080"
     networks:
       - metamapa-net
+    volumes:
+      - agregador_logs:/var/log/agregador
 
   estadistica:
     build: ./estadistica
@@ -209,10 +302,14 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      agregador:
+        condition: service_started
     expose:
       - "8088"
     networks:
       - metamapa-net
+    volumes:
+      - estadistica_logs:/var/log/estadistica
 
   gestor-personas:
     build: ./gestor-personas
@@ -230,6 +327,8 @@ services:
       - "8086"
     networks:
       - metamapa-net
+    volumes:
+      - gestor_personas_logs:/var/log/gestor-personas
 
   frontend:
     build:
@@ -254,3 +353,16 @@ networks:
 volumes:
   mysql_data:
   keycloak_data:
+  grafana_data:
+  metamapa_logs:
+  metamapa_loki_data:
+  dinamica_logs:
+  estadistica_logs:
+  estatica_logs:
+  normalizador_logs:
+  gestor_personas_logs:
+  agregador_logs:
+  proxy_logs:
+  api_gateway_logs:
+  loki_data:
+    driver: local

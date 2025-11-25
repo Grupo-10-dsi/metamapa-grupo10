@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +104,15 @@ public class SecurityConfig {
             .authorizeExchange(exchanges ->
                     exchanges
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        // --- REGLAS PUBLICAS (permitAll) ---
+
+                        .pathMatchers("/actuator/prometheus", "/actuator/health").permitAll()
+
+                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
+
+                        .pathMatchers(HttpMethod.GET, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/graphiql", "/graphiql/**").permitAll()
+                        // --- REGLAS PÚBLICAS (permitAll) ---
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/categorias").permitAll()

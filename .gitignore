@@ -33,3 +33,13 @@ build/
 ### VS Code ###
 .vscode/
 #.env
+
+### LOGS ###
+/agregador/logs/
+/estatica/logs/
+/dinamica/logs/
+/proxy/logs/
+/estadistica/logs/
+/normalizador/logs/
+/gestor-personas/logs/
+/api-gateway/logs/

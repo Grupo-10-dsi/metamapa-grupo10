@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.services;
 
+import ar.edu.utn.frba.ddsi.agregador.controllers.AgregadorController;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Algoritmo_Consenso;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.FuenteEstatica;
@@ -19,6 +20,8 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Solic
 import ar.edu.utn.frba.ddsi.agregador.models.repositories.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,6 +41,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AgregadorService {
+    private static Logger logger = LoggerFactory.getLogger(AgregadorController.class);
     private final HechosRepository hechosRepository;
     private final FuentesRepository fuentesRepository;
     private final SolicitudesRepository solicitudesRepository;
@@ -76,15 +80,7 @@ public class AgregadorService {
     @Transactional
     @PostConstruct
     public void consultarHechosPorPrimeraVez() {
-        //System.out.print("Se ejecuta el PostConstruct");
-//        Contribuyente anonimoExistente = contribuyenteRepository.findById(1).orElse(null);
-//
-//        if (anonimoExistente == null) {
-//            // Crear e insertar el anónimo con ID manual
-//            Anonimo anonimo = Anonimo.getInstance();
-//            contribuyenteRepository.saveAndFlush(anonimo);
-//        }
-
+        logger.info("Consultando hechos por primera vez.");
         Dinamica origenDinamica = new Dinamica();
         Proxy origenProxy = new Proxy();
         origenFuenteRepository.saveAndFlush(origenDinamica);
@@ -99,10 +95,11 @@ public class AgregadorService {
             fuentesRepository.saveAndFlush(dinamica);
             fuentesRepository.saveAndFlush(proxy);
         }
-
+        logger.info("Fuentes cargadas con exito.");
 
         this.consultarHechosPeriodicamente();
         this.clasificarHechos();
+        this.hechosRepository.crearFullText();
     }
 
     /**
@@ -111,17 +108,16 @@ public class AgregadorService {
     @Transactional
     @Scheduled(fixedRate = 60 * 1000, initialDelay = 360000)
     public void consultarHechosPeriodicamente() {
-        System.out.println("Consultando hechos de las fuentes...");
+        logger.info("Consultando hechos de las fuentes...");
 
         List<Fuente> fuentes = fuentesRepository.findAll();
 
         //Contribuyente anonimoGestionado = contribuyenteRepository.findById(1).orElse(null);
 
-        fuentes.forEach(fuente -> System.out.println(fuente.getUrl()));
+        fuentes.forEach(fuente -> logger.debug("Fuente {} URL: {}" , fuente.getNombre(),fuente.getUrl()));
 
         fuentes.forEach(fuente -> importador.importarHechos(fuente, this.ultimaConsulta, contribuyenteRepository, archivoProcesadoRepository, origenFuenteRepository, categoriaRepository));
-        System.out.print("Ultima consulta: ");
-        System.out.println(ultimaConsulta);
+
         this.ultimaConsulta = LocalDateTime.now();
         fuentes.forEach(fuente -> {
 
@@ -130,7 +126,7 @@ public class AgregadorService {
            // hechosRepository.saveAll(fuente.getHechos());
         });
 
-        //hechosRepository.findAll(); // Se conecta a las otras API's y pone los hechos en instancias de las fuentes
+
     }
 
     /**
@@ -140,7 +136,8 @@ public class AgregadorService {
     @Transactional
     @Scheduled(cron = "0 0 3 * * *")
     public void clasificarHechos() {
-        System.out.println("Clasificando hechos...");
+        logger.info("Clasificando hechos...");
+
         List<Fuente> fuentes = fuentesRepository.findAll();
 
         for (Fuente fuente : fuentes) {
@@ -157,7 +154,6 @@ public class AgregadorService {
     }
 
     // <----------------- COLECCIONES ----------------->
-    // TODO: Implementar manejo de errores y validaciones
 
     /**
      * Crea una nueva colección a partir del DTO recibido.
@@ -172,9 +168,6 @@ public class AgregadorService {
                 }
         );
 
-//        if (fuentes == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Fuente no encontrada, URL: " + coleccionDTO.getUrls_fuente());
-//        }
 
         List<CriterioPertenencia> criterios = coleccionDTO.getCriterios().stream()
                 .map(this::criterioFromDTO)
@@ -190,6 +183,8 @@ public class AgregadorService {
 
 
         this.coleccionRepository.save(nuevaColeccion);
+
+        logger.info("Coleccion creada con ID: {}", nuevaColeccion.getId());
 
         return nuevaColeccion.getId();
     }
@@ -230,6 +225,7 @@ public class AgregadorService {
         Coleccion coleccion = coleccionRepository.findColeccionById(id);
 
         if (coleccion == null) {
+            logger.error("No se encontro la coleccion con ID: {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
         }
         List<Hecho> hechos =  coleccion.mostrarHechos().stream()
@@ -240,7 +236,11 @@ public class AgregadorService {
     }
 
     public Hecho obtenerHechoPorId(Integer id) {
-        return this.hechosRepository.findHechoById(id);
+        Hecho hecho = this.hechosRepository.findHechoById(id);
+        if (hecho == null) {
+            throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Hecho no encontrado con ID: " + id);
+        }
+        return hecho;
     }
 
     public List<Hecho> encontrarHechosPorColeccion(
@@ -275,12 +275,25 @@ public class AgregadorService {
     /**
      * Busca una colección por su ID.
      */
-    public Coleccion obtenerColeccion(Integer id){ return this.coleccionRepository.findColeccionById(id);}
+    public Coleccion obtenerColeccion(Integer id){
+        Coleccion coleccion = this.coleccionRepository.findColeccionById(id);
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
+        return coleccion;
+    }
 
     /**
      * Elimina una colección por su ID.
      */
-    public void eliminarColeccionPorId(Integer id) { this.coleccionRepository.deleteById(id);}
+    public void eliminarColeccionPorId(Integer id) {
+        Coleccion coleccion = this.coleccionRepository.findColeccionById(id);
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
+        this.coleccionRepository.deleteById(id);
+        logger.info("Coleccion con ID {} eliminada.", id);
+    }
 
     /**
      * Actualiza una colección existente con los datos del DTO proporcionado.
@@ -328,6 +341,7 @@ public class AgregadorService {
         }
 
         coleccionAModificadar.setAlgoritmo_consenso(nuevoAlgoritmo);
+        logger.info("Se ha modificado el algoritmo de consenso de la coleccion con ID: {}", id);
         return this.coleccionRepository.save(coleccionAModificadar);
     }
 
@@ -350,6 +364,8 @@ public class AgregadorService {
         });
         coleccionAModificadar.setFuentes(fuentes);
 
+        logger.info("Se ha modificado la lista de fuentes de la coleccion con ID: {}", id);
+
         return coleccionRepository.save(coleccionAModificadar);
     }
 
@@ -363,7 +379,7 @@ public class AgregadorService {
         return solicitudes;
     }
 
-    public Integer crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
+    public Integer crearSolicitudEliminacion(SolicitudDTOE solicitudDTO) {
 
         SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion();
 
@@ -381,12 +397,14 @@ public class AgregadorService {
         Hecho hechoAeliminar = hechosRepository.findById(solicitudDTO.getIdHecho()).orElse(null);
 
         if (hechoAeliminar == null) {
-            throw new IllegalArgumentException("Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
         }
 
         nuevaSolicitudEliminacion.setHecho(hechoAeliminar);
 
         solicitudesRepository.save(nuevaSolicitudEliminacion);
+
+        logger.info("Solicitud de eliminación creada con ID: {}", nuevaSolicitudEliminacion.getId());
 
         return nuevaSolicitudEliminacion.getId();
     }
@@ -396,7 +414,7 @@ public class AgregadorService {
         SolicitudEliminacion solicitudAEditar = solicitudesRepository.findById(id).orElse(null);
 
         if (solicitudAEditar == null) {
-            throw new IllegalArgumentException("Solicitud no encontrada con ID: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Solicitud no encontrada con ID: " + id);
         }
 
         solicitudAEditar.setEstado(nuevoEstado);
@@ -408,6 +426,7 @@ public class AgregadorService {
 //            this.ocultarHecho(solicitudAEditar.getIdHecho());
 //        }
 
+        logger.info("Solicitud con ID {} actualizada a estado {}", id, nuevoEstado);
         return solicitudActualizada;
 
     }
@@ -452,14 +471,26 @@ public class AgregadorService {
                     return latOk && lonOk;
                 })
                 .filter(hecho -> {
-                     SolicitudEliminacion solicitud = solicitudesRepository.findSolicitudEliminacionByHecho_Id(hecho.getId());
-                        return solicitud == null || solicitud.getEstado() != Estado_Solicitud.ACEPTADA;
+                     boolean aceptada = solicitudesRepository.existsByHecho_IdAndEstado(hecho.getId(), Estado_Solicitud.ACEPTADA);
+                     return !aceptada;
                 })
                 .collect(Collectors.toList());
     }
 
     public List<Hecho> obtenerTodosLosHechos() {
         return this.hechosRepository.findAll();
+    }
+
+    public List<Hecho> obtenerHechosPorContribuyente(Integer contribuyenteId) {
+        return this.hechosRepository.findByContribuyenteId(contribuyenteId);
+    }
+
+    public Contribuyente obtenerContribuyente(Integer id) {
+        Contribuyente contribuyente = this.contribuyenteRepository.findById(id).orElse(null);
+        if (contribuyente == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contribuyente no encontrado con ID: " + id);
+        }
+        return contribuyente;
     }
 
 
@@ -471,7 +502,13 @@ public class AgregadorService {
     public List<UbicacionParaMapaDTO> obtenerUbicaciones() {
         return this.hechosRepository.obtenerUbicaciones();
     }
+
+    public List<Hecho> obtenerHechosPorEtiquetas(List<String> nombres, boolean matchAll) {
+        if (nombres == null || nombres.isEmpty()) return List.of();
+        if (matchAll) {
+            return hechosRepository.findByEtiquetasAll(nombres, nombres.size());
+        } else {
+            return hechosRepository.findByEtiquetasAny(nombres);
+        }
+    }
 }
-
-
-

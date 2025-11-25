@@ -17,3 +17,4 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8082
 # Arranque del servicio
 ENTRYPOINT ["java","-jar","/app/app.jar"]
+

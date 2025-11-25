@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
+import jakarta.transaction.Transactional;
 
 
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.List;
 @Repository
 public interface HechosRepository extends JpaRepository<Hecho, Integer> {
     List<Hecho> findByOrigenFuente(OrigenFuente origenFuente);
+
+    @Query(value = "SELECT * FROM hecho WHERE contribuyente_id = :contribuyenteId", nativeQuery = true)
+    List<Hecho> findByContribuyenteId(@Param("contribuyenteId") Integer contribuyenteId);
 
     @Query(value = "SELECT id, titulo, descripcion," +
                     "   MATCH(titulo, descripcion) AGAINST (:texto IN NATURAL LANGUAGE MODE) AS relevancia" +
@@ -35,6 +40,14 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
 
 
     Hecho findHechoById(Integer id);
+
+    @Modifying
+    @Transactional
+    @Query( value = """
+            ALTER TABLE hecho ADD FULLTEXT INDEX ft_titulo_descripcion (titulo, descripcion);
+        """,
+            nativeQuery = true)
+    void crearFullText();
 
     /**
      * Por ahora las fuentes se hardcodean aca. Eventualmente se
@@ -100,4 +113,10 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
 //    public Long countFuentes() {
 //        return fuentes.stream().count();
 //    }
+
+    @Query(value = "SELECT * FROM hecho h JOIN etiqueta e ON e.hecho_id = h.id WHERE e.descripcion IN (:nombres)", nativeQuery = true)
+    List<Hecho> findByEtiquetasAny(@Param("nombres") List<String> nombres);
+
+    @Query(value = "SELECT h.* FROM hecho h JOIN etiqueta e ON e.hecho_id = h.id WHERE e.descripcion IN (:nombres) GROUP BY h.id HAVING COUNT(DISTINCT e.descripcion) = :total", nativeQuery = true)
+    List<Hecho> findByEtiquetasAll(@Param("nombres") List<String> nombres, @Param("total") Integer total);
 }

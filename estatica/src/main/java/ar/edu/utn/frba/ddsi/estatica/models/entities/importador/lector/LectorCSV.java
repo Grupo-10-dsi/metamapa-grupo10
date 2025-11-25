@@ -6,6 +6,8 @@ import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.HechoCSV;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Ubicacion;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 
@@ -20,6 +22,8 @@ import java.util.List;
 
 public class LectorCSV implements Lector {
 
+    private static Logger log = LoggerFactory.getLogger(LectorCSV.class);
+
     @Override
     public List<Hecho> leerArchivo(Resource recurso) throws IOException, CsvValidationException {
         List<String[]> filas = this.leerCSV(recurso);
@@ -30,9 +34,9 @@ public class LectorCSV implements Lector {
             hechosImportados = this.findOrUpdateByTitulo(hechoImportado, hechosImportados);
         }
         if (hechosImportados.isEmpty()) {
-            System.out.println("No se encontraron hechos en el archivo: " + recurso.getFilename());
+            log.debug("No se encontraron hechos en el archivo: {}", recurso.getFilename());
         } else {
-            System.out.println("Se importaron " + hechosImportados.size() + " hechos desde el archivo: " + recurso.getFilename());
+            log.debug("Se importaron {} hechos desde el archivo: {} ", hechosImportados.size(), recurso.getFilename());
         }
 
         return hechosImportados;

@@ -1,0 +1,30 @@
+server:
+  http_listen_port: 3100
+ingester:
+  wal:
+    enabled: true
+    dir: /loki/wal
+  lifecycler:
+    ring:
+      kvstore:
+        store: memberlist
+      replication_factor: 1
+memberlist:
+  join_members:
+    - loki:7946
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+storage_config:
+  boltdb:
+    directory: /loki/index
+  filesystem:
+    directory: /loki/chunks
+limits_config:
+  enforce_metric_name: false

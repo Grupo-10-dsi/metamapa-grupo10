@@ -1,0 +1,35 @@
+spring.application.name=api-gateway
+server.port=8089
+
+visualizador.url=http://localhost:3000
+agregador.url=http://localhost:8080
+estadistica.url=http://localhost:8088
+dinamica.url=http://localhost:8082
+keycloak.url=http://localhost:9090
+
+# --- Configuración de CORS Global ---
+spring.cloud.gateway.globalcors.add-to-simple-url-handler-mapping=true
+
+# 2. Define la política de CORS
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-origins=${visualizador.url}
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-headers=*
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allow-credentials=true
+
+# Peticiones para el agregador
+spring.cloud.gateway.routes[0].id=agregador
+spring.cloud.gateway.routes[0].uri=${agregador.url}
+spring.cloud.gateway.routes[0].predicates[0]=Path=/agregador/**
+
+# Peticiones para estadistica
+spring.cloud.gateway.routes[1].id=estadisticas
+spring.cloud.gateway.routes[1].uri=${estadistica.url}
+spring.cloud.gateway.routes[1].predicates[0]=Path=/api/estadisticas/**
+
+# Peticiones para dinamica
+spring.cloud.gateway.routes[2].id=dinamica
+spring.cloud.gateway.routes[2].uri=${dinamica.url}
+spring.cloud.gateway.routes[2].predicates[0]=Path=/api/dinamica/**
+
+# Configuración de seguridad para validar tokens JWT emitidos por Keycloak
+spring.security.oauth2.resourceserver.jwt.issuer-uri=${keycloak.url}/realms/MetaMapa

@@ -7,6 +7,8 @@ import ar.edu.utn.frba.ddsi.proxy.models.entities.Hecho.Hecho;
 import ar.edu.utn.frba.ddsi.proxy.models.entities.solicitudes.SolicitudEliminacion;
 import ar.edu.utn.frba.ddsi.proxy.models.repositories.HechosRepository;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class HechosServices {
+    private static Logger log = LoggerFactory.getLogger(HechosServices.class);
     private final HechosRepository hechosRepository;
     private static List<MetaMapaClient> instanciasMetaMapa = new ArrayList<>();
 
@@ -37,6 +40,7 @@ public class HechosServices {
     }
 
     public List<Hecho> findAllHechos(String ultimaConsulta) {
+        log.info("Buscando todos los hechos desde: {}", ultimaConsulta);
         List<Hecho> hechos = new ArrayList<>(this.hechosRepository.findAll());
         hechos.addAll(this.obtenerHechosMetaMapa(
                 new FiltroRequest(null, null, null, null, null, null, null, ultimaConsulta)));
@@ -48,7 +52,7 @@ public class HechosServices {
     }
 
     public List<Hecho> obtenerHechos(String nombreConexion) {
-        System.out.println("Buscando hechos para: " + nombreConexion);
+        log.info("Buscando hechos para: {}", nombreConexion);
         List<Hecho> hechos = this.hechosRepository.findByName(nombreConexion);
         if (hechos == null || hechos.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron hechos para el nombre: " + nombreConexion);
