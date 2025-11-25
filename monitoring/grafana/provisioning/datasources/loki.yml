@@ -1,0 +1,13 @@
+apiVersion: 1
+datasources:
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    isDefault: false
+    editable: true
+    jsonData:
+      maxLines: 1000
+    secureJsonData:
+      httpHeaderName1: X-Scope-OrgID
+      httpHeaderValue1: default

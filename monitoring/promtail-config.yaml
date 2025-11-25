@@ -4,7 +4,7 @@ positions:
   filename: /tmp/positions.yaml
 clients:
   - url: http://loki:3100/loki/api/v1/push
-    tenant_id: "default"    # <- establece el org id que Loki espera
+    tenant_id: default
     batchwait: 1s
     timeout: 10s
 scrape_configs:

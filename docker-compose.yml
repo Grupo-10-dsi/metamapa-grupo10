@@ -22,6 +22,7 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+      - loki
     networks:
       - metamapa-net
 
@@ -186,18 +187,21 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./api-gateway/logs:/app/logs
+      - api_gateway_logs:/var/log/api-gateway
 
   estatica:
     build: ./estatica
     container_name: estatica
+    labels:
+      logging: "promtail"
+      logging_jobname: "estatica"
     restart: always
     expose:
       - "8081"
     networks:
       - metamapa-net
     volumes:
-      - ./estatica/logs:/app/logs
+      - estatica_logs:/var/log/estatica
 
   dinamica:
     build: ./dinamica
@@ -219,7 +223,7 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./dinamica/logs:/app/logs
+      - dinamica_logs:/var/log/dinamica
 
   proxy:
     build: ./proxy
@@ -235,7 +239,7 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./proxy/logs:/app/logs
+      - proxy_logs:/var/log/proxy
 
   proxyejemplo:
     build: ./proxyEjemplo
@@ -255,7 +259,7 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./normalizador/logs:/app/logs
+      - normalizador_logs:/var/log/normalizador
 
   agregador:
     build: ./agregador
@@ -280,7 +284,7 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./agregador/logs:/app/logs
+      - agregador_logs:/var/log/agregador
 
   estadistica:
     build: ./estadistica
@@ -301,7 +305,7 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./estadistica/logs:/app/logs
+      - estadistica_logs:/var/log/estadistica
 
   gestor-personas:
     build: ./gestor-personas
@@ -320,7 +324,7 @@ services:
     networks:
       - metamapa-net
     volumes:
-      - ./gestor-personas/logs:/app/logs
+      - gestor_personas_logs:/var/log/gestor-personas
 
   frontend:
     build:
@@ -348,5 +352,13 @@ volumes:
   grafana_data:
   metamapa_logs:
   metamapa_loki_data:
+  dinamica_logs:
+  estadistica_logs:
+  estatica_logs:
+  normalizador_logs:
+  gestor_personas_logs:
+  agregador_logs:
+  proxy_logs:
+  api_gateway_logs:
   loki_data:
     driver: local
