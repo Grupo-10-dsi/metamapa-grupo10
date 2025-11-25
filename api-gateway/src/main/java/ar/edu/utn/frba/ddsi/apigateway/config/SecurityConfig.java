@@ -107,7 +107,12 @@ public class SecurityConfig {
 
                         .pathMatchers("/actuator/prometheus", "/actuator/health").permitAll()
 
-                        // --- REGLAS PUBLICAS (permitAll) ---
+                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
+
+                        .pathMatchers(HttpMethod.GET, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/graphql").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/graphiql", "/graphiql/**").permitAll()
+                        // --- REGLAS PÚBLICAS (permitAll) ---
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/categorias").permitAll()

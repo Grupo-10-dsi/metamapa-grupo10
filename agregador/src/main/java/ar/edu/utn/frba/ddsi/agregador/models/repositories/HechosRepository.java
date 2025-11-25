@@ -20,6 +20,9 @@ import java.util.List;
 public interface HechosRepository extends JpaRepository<Hecho, Integer> {
     List<Hecho> findByOrigenFuente(OrigenFuente origenFuente);
 
+    @Query(value = "SELECT * FROM hecho WHERE contribuyente_id = :contribuyenteId", nativeQuery = true)
+    List<Hecho> findByContribuyenteId(@Param("contribuyenteId") Integer contribuyenteId);
+
     @Query(value = "SELECT id, titulo, descripcion," +
                     "   MATCH(titulo, descripcion) AGAINST (:texto IN NATURAL LANGUAGE MODE) AS relevancia" +
                     "   FROM hecho" +
@@ -110,4 +113,10 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
 //    public Long countFuentes() {
 //        return fuentes.stream().count();
 //    }
+
+    @Query(value = "SELECT * FROM hecho h JOIN etiqueta e ON e.hecho_id = h.id WHERE e.descripcion IN (:nombres)", nativeQuery = true)
+    List<Hecho> findByEtiquetasAny(@Param("nombres") List<String> nombres);
+
+    @Query(value = "SELECT h.* FROM hecho h JOIN etiqueta e ON e.hecho_id = h.id WHERE e.descripcion IN (:nombres) GROUP BY h.id HAVING COUNT(DISTINCT e.descripcion) = :total", nativeQuery = true)
+    List<Hecho> findByEtiquetasAll(@Param("nombres") List<String> nombres, @Param("total") Integer total);
 }

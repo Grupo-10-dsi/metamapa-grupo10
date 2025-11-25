@@ -6,14 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
-
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.time.LocalTime;
 import java.util.Map;
@@ -23,22 +18,28 @@ import java.util.stream.Collectors;
 @Service
 public class EstadisticaService {
 
-    @Value("${agregador.url}")
-    private String agregadorUrl;
 
-    private final AgregadorClient agregadorClient = new AgregadorClient(agregadorUrl + "/agregador");
+    private final AgregadorClient agregadorClient;
     private final ProvinciaRepository provinciaRepository;
     private final CategoriaRepository categoriaRepository;
     private final ProvinciaColeccionRepository provinciaColeccionRepository;
     private final HoraFrecuenteRepository horaFrecuenteRepository;
     private final SolicitudCantidadRepository solicitudCantidadRepository;
 
-    public EstadisticaService(ProvinciaRepository provinciaRepository, CategoriaRepository categoriaRepository, ProvinciaColeccionRepository provinciaColeccionRepository, HoraFrecuenteRepository horaFrecuenteRepository, SolicitudCantidadRepository solicitudCantidadRepository) {
+    public EstadisticaService(
+            ProvinciaRepository provinciaRepository,
+            CategoriaRepository categoriaRepository,
+            ProvinciaColeccionRepository provinciaColeccionRepository,
+            HoraFrecuenteRepository horaFrecuenteRepository,
+            SolicitudCantidadRepository solicitudCantidadRepository,
+            @Value("${agregador.url}") String agregadorUrl
+    ) {
         this.provinciaRepository = provinciaRepository;
         this.categoriaRepository = categoriaRepository;
         this.provinciaColeccionRepository = provinciaColeccionRepository;
         this.horaFrecuenteRepository = horaFrecuenteRepository;
         this.solicitudCantidadRepository = solicitudCantidadRepository;
+        this.agregadorClient = new AgregadorClient(agregadorUrl + "/agregador");
     }
 
     public List<String> obtenerProvinciaDeColeccion(Integer Id, Integer cantidadProvincias) {
@@ -49,7 +50,7 @@ public class EstadisticaService {
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
         List<String> prov_frecuentes = provinciasMasFrecuente(provincias, cantidadProvincias);
 
-        prov_frecuentes.forEach(provincia -> {;
+        prov_frecuentes.forEach(provincia -> {
             ProvinciaColeccion nuevaProvincia = new ProvinciaColeccion(provincia, Id);
             provinciaColeccionRepository.save(nuevaProvincia);
         });
@@ -81,7 +82,7 @@ public class EstadisticaService {
         List<String> provincias = convertirAProvincias(ubicacionesCategoria);
         List<String> prov_frecuentes = provinciasMasFrecuente(provincias, cantidadProvincias);
 
-        prov_frecuentes.forEach(provincia -> {;
+        prov_frecuentes.forEach(provincia -> {
             Provincia nuevaProvincia = new Provincia(provincia, Id);
             provinciaRepository.save(nuevaProvincia);
         });
@@ -134,12 +135,12 @@ public class EstadisticaService {
 
 
         for (Ubicacion ubicacion : ubicaciones) {
-             JSONObject obj = new JSONObject();
-             obj.put("lat", ubicacion.getLatitud());
-             obj.put("lon", ubicacion.getLongitud());
-             obj.put("campos", "basico");
-             obj.put("aplanar", true);
-             ubicacionesArray.put(obj);
+            JSONObject obj = new JSONObject();
+            obj.put("lat", ubicacion.getLatitud());
+            obj.put("lon", ubicacion.getLongitud());
+            obj.put("campos", "basico");
+            obj.put("aplanar", true);
+            ubicacionesArray.put(obj);
         }
         body.put("ubicaciones", ubicacionesArray);
 

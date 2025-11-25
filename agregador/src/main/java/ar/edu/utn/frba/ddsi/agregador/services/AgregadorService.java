@@ -236,7 +236,11 @@ public class AgregadorService {
     }
 
     public Hecho obtenerHechoPorId(Integer id) {
-        return this.hechosRepository.findHechoById(id);
+        Hecho hecho = this.hechosRepository.findHechoById(id);
+        if (hecho == null) {
+            throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Hecho no encontrado con ID: " + id);
+        }
+        return hecho;
     }
 
     public List<Hecho> encontrarHechosPorColeccion(
@@ -271,15 +275,61 @@ public class AgregadorService {
     /**
      * Busca una colección por su ID.
      */
-    public Coleccion obtenerColeccion(Integer id){ return this.coleccionRepository.findColeccionById(id);}
+    public Coleccion obtenerColeccion(Integer id){
+        Coleccion coleccion = this.coleccionRepository.findColeccionById(id);
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
+        return coleccion;
+    }
 
     /**
      * Elimina una colección por su ID.
      */
     public void eliminarColeccionPorId(Integer id) {
-        logger.info("Coleccion con ID {} eliminada.", id);
+        Coleccion coleccion = this.coleccionRepository.findColeccionById(id);
+        if (coleccion == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+        }
         this.coleccionRepository.deleteById(id);
+        logger.info("Coleccion con ID {} eliminada.", id);
     }
+
+    /**
+     * Actualiza una colección existente con los datos del DTO proporcionado.
+     */
+//    public Coleccion actualizarColeccion(Integer id, ColeccionDTO coleccionDTO) {
+//        // Buscar la colección existente
+//        Coleccion coleccionExistente = coleccionRepository.findColeccionById(id);
+//
+//        if (coleccionExistente == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Colección no encontrada con ID: " + id);
+//        }
+//
+//        // Actualizar propiedades
+//        coleccionExistente.setTitulo(coleccionDTO.getTitulo());
+//        coleccionExistente.setDescripcion(coleccionDTO.getDescripcion());
+//        coleccionExistente.setAlgoritmo_consenso(coleccionDTO.getAlgoritmo_consenso());
+//
+//        // Actualizar fuentes
+//        List<Fuente> fuentes = new ArrayList<>();
+//        coleccionDTO.getUrls_fuente().forEach(urlFuente -> {
+//            Fuente fuente = fuentesRepository.findFuenteByUrl(urlFuente);
+//            if (fuente != null) {
+//                fuentes.add(fuente);
+//            }
+//        });
+//        coleccionExistente.setFuentes(fuentes);
+//
+//        // Actualizar criterios
+//        List<CriterioPertenencia> criterios = coleccionDTO.getCriterios().stream()
+//                .map(this::criterioFromDTO)
+//                .toList();
+//        coleccionExistente.setCriterios(criterios);
+//
+//        // Guardar la colección actualizada
+//        return coleccionRepository.save(coleccionExistente);
+//    }
 
     /**
      * Modifica el algoritmo de consenso de una colección existente a partir de su ID.
@@ -329,7 +379,7 @@ public class AgregadorService {
         return solicitudes;
     }
 
-    public Integer crearSolicitudEliminacion(SolicitudDTO solicitudDTO) {
+    public Integer crearSolicitudEliminacion(SolicitudDTOE solicitudDTO) {
 
         SolicitudEliminacion nuevaSolicitudEliminacion = new SolicitudEliminacion();
 
@@ -347,7 +397,7 @@ public class AgregadorService {
         Hecho hechoAeliminar = hechosRepository.findById(solicitudDTO.getIdHecho()).orElse(null);
 
         if (hechoAeliminar == null) {
-            throw new IllegalArgumentException("Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hecho no encontrado con ID: " + solicitudDTO.getIdHecho());
         }
 
         nuevaSolicitudEliminacion.setHecho(hechoAeliminar);
@@ -364,7 +414,7 @@ public class AgregadorService {
         SolicitudEliminacion solicitudAEditar = solicitudesRepository.findById(id).orElse(null);
 
         if (solicitudAEditar == null) {
-            throw new IllegalArgumentException("Solicitud no encontrada con ID: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Solicitud no encontrada con ID: " + id);
         }
 
         solicitudAEditar.setEstado(nuevoEstado);
@@ -421,14 +471,26 @@ public class AgregadorService {
                     return latOk && lonOk;
                 })
                 .filter(hecho -> {
-                     SolicitudEliminacion solicitud = solicitudesRepository.findSolicitudEliminacionByHecho_Id(hecho.getId());
-                        return solicitud == null || solicitud.getEstado() != Estado_Solicitud.ACEPTADA;
+                     boolean aceptada = solicitudesRepository.existsByHecho_IdAndEstado(hecho.getId(), Estado_Solicitud.ACEPTADA);
+                     return !aceptada;
                 })
                 .collect(Collectors.toList());
     }
 
     public List<Hecho> obtenerTodosLosHechos() {
         return this.hechosRepository.findAll();
+    }
+
+    public List<Hecho> obtenerHechosPorContribuyente(Integer contribuyenteId) {
+        return this.hechosRepository.findByContribuyenteId(contribuyenteId);
+    }
+
+    public Contribuyente obtenerContribuyente(Integer id) {
+        Contribuyente contribuyente = this.contribuyenteRepository.findById(id).orElse(null);
+        if (contribuyente == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contribuyente no encontrado con ID: " + id);
+        }
+        return contribuyente;
     }
 
 
@@ -440,7 +502,13 @@ public class AgregadorService {
     public List<UbicacionParaMapaDTO> obtenerUbicaciones() {
         return this.hechosRepository.obtenerUbicaciones();
     }
+
+    public List<Hecho> obtenerHechosPorEtiquetas(List<String> nombres, boolean matchAll) {
+        if (nombres == null || nombres.isEmpty()) return List.of();
+        if (matchAll) {
+            return hechosRepository.findByEtiquetasAll(nombres, nombres.size());
+        } else {
+            return hechosRepository.findByEtiquetasAny(nombres);
+        }
+    }
 }
-
-
-

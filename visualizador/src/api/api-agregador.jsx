@@ -125,12 +125,7 @@ class ApiAgregador {
     async confirmarSolicitud(id) {
         try {
             const body = "ACEPTADA"
-            const response = await this.axiosInstance.put(`/solicitudes/${id}`, body, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.tokenAuth}`
-                },
-            })
+            const response = await this.axiosInstance.put(`/solicitudes/${id}`, body, {})
             return response.data
         } catch (error) {
             console.error('Error al eliminar solicitud:', error)

@@ -1,6 +1,9 @@
 package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
+import lombok.Getter;
+
+@Getter
 
 public class SolicitudDTOE {
     private Integer id;
