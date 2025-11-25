@@ -9,7 +9,7 @@ class ApiEstadistica {
         this.tokenAuth = null;
 
         this.axiosInstance = axios.create({
-            baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/estadisticas` || 'http://localhost:8089/api/estadisticas',
+            baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/estadisticas`,
         });
 
         // --- 2. AÑADE EL INTERCEPTOR DE PETICIONES ---

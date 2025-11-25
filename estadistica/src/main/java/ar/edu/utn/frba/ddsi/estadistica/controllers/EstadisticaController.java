@@ -6,6 +6,8 @@ import ar.edu.utn.frba.ddsi.estadistica.models.entities.SolicitudDTO;
 import ar.edu.utn.frba.ddsi.estadistica.models.repositories.ProvinciaRepository;
 import ar.edu.utn.frba.ddsi.estadistica.service.CSVService;
 import ar.edu.utn.frba.ddsi.estadistica.service.EstadisticaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Estadísticas", description = "Endpoints para obtener estadísticas de hechos y categorías")
 public class EstadisticaController {
 
+    private static Logger log = LoggerFactory.getLogger(EstadisticaController.class);
+
     private final EstadisticaService estadisticaService;
     private final CSVService csvService;
 
@@ -45,6 +49,7 @@ public class EstadisticaController {
         if (formato != null && formato.equalsIgnoreCase("csv")){
             return this.csvService.convertirProvinciasACSV(resultados, "provincia_max_hechos-coleccion");
         }
+        log.info ("Se ha consultado la estadistica: provincia con mayor cantidad de hechos reportados");
         return ResponseEntity.ok(resultados);
     }
 
@@ -57,7 +62,7 @@ public class EstadisticaController {
         if(formato != null && formato.equalsIgnoreCase("csv")){
             return this.csvService.convertirACSV(resultados, "categoria-max-hechos;");
         }
-
+        log.info ("Se ha consultado la estadistica: categoria con mayor cantidad de hechos reportados");
         return ResponseEntity.ok(resultados);
     }
 
@@ -71,7 +76,7 @@ public class EstadisticaController {
         if (formato != null && formato.equalsIgnoreCase("csv")){
             return this.csvService.convertirProvinciasACSV(resultados, "provincia_max_hechos-coleccion");
         }
-
+        log.info ("Se ha consultado la estadistica: mayor cantidad de hechos de la categoria con id  {} ", Id );
         return ResponseEntity.ok(resultados);
     }
 
@@ -83,6 +88,7 @@ public class EstadisticaController {
         if (formato != null && formato.equalsIgnoreCase("csv")) {
             return this.csvService.convertirHorasACSV(resultados, "hora-hechos-max");
         }
+        log.info ("Se ha consultado la estadistica: hora del dia con mayor cantidad de hechos de la categoria con id {}", Id );
         return ResponseEntity.ok(resultados);
     }
 
@@ -98,6 +104,7 @@ public class EstadisticaController {
         else if (mostrar && formato != null && formato.equalsIgnoreCase("csv")) {
             return this.csvService.convertirSolicitudesACSV(solicitudes, "solicitudes-spam");
         }
+        log.info ("Se ha consultado la estadistica: cantidad de solicitudes de eliminacion que son spam: {}", solicitudes.size());
         return ResponseEntity.ok(solicitudes.size());
     }
 }

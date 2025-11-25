@@ -1,15 +1,20 @@
-# Usa una imagen base ligera de Java 17
-FROM openjdk:17-jdk-slim
-
-# Establece el directorio de trabajo
+## Etapa de build: usa Maven + JDK para compilar el JAR
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
+# Copiamos descriptor y código para empaquetar
+# Copiar el pom es útil para aprovechar el cacheo de capas de Docker
+COPY pom.xml . 
+# Copiamos el código fuente
+COPY src ./src
+# Compilamos y generamos el JAR (sin tests para acelerar)
+RUN mvn -B -DskipTests clean package
 
-# Copia el .jar (construido por Maven) al contenedor
-# El *.jar significa que tomará el .jar que encuentre
-COPY target/*.jar app.jar
-
-# Expone el puerto que definiste en application.properties
+## Etapa runtime: imagen liviana con solo JRE
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+# Tomamos el JAR ya construido desde la etapa anterior
+COPY --from=build /app/target/*.jar app.jar
+# Puerto expuesto por el servicio
 EXPOSE 8080
-
-# Comando para correr la aplicación
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Arranque del servicio
+ENTRYPOINT ["java","-jar","/app/app.jar"]

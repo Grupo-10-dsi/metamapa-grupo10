@@ -1,0 +1,7 @@
+{
+  "realm": "master",
+  "enabled": true,
+  "sslRequired": "NONE",
+  "eventsEnabled": true,
+  "adminEventsEnabled": true
+}

@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.ddsi.dinamica.services;
 
+import ar.edu.utn.frba.ddsi.dinamica.controllers.DinamicaController;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.ContribuyenteDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.dtos.SolicitudDTO;
@@ -16,6 +17,8 @@ import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.Estado
 
 
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.edu.utn.frba.ddsi.dinamica.models.entities.solicitudEliminacion.SolicitudEliminacion;
@@ -24,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class DinamicaService {
@@ -41,13 +46,15 @@ public class DinamicaService {
         this.imagenesRepository = imagenesRepository;
     }
 
+    private static Logger log = LoggerFactory.getLogger(DinamicaService.class);
+
     // <---------------------------------- CREACION DE HECHOS ---------------------------------->
 
     public Integer crearHecho(HechoDTO hechoDTO) {
 
         Hecho hecho = this.hechoFromDTO(hechoDTO);
 
-
+        log.info("Hecho creado con exito, ID: {}", hecho.getId());
         return hechosRepository.save(hecho).getId();
     }
 
@@ -148,6 +155,8 @@ public class DinamicaService {
 
         hecho.addContenidoMultimedia(nombreArchivo);
 
+        log.info("Contenido multimedia almacenado con exito para el hecho de ID: {}", idHecho);
+
         hechosRepository.save(hecho);
 
     }
@@ -162,6 +171,7 @@ public class DinamicaService {
 
         if(DetectorDeSpam.esSpam(nuevaSolicitudEliminacion.getJustificacion())) {
             nuevaSolicitudEliminacion.setEstado(Estado_Solicitud.RECHAZADA);
+            log.info("Solicitud de eliminacion rechazada por detectar spam en la justificacion.");
         }
 
 //        if (!nuevaSolicitudEliminacion.esCorrecta()) {
@@ -178,6 +188,8 @@ public class DinamicaService {
         nuevaSolicitudEliminacion.setHecho(hechoAeliminar);
 
         solicitudesRepository.save(nuevaSolicitudEliminacion);
+
+        log.info("Solicitud de eliminacion creada con exito, ID: {}", nuevaSolicitudEliminacion.getId());
 
         return nuevaSolicitudEliminacion.getId();
     }
@@ -198,6 +210,8 @@ public class DinamicaService {
 //        if(nuevoEstado == Estado_Solicitud.ACEPTADA) {
 //            this.ocultarHecho(solicitudAEditar.getIdHecho());
 //        }
+
+        log.info("Solicitud de eliminacion con ID: {} actualizada al estado: {}", id, nuevoEstado);
 
         return solicitudActualizada;
 
@@ -233,7 +247,6 @@ public class DinamicaService {
             Double longitud
     )
     {
-        System.out.println("Consulta desde dinamica:" + ultimaConsulta);
         return hechosRepository.findAll().stream()
                 .filter(hecho -> categoria == null ||
                         (hecho.getCategoria() != null && categoria.equalsIgnoreCase(hecho.getCategoria().getDetalle())))

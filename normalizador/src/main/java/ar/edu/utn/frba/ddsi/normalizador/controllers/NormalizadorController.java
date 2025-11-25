@@ -25,7 +25,7 @@ public class NormalizadorController {
 
     @GetMapping("/health")
     public String health() {
-        return "Normalizador Service is up and running";
+        return "Servicio de normalizacion activo";
     }
 
 }

@@ -10,6 +10,9 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 public class AgregadorController {
     private final AgregadorService agregadorService;
+    private static Logger logger = LoggerFactory.getLogger(AgregadorController.class);
     private final ColeccionMapper coleccionMapper;
     private final CategoriaMapper categoriaMapper;
     private final HechoMapper hechoMapper;
@@ -42,6 +46,7 @@ public class AgregadorController {
     @PostMapping("/colecciones")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Integer crearColeccion(@RequestBody ColeccionDTO coleccion) {
+        logger.info("Se ha recibido una solicitud para crear una nueva coleccion.");
         return this.agregadorService.crearColeccion(coleccion);
     }
 
@@ -57,6 +62,7 @@ public class AgregadorController {
 
     @GetMapping("/colecciones")
     public List<ColeccionDTO> obtenerColecciones(){
+        logger.info("Se han solicitado las colecciones disponibles.");
         return this.agregadorService.obtenerColecciones()
                 .stream()
                 .map(coleccionMapper::toColeccionDTO)
@@ -70,12 +76,14 @@ public class AgregadorController {
                 .map(categoriaMapper::toCategoriaDTO)
                 .collect(Collectors.toList());
     }
+
     /**
      * Devuelve una coleccion en particular a partir de su ID.
      * Si no se encuentra la coleccion, devuelve un error 404.
      */
     @GetMapping("/colecciones/{id}")
     public ColeccionDTO obtenerColeccion(@PathVariable Integer id){
+        logger.info("Se ha solicitado la coleccion con ID: {}", id);
         return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
     }
 
@@ -83,10 +91,10 @@ public class AgregadorController {
      * Elimina una coleccion del sistema a partir de su ID. No devuelve contenido.
      * Si no se encuentra la coleccion, devuelve un error 404.
      */
-
     @DeleteMapping("/colecciones/{id}")
     @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
     public void eliminarColeccion(@PathVariable Integer id) {
+        logger.info("Intentando eliminar la coleccion: {}", id);
         this.agregadorService.eliminarColeccionPorId(id);
     }
 
@@ -105,12 +113,13 @@ public class AgregadorController {
 
     @PatchMapping("/colecciones/{id}")
     public ColeccionDTO modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
-
+        logger.info("Se quiere modificar la coleccion: {}", id);
         if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
             this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso()));
         } if (actualizacionColeccion.getUrls_fuente() != null) {
             this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente()));
         } else {
+            logger.error("Sede debe proporcionar al menos un campo para actualizar una coleccion.");
             throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
         }
         return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
@@ -146,6 +155,7 @@ public class AgregadorController {
         );
 
         if(tipoNavegacion == null) {
+            logger.error("Sede debe proporcionar un tipo de navegacion para obtener hechos.");
             throw new IllegalArgumentException("El tipo de navegacion es obligatorio");
         }
 

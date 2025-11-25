@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
+import jakarta.transaction.Transactional;
 
 
 import java.util.List;
@@ -38,6 +40,14 @@ public interface HechosRepository extends JpaRepository<Hecho, Integer> {
 
 
     Hecho findHechoById(Integer id);
+
+    @Modifying
+    @Transactional
+    @Query( value = """
+            ALTER TABLE hecho ADD FULLTEXT INDEX ft_titulo_descripcion (titulo, descripcion);
+        """,
+            nativeQuery = true)
+    void crearFullText();
 
     /**
      * Por ahora las fuentes se hardcodean aca. Eventualmente se

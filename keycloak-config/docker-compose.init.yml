@@ -1,0 +1,18 @@
+services:
+  keycloak-init:
+    image: alpine:latest
+    container_name: keycloak-init
+    volumes:
+      - ./init-users.sh:/init-users.sh:ro
+    command: >
+      sh -c "apk add --no-cache curl jq bash &&
+             bash /init-users.sh"
+    environment:
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+    depends_on:
+      keycloak:
+        condition: service_started
+    networks:
+      - metamapa-net
+    restart: "no"
+
