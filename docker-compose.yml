@@ -56,14 +56,14 @@ services:
       - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./logs:/var/log/metamapa
-      - ./agregador/logs:/var/log/agregador
-      - ./dinamica/logs:/var/log/dinamica
-      - ./estadistica/logs:/var/log/estadistica
-      - ./estatica/logs:/var/log/estatica
-      - ./normalizador/logs:/var/log/normalizador
-      - ./gestor-personas/logs:/var/log/gestor-personas
-      - ./proxy/logs:/var/log/proxy
-      - ./api-gateway/logs:/var/log/api-gateway
+      - agregador_logs:/var/log/agregador
+      - dinamica_logs:/var/log/dinamica
+      - estadistica_logs:/var/log/estadistica
+      - estatica_logs:/var/log/estatica
+      - normalizador_logs:/var/log/normalizador
+      - gestor_personas_logs:/var/log/gestor-personas
+      - proxy_logs:/var/log/proxy
+      - api_gateway_logs:/var/log/api-gateway
     command: -config.file=/etc/promtail/promtail-config.yaml
     depends_on:
       - loki
