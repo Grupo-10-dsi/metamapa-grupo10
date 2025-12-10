@@ -21,7 +21,7 @@ public class HechoDTO {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private Origen_Fuente_VIEJO origenFuente;
+    private OrigenFuenteDTO origenFuente;
     private List<EtiquetaDTO> etiquetas;
     private ContribuyenteDTO contribuyente;
 

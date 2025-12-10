@@ -1,9 +1,6 @@
 package ar.edu.utn.frba.ddsi.agregador.mappers;
 
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.EtiquetaDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoMultimediaDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoTextualDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.*;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Etiqueta;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.HechoMultimedia;
@@ -31,16 +28,21 @@ public interface HechoMapper {
 
     EtiquetaDTO map(Etiqueta value);
 
-    default Origen_Fuente_VIEJO mapOrigenFuente(OrigenFuente origen) {
-        if (origen == null) return null;
-        if (origen instanceof Estatica) {
-            return Origen_Fuente_VIEJO.ESTATICA;
-        }
-        String simple = origen.getClass().getSimpleName().toUpperCase();
-        try {
-            return Origen_Fuente_VIEJO.valueOf(simple);
-        } catch (IllegalArgumentException ex) {
+    default OrigenFuenteDTO mapOrigenFuenteDTO(OrigenFuente origen) {
+        if (origen == null) {
             return null;
         }
+
+        String tipo = origen.getClass().getSimpleName().toUpperCase();
+        String nombreArchivo = null;
+
+        if (origen instanceof Estatica) {
+            Estatica estatica = (Estatica) origen;
+            nombreArchivo = estatica.getArchivoProcesado() != null
+                    ? estatica.getArchivoProcesado().getNombre()
+                    : null;
+        }
+
+        return new OrigenFuenteDTO(tipo, origen.getNombre(), nombreArchivo);
     }
 }
