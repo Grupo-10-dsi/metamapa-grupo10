@@ -3,6 +3,7 @@ package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Origen_Fuente_VIEJO;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Ubicacion;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +22,8 @@ public class HechoDTO {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private OrigenFuenteDTO origenFuente;
+    private Origen_Fuente_VIEJO origenFuente;
+    private OrigenFuenteDTO origenMapeado;
     private List<EtiquetaDTO> etiquetas;
     private ContribuyenteDTO contribuyente;
 

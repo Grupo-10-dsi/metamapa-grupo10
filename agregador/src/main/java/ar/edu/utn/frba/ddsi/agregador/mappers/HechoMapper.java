@@ -17,13 +17,13 @@ public interface HechoMapper {
 
     @SubclassMapping(source = HechoTextual.class, target = HechoTextualDTO.class)
     @SubclassMapping(source = HechoMultimedia.class, target = HechoMultimediaDTO.class)
-    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuente(hecho.getOrigenFuente()))")
+    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoDTO toHechoDTO(Hecho hecho);
 
-    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuente(hecho.getOrigenFuente()))")
+    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoTextualDTO toDTO(HechoTextual hecho);
 
-    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuente(hecho.getOrigenFuente()))")
+    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoMultimediaDTO toDTO(HechoMultimedia hecho);
 
     EtiquetaDTO map(Etiqueta value);
@@ -46,3 +46,4 @@ public interface HechoMapper {
         return new OrigenFuenteDTO(tipo, origen.getNombre(), nombreArchivo);
     }
 }
+
