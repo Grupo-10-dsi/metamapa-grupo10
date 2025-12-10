@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class HechoDTO {
+public class HechoDTOGraph {
     private Integer id;
     private String titulo;
     private String descripcion;
@@ -22,7 +22,7 @@ public class HechoDTO {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private Origen_Fuente_VIEJO origenFuente;
+    private OrigenFuenteDTO origenMapeado;
     private List<EtiquetaDTO> etiquetas;
     private ContribuyenteDTO contribuyente;
 

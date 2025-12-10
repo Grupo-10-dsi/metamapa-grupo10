@@ -51,7 +51,7 @@ public class AgregadorController {
     }
 
     @GetMapping("/hechos/{id}")
-    public HechoDTO obtenerHechoPorId(@PathVariable Integer id) {
+    public HechoDTOGraph obtenerHechoPorId(@PathVariable Integer id) {
         return this.hechoMapper.toHechoDTO(this.agregadorService.obtenerHechoPorId(id));
     }
 
@@ -134,7 +134,7 @@ public class AgregadorController {
     // Navegacion de forma irrestricta -> No se aplica curacion
 
     @GetMapping("/colecciones/{id}/hechos")
-    public List<HechoDTO> obtenerHechosPorColeccion(@PathVariable Integer id,
+    public List<HechoDTOGraph> obtenerHechosPorColeccion(@PathVariable Integer id,
                 @RequestParam(required = false) String categoria,
                 @RequestParam(required = false) String fecha_reporte_desde,
                 @RequestParam(required = false) String fecha_reporte_hasta,
@@ -210,7 +210,7 @@ public class AgregadorController {
 
 
     @GetMapping("/hechos")
-    public List<HechoDTO> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
+    public List<HechoDTOGraph> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
                                              @RequestParam(required = false) String fecha_reporte_desde,
                                              @RequestParam(required = false) String fecha_reporte_hasta,
                                              @RequestParam(required = false) String fecha_acontecimiento_desde,

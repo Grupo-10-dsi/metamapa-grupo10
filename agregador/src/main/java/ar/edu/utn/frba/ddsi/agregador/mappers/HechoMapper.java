@@ -17,8 +17,8 @@ public interface HechoMapper {
 
     @SubclassMapping(source = HechoTextual.class, target = HechoTextualDTO.class)
     @SubclassMapping(source = HechoMultimedia.class, target = HechoMultimediaDTO.class)
-    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
-    HechoDTO toHechoDTO(Hecho hecho);
+    @Mapping(target = "origenMapeado", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
+    HechoDTOGraph toHechoDTO(Hecho hecho);
 
     @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoTextualDTO toDTO(HechoTextual hecho);
