@@ -2,3 +2,44 @@
     width: 100%;
     height: 100%;
 }
+
+/* Quita el padding por defecto de Leaflet para tener control total */
+.custom-popup .leaflet-popup-content {
+    margin: 0 !important;
+    width: 260px !important; /* Forzar un ancho un poco mayor */
+    line-height: 1.5;
+}
+
+/* El contenedor principal de nuestro diseño */
+.popup-card-content {
+    overflow: hidden;
+    border-radius: 12px; /* Bordes redondeados coincidiendo con el globo */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Encabezado bonito */
+.popup-header {
+    background-color: #0d6efd; /* Color primario de Bootstrap */
+    color: white;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Cuerpo con espaciado controlado */
+.popup-body {
+    padding: 15px;
+}
+
+/* Ajuste opcional para la flechita (tip) del popup si quieres cambiarle el color */
+.custom-popup .leaflet-popup-tip {
+    background: white; /* O el color que prefieras */
+}
+
+/* Quitar botón de cerrar por defecto si molesta, o estilizarlo */
+.custom-popup .leaflet-popup-close-button {
+    color: white !important; /* Para que se vea sobre el header azul */
+    top: 5px !important;
+    right: 5px !important;
+}

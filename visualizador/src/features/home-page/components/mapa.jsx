@@ -11,6 +11,8 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
+import { GeoAltFill, ArrowRightCircle } from "react-bootstrap-icons";
+
 // --- INICIO: Fix para íconos de Leaflet ---
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -61,9 +63,32 @@ function Mapa({ hechosMapa }) {
                                     lng: unHecho.longitud
                                 }}
                             >
-                                <Popup>
-                                    <p>{unHecho.titulo}</p>
-                                    <Button onClick={() => navigateToHecho(unHecho.id)}> Ver mas </Button>
+                                <Popup className="custom-popup">
+                                    <div className="popup-card-content">
+                                        {/* Encabezado con color e ícono */}
+                                        <div className="popup-header">
+                                            <GeoAltFill className="me-2" />
+                                            <strong>Incidente #{unHecho.id}</strong>
+                                        </div>
+
+                                        {/* Cuerpo del popup */}
+                                        <div className="popup-body">
+                                            <h6 className="mb-2">{unHecho.titulo}</h6>
+                                            {/* Puedes agregar fecha o categoría aquí si la tienes */}
+                                            <p className="text-muted small mb-3">
+                                                Haz click para ver el detalle completo.
+                                            </p>
+
+                                            <Button
+                                                size="sm"
+                                                variant="primary"
+                                                className="w-100 d-flex align-items-center justify-content-center"
+                                                onClick={() => navigateToHecho(unHecho.id)}
+                                            >
+                                                Ver más <ArrowRightCircle className="ms-2"/>
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </Popup>
                             </CircleMarker>
                         )}
