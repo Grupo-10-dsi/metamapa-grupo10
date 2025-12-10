@@ -20,10 +20,10 @@ public interface HechoMapper {
     @Mapping(target = "origenMapeado", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoDTOGraph toHechoDTO(Hecho hecho);
 
-    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
+    @Mapping(target = "origenMapeado", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoTextualDTOGraph toDTO(HechoTextual hecho);
 
-    @Mapping(target = "origenFuente", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
+    @Mapping(target = "origenMapeado", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoMultimediaDTOGraph toDTO(HechoMultimedia hecho);
 
     EtiquetaDTO map(Etiqueta value);
