@@ -7,6 +7,6 @@ public class Dinamica extends OrigenFuente {
 
     public Dinamica() {
         super();
-        this.nombre = "Dinamica";
+        this.nombre = "DINAMICA";
     }
 }

@@ -16,12 +16,13 @@ public class Estatica extends OrigenFuente {
 
     public Estatica(ArchivoProcesado archivoProcesado) {
         super();
-        this.nombre = "Estatica";
+        this.nombre = "ESTATICA";
         this.archivoProcesado = archivoProcesado;
     }
 
     public Estatica() {
         super();
+        this.nombre = "ESTATICA";
     }
 
     @Override

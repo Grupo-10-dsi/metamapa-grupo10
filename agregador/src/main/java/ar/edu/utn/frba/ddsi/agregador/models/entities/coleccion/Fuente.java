@@ -82,9 +82,9 @@ public class Fuente {
 
         if (hechos != null) {
             if (Objects.equals(this.nombre, "DINAMICA")) {
-                origenFuente = o.findOrigenFuenteById(1);
+                origenFuente = o.findOrigenFuenteByNombre("DINAMICA");
             } else {
-                origenFuente = o.findOrigenFuenteById(2);
+                origenFuente = o.findOrigenFuenteByNombre("PROXY");
             }
             this.agregarHechos(hechos.stream().map(h -> conversor.convertirHecho(h, origenFuente, contribuyenteRepository, categoriaRepository)).toList());
         }

@@ -7,7 +7,7 @@ public class Proxy extends OrigenFuente {
 
     public Proxy() {
         super();
-        this.nombre = "Proxy";
+        this.nombre = "PROXY";
 
     }
 }

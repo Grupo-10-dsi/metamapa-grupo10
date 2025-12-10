@@ -14,4 +14,5 @@ public interface OrigenFuenteRepository extends JpaRepository<OrigenFuente, Inte
     OrigenFuente findOrigenFuenteById(Integer id);
 
 
+    OrigenFuente findOrigenFuenteByNombre(String nombre);
 }
