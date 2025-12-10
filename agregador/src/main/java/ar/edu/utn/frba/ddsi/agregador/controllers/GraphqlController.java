@@ -3,10 +3,7 @@ package ar.edu.utn.frba.ddsi.agregador.controllers;
 import ar.edu.utn.frba.ddsi.agregador.mappers.ColeccionMapper;
 import ar.edu.utn.frba.ddsi.agregador.mappers.HechoMapper;
 import ar.edu.utn.frba.ddsi.agregador.mappers.SolicitudMapper;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ContribuyenteDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.HechoDTO;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.SolicitudDTOE;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.*;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.personas.Contribuyente;
 import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -33,17 +30,17 @@ public class GraphqlController {
     }
 
     @QueryMapping
-    public List<HechoDTO> hechos() {
+    public List<HechoDTOGraph> hechos() {
         return agregadorService.obtenerTodosLosHechos().stream().map(hechoMapper::toHechoDTO).collect(Collectors.toList());
     }
 
     @QueryMapping
-    public HechoDTO hecho(@Argument Integer id) {
+    public HechoDTOGraph hecho(@Argument Integer id) {
         return hechoMapper.toHechoDTO(agregadorService.obtenerHechoPorId(id));
     }
 
     @QueryMapping
-    public List<HechoDTO> hechosPorContribuyente(@Argument Integer contribuyenteId) {
+    public List<HechoDTOGraph> hechosPorContribuyente(@Argument Integer contribuyenteId) {
         return agregadorService.obtenerHechosPorContribuyente(contribuyenteId).stream()
                 .map(hechoMapper::toHechoDTO)
                 .collect(Collectors.toList());
@@ -95,7 +92,7 @@ public class GraphqlController {
     }
 
     @QueryMapping
-    public List<HechoDTO> hechosPorEtiquetas(@Argument List<String> nombres, @Argument(name = "match") String match) {
+    public List<HechoDTOGraph> hechosPorEtiquetas(@Argument List<String> nombres, @Argument(name = "match") String match) {
         boolean matchAll = "ALL".equalsIgnoreCase(match);
         return agregadorService.obtenerHechosPorEtiquetas(nombres, matchAll)
                 .stream()

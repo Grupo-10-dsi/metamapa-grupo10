@@ -15,8 +15,8 @@ import org.mapstruct.SubclassMapping;
 @Mapper(componentModel = "spring")
 public interface HechoMapper {
 
-    @SubclassMapping(source = HechoTextual.class, target = HechoTextualDTO.class)
-    @SubclassMapping(source = HechoMultimedia.class, target = HechoMultimediaDTO.class)
+    @SubclassMapping(source = HechoTextual.class, target = HechoTextualDTOGraph.class)
+    @SubclassMapping(source = HechoMultimedia.class, target = HechoMultimediaDTOGraph.class)
     @Mapping(target = "origenMapeado", expression = "java(mapOrigenFuenteDTO(hecho.getOrigenFuente()))")
     HechoDTOGraph toHechoDTO(Hecho hecho);
 
