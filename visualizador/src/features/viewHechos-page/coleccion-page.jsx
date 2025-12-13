@@ -4,20 +4,17 @@ import ColeccionInfo from './components/coleccion-info/ColeccionInfo';
 import ConsensoSwitch from './components/consenso-switch/ConsensoSwitch';
 import FiltrosModal from './components/filtros-modal/FiltrosModal';
 import HechoCard from './components/hecho-card/HechoCard';
-// import Paginacion from './paginacion'; // <--- PAGINACIÓN ELIMINADA
 import api from '../../api/api-agregador';
 
 export default function ColeccionHechosPage() {
     const { id } = useParams();
     const isModoColeccion = Boolean(id);
 
-    // --- Estados ---
     const [coleccion, setColeccion] = useState(null);
     const [tituloPagina, setTituloPagina] = useState("Cargando...");
     const [hechos, setHechos] = useState([]);
     const [modalAbierto, setModalAbierto] = useState(false);
 
-    // --- Estados de Filtro y Consenso ---
     const [mostrarConsensuados, setMostrarConsensuados] = useState(false);
     const [filtros, setFiltros] = useState({
         categoria: '',
@@ -32,17 +29,14 @@ export default function ColeccionHechosPage() {
     // --- Handlers (Solo actualizan el estado) ---
 
     const handleApplyFiltros = (nuevosFiltros) => {
-        // Asumimos que el Modal nos pasa los nuevos filtros al aplicar
         setFiltros(nuevosFiltros);
         setModalAbierto(false);
     };
 
     const handleConsensoChange = (valor) => {
-        // El handler solo actualiza el estado. El useEffect reaccionará.
         setMostrarConsensuados(valor);
     };
 
-    // --- Efecto Principal: Cargar Info de Colección (Solo 1 vez) ---
     useEffect(() => {
         if (isModoColeccion) {
             const cargarInfoColeccion = async () => {
@@ -58,26 +52,17 @@ export default function ColeccionHechosPage() {
         } else {
             setTituloPagina("Todos los Hechos");
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, isModoColeccion]); // Se ejecuta solo si el 'id' cambia
+    }, [id, isModoColeccion]);
 
 
-    // --- Efecto para BUSCAR HECHOS ---
-    // Este es el "corazón" de la página.
-    // Se ejecuta al inicio Y CADA VEZ que 'id', 'mostrarConsensuados' o 'filtros' cambian.
     useEffect(() => {
-        // --- INICIO DE LA CORRECCIÓN ---
 
-        // 1. Condición de Salida:
-        // Si estamos en modo colección, PERO la info de la colección aún no ha cargado (es null),
-        // no hagas nada. Este efecto se volverá a ejecutar cuando 'coleccion' cambie.
-        // --- FIN DE LA CORRECCIÓN ---
+
         const buscarHechos = async () => {
             try {
                 let data;
 
                 if (isModoColeccion) {
-                    // Ahora, cuando este código se ejecute, 'coleccion' ya no será null
                     data = await api.getHechosPorColeccion(id, filtros, mostrarConsensuados);
                 } else {
                     // --- MODO GENERAL ---
@@ -96,7 +81,6 @@ export default function ColeccionHechosPage() {
 
         buscarHechos();
 
-        // 2. Añadir 'coleccion' al array de dependencias
     }, [id, isModoColeccion, mostrarConsensuados, filtros, coleccion]);
 
     return (
@@ -128,7 +112,6 @@ export default function ColeccionHechosPage() {
                     <HechoCard key={hecho.id} hecho={hecho} coleccion={isModoColeccion ? coleccion : null} />
                 ))}
 
-                {/* <Paginacion /> */} {/* --- PAGINACIÓN ELIMINADA --- */}
             </div>
         </div>
     );

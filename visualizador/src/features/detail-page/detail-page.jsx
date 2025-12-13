@@ -113,7 +113,7 @@ function DetailPage() {
 
                             <Col md={6} className="mb-3 mt-md-3">
                                 <p className="mb-0 fs-5"><span title="Fuente del Reporte">💻</span> <strong>Fuente:</strong></p>
-                                <p className="text-muted fs-5">
+                                <p className="text-muted fs-5 text-break lh-base">
                                     {hecho.origenMapeado?.nombreArchivo
                                         ? `${hecho.origenMapeado?.nombre} - Archivo: ${hecho.origenMapeado?.nombreArchivo}`
                                         : (hecho.origenMapeado?.nombre || "Fuente desconocida")
@@ -123,7 +123,9 @@ function DetailPage() {
 
                             <Col md={6} className="mb-3 mt-md-3">
                                 <p className="mb-0 fs-5"><span title="Referencia de Ubicación">📍</span> <strong>Ubicación (Ref.):</strong></p>
-                                <p className="text-muted fs-5">{[provincia, ciudad].filter(Boolean).join(', ') || 'Sin descripción textual'}</p>
+                                <p className="text-muted fs-5 lh-base">
+                                    {[provincia, ciudad].filter(Boolean).join(', ') || 'Sin descripción textual'}
+                                </p>
                             </Col>
                         </Row>
                     </div>

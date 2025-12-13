@@ -2,7 +2,6 @@ import SolicitudCard from "./solicitud-card/solicitud-card"
 import { useEffect, useState } from 'react'
 import api from "../../../api/api-agregador";
 import './solicitud-card/solicitud-card.css'
-// --- 1. IMPORTA EL NUEVO CSS ---
 import './MostrarSolicitudes.css'
 import { Inbox } from 'react-bootstrap-icons';
 
@@ -10,8 +9,6 @@ const MostrarSolicitudes = () => {
     const [solicitudes, setSolicitudes] = useState([])
     const [loading, setLoading] = useState(true)
 
-    // --- 2. AÑADIR ESTADO PARA EL FILTRO ---
-    // Lo iniciamos en 'PENDIENTE' como en tu imagen
     const [filtroActivo, setFiltroActivo] = useState('PENDIENTE')
 
     const fetchSolicitudes = async () => {
@@ -34,8 +31,6 @@ const MostrarSolicitudes = () => {
         fetchSolicitudes()
     }
 
-    // --- 3. LÓGICA DE FILTRADO ---
-    // Filtramos la lista principal ANTES de mostrarla
     const solicitudesFiltradas = solicitudes.filter(
         (s) => s.estado === filtroActivo
     )
@@ -90,14 +85,11 @@ const MostrarSolicitudes = () => {
                         zIndex: 1000,
                     }}
                 >
-                    {/* <CircularIndeterminate /> */}
                 </div>
             ) : (
                 <>
-                    {/* --- 5. USAR LA LISTA FILTRADA --- */}
                     {solicitudesFiltradas.length > 0 && (
                         <div className="fondo-gris">
-                            {/* Mapeamos sobre la lista filtrada */}
                             {solicitudesFiltradas.map((result) => (
                                 <SolicitudCard
                                     key={result.id} // Añadir key es buena práctica
@@ -107,7 +99,6 @@ const MostrarSolicitudes = () => {
                                     justificacion={result.justificacion}
                                     handleEliminarSolicitud={handleEliminarSolicitud}
 
-                                    // --- 1. PASAMOS EL FILTRO ACTIVO AL HIJO ---
                                     vistaActual={filtroActivo}
                                 />
                             ))}

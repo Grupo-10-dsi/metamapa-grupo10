@@ -125,7 +125,12 @@ class ApiAgregador {
     async confirmarSolicitud(id) {
         try {
             const body = "ACEPTADA"
-            const response = await this.axiosInstance.put(`/solicitudes/${id}`, body, {})
+            const response = await this.axiosInstance.put(`/solicitudes/${id}`, body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`
+                },
+            })
             return response.data
         } catch (error) {
             console.error('Error al eliminar solicitud:', error)
@@ -172,10 +177,6 @@ class ApiAgregador {
     async enviarSolicitudEliminacion(data) {
         try {
             const response = await this.axiosInstance.post(`/solicitudes`, data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.tokenAuth}`,
-                }
             })
             return response.data
         } catch (error) {
@@ -187,13 +188,10 @@ class ApiAgregador {
 
     async getHechosPorColeccion(id, filtros, consenso) {
 
-        // --- INICIO DE LA CORRECCIÓN ---
 
-        // 1. Crear un objeto de filtros limpios
         const cleanFiltros = {};
 
-        // 2. Recorrer el objeto 'filtros' y copiar solo las
-        //    claves que tengan un valor real (no '', null, o undefined)
+
         for (const key in filtros) {
             const value = filtros[key];
             if (value !== null && value !== undefined && value !== '') {
@@ -201,14 +199,11 @@ class ApiAgregador {
             }
         }
 
-        // 3. Construir los parámetros con los filtros limpios
         const params = {
             ...cleanFiltros, // <-- Usamos el objeto limpio
             tipoNavegacion: consenso ? 'curada' : 'irrestricta'
         };
-        // --- FIN DE LA CORRECCIÓN ---
 
-        // Log de depuración: mira lo que realmente se envía
         console.log("Enviando parámetros a la API:", params);
 
         try {

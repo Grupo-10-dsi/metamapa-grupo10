@@ -2,68 +2,71 @@ import React from 'react';
 import './hecho-card.css';
 import { Link } from 'react-router-dom';
 
-// 1. Recibe la prop 'coleccion' que pasamos desde ColeccionHechosPage
+// ... imports
+
 export default function HechoCard({ hecho, coleccion }) {
     return (
-        // 2. Envuelve TODA la tarjeta en el Link
         <Link
-            // 1. 'to' ahora es solo un string con la URL
             to={`/hecho/${hecho.id}`}
-
-            // 2. 'state' se pasa como una prop aparte
             state={{
                 coleccionId: coleccion?.id,
                 coleccionNombre: coleccion?.titulo
             }}
-
             className="hecho-card-link-wrapper"
+            style={{ textDecoration: 'none' }} // Agregado para quitar subrayado azul del link general
         >
-
-
-            {/* Tu código de la tarjeta va aquí dentro.
-        El <div> exterior original se elimina porque el <Link>
-        ya cumple esa función de "contenedor".
-      */}
             <div className="hecho-card">
                 {hecho.imagen && (
                     <div className="hecho-card-img-box">
                         <img src={hecho.imagen} alt={hecho.titulo} className="hecho-card-img" />
                     </div>
                 )}
-                <div style={{ flex: 1 }}>
-                    <div className="hecho-card-title-row">
 
-                        {/* 3. El título ya no necesita ser un Link,
-                 porque la card entera lo es.
-                 Lo convertimos a un <span> (o <div>) */}
-                        <span className="hecho-card-title">
-              {hecho.titulo}
-            </span>
+                {/* AQUI ESTA EL CAMBIO IMPORTANTE: flex: 1 para ocupar el resto */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '10px' }}>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                            {hecho.contribuyente && (
-                                <span className="hecho-card-autor">
-                por {hecho.contribuyente.contribuyente_nombre || 'Anónimo'}
-              </span>
-                            )}
-                            {hecho.consenso && (
-                                <span className="hecho-card-consenso">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle' }}><path d="M7.5 13.5L4 10L5.41 8.59L7.5 10.67L14.59 3.59L16 5L7.5 13.5Z" fill="#7d4f1e"/></svg>
-                Consensuado
-              </span>
-                            )}
-                        </div>
+                    {/* 1. Título arriba (sin row que lo limite) */}
+                    <div className="mb-2"> {/* Margen abajo para separar del autor */}
+                        <span className="hecho-card-title" style={{ display: 'block', width: '100%' }}>
+                            {hecho.titulo}
+                        </span>
                     </div>
-                    <div className="hecho-card-desc">{hecho.descripcion}</div>
-                    <div className="hecho-card-chips">
+
+                    {/* 2. Autor y Consenso abajo del título */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.9rem', color: '#666', marginBottom: '8px' }}>
+                        {hecho.contribuyente && (
+                            <span className="hecho-card-autor">
+                                👤 {hecho.contribuyente.contribuyente_nombre || 'Anónimo'}
+                            </span>
+                        )}
+
+                        {hecho.consenso && (
+                            <span className="hecho-card-consenso" title="Hecho verificado">
+                                {/* Mantuve tu SVG pero ajusté el margen */}
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'text-bottom', marginRight: 4 }}>
+                                    <path d="M7.5 13.5L4 10L5.41 8.59L7.5 10.67L14.59 3.59L16 5L7.5 13.5Z" fill="#7d4f1e"/>
+                                </svg>
+                                Consensuado
+                            </span>
+                        )}
+                    </div>
+
+                    {/* 3. Descripción */}
+                    <div className="hecho-card-desc mb-3" style={{ color: '#333' }}>
+                        {hecho.descripcion}
+                    </div>
+
+                    {/* 4. Chips (Categoría y ubicación) al final */}
+                    {/* Usamos marginTop: 'auto' para que si la card crece, esto quede siempre abajo */}
+                    <div className="hecho-card-chips" style={{ marginTop: 'auto' }}>
                         {hecho.categoria && (
                             <span className="hecho-card-chip-categoria">{hecho.categoria.detalle}</span>
                         )}
-                        {hecho.ubicacion.latitud && (
-                            <span className="hecho-card-chip-ubicacion">{hecho.ubicacion.latitud}</span>
-                        )}
-                        {hecho.ubicacion.longitud && (
-                            <span className="hecho-card-chip-ubicacion">{hecho.ubicacion.longitud}</span>
+                        {/* Agregué una validación extra para no mostrar chips vacíos de ubicación */}
+                        {(hecho.ubicacion?.latitud || hecho.ubicacion?.longitud) && (
+                            <span className="hecho-card-chip-ubicacion" style={{backgroundColor: '#e9f5e9', color: '#2e7d32'}}>
+                                📍 {hecho.ubicacion.latitud?.toFixed(4)}, {hecho.ubicacion.longitud?.toFixed(4)}
+                            </span>
                         )}
                     </div>
                 </div>

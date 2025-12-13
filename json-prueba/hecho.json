@@ -1,0 +1,15 @@
+{
+  "tipo": "textual",
+  "titulo": "Ráfagas de más de 100 km/h causa estragos en San Vicente, Misiones",
+  "descripcion": "La región de San Vicente en Misiones sufrió los efectos de una intensa ráfagas de más de 100 km/h. El incidente obligando a evacuar a residentes de la zona. Se ha convocado al comité de crisis para coordinar las acciones de respuesta.",
+  "categoria": {
+    "detalle": "Ráfagas de más de 100 km/h"
+  },
+  "ubicacion": {
+    "latitud": -27.029465,
+    "longitud": -54.436559
+  },
+  "fechaAcontecimiento": "2007-12-21T00:00:00",
+  "etiquetas": [],
+  "cuerpo": "Cuerpo prueba"
+}

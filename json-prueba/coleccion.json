@@ -1,0 +1,7 @@
+{
+  "titulo": "Prueba 1",
+  "descripcion": "descripcion 1 ",
+  "algoritmo_consenso": "NINGUNO",
+  "urls_fuente": ["http://localhost:8081/api/estatica/hechos"],
+  "criterios": []
+}
