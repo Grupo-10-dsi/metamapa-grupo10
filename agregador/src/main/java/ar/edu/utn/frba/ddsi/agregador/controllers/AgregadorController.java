@@ -119,7 +119,7 @@ public class AgregadorController {
         } if (actualizacionColeccion.getUrls_fuente() != null) {
             this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente()));
         } else {
-            logger.error("Sede debe proporcionar al menos un campo para actualizar una coleccion.");
+            logger.error("Se debe proporcionar al menos un campo para actualizar una coleccion.");
             throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
         }
         return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
