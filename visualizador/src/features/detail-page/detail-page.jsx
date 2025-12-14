@@ -114,9 +114,9 @@ function DetailPage() {
                             <Col md={6} className="mb-3 mt-md-3">
                                 <p className="mb-0 fs-5"><span title="Fuente del Reporte">💻</span> <strong>Fuente:</strong></p>
                                 <p className="text-muted fs-5 text-break lh-base">
-                                    {hecho.origenMapeado?.nombreArchivo
-                                        ? `${hecho.origenMapeado?.nombre} - Archivo: ${hecho.origenMapeado?.nombreArchivo}`
-                                        : (hecho.origenMapeado?.nombre || "Fuente desconocida")
+                                    {hecho.origenFuente?.archivoProcesado
+                                        ? `${hecho.origenFuente.nombre} - Archivo: ${hecho.origenFuente?.archivoProcesado?.nombre}`
+                                        : (hecho.origenFuente?.nombre || "Fuente desconocida")
                                     }
                                 </p>
                             </Col>

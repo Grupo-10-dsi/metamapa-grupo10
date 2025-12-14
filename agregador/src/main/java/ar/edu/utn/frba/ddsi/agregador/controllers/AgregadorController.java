@@ -51,8 +51,8 @@ public class AgregadorController {
     }
 
     @GetMapping("/hechos/{id}")
-    public HechoDTOGraph obtenerHechoPorId(@PathVariable Integer id) {
-        return this.hechoMapper.toHechoDTO(this.agregadorService.obtenerHechoPorId(id));
+    public Hecho obtenerHechoPorId(@PathVariable Integer id) {
+        return this.agregadorService.obtenerHechoPorId(id);
     }
 
     /**
