@@ -691,18 +691,18 @@
       "clientId": "metamapa-frontend",
       "name": "",
       "description": "",
-      "rootUrl": "https://metamapa.page",
-      "adminUrl": "https://metamapa.page",
-      "baseUrl": "https://metamapa.page",
+      "rootUrl": "https://localhost",
+      "adminUrl": "https://localhost",
+      "baseUrl": "https://localhost",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://metamapa.page/*"
+        "https://localhost/*"
       ],
       "webOrigins": [
-        "https://metamapa.page"
+        "https://localhost"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -720,7 +720,7 @@
         "backchannel.logout.session.required": "true",
         "standard.token.exchange.enabled": "false",
         "frontchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "https://metamapa.page/*",
+        "post.logout.redirect.uris": "https://localhost/*",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",

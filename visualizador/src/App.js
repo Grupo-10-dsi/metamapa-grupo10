@@ -21,7 +21,7 @@ import ColeccionesHechoPage from "./features/viewHechos-page/coleccion-page.jsx"
 //const keyCloakBaseUrl = "http://3.15.225.114:9090";
 
 const kcConfig = {
-    url: "https://metamapa.page",
+    url: "https://localhost",
     realm: "MetaMapa",
     clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID
 };
