@@ -124,12 +124,6 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/{id}/hechos").permitAll()
                         .pathMatchers(HttpMethod.GET, "/agregador/colecciones/{id}").permitAll()
-                            .pathMatchers(
-                                    "/swagger-ui.html",
-                                    "/swagger-ui/**",
-                                    "/v3/api-docs/**",
-                                    "/webjars/**"
-                            ).permitAll()
                         // --- REGLAS DE "ADMIN" (hasRole) ---
                         .pathMatchers(HttpMethod.POST, "/agregador/colecciones").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.PATCH, "/agregador/colecciones/{id}").hasRole("ADMIN")
