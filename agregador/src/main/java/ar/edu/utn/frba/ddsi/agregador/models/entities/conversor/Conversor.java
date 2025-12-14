@@ -58,135 +58,151 @@ public class Conversor {
     public HechoDTO aplicarNormalizacion(HechoDTO hecho) {
         WebClient webClient = WebClient.create(normalizadorUrl);
 
-        Class<? extends HechoDTO> dtoClass;
-        if (hecho instanceof HechoMultimediaDTO) {
-            dtoClass = HechoMultimediaDTO.class;
-        } else if (hecho instanceof HechoTextualDTO) {
-            dtoClass = HechoTextualDTO.class;
-        } else {
-            dtoClass = HechoDTO.class;
-        }
-
+        // Ya no necesitamos distinguir clases, enviamos y recibimos HechoDTO
         return webClient.patch()
                 .uri("/normalizador/normalizar")
                 .bodyValue(hecho)
                 .retrieve()
-                .bodyToMono(dtoClass)
+                .bodyToMono(HechoDTO.class)
                 .block();
     }
 
+    public Hecho creacionHecho(HechoDTO dto, OrigenFuente origen, Categoria categoria) {
 
-    public Hecho creacionHecho(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
-
-        if (hechoDTO instanceof HechoMultimediaDTO) {
-            return crearHechoMultimediaBase((HechoMultimediaDTO) hechoDTO, origen, categoria);
-        } else if (hechoDTO instanceof HechoTextualDTO) {
-            return crearHechoTextualBase((HechoTextualDTO) hechoDTO, origen, categoria);
+        if (dto.getContenidoMultimedia() != null && !dto.getContenidoMultimedia().isEmpty()) {
+            return crearHechoMultimedia(dto, origen, categoria);
         } else {
-            if (esHechoMultimedia(hechoDTO)) {
-                return crearHechoMultimediaDesdeBase(hechoDTO, origen, categoria);
-            } else {
-                return crearHechoTextualDesdeBase(hechoDTO, origen, categoria);
-            }
+            // Por defecto asumimos textual (o manejas la excepción)
+            return crearHechoTextual(dto, origen, categoria);
         }
     }
 
-    private boolean esHechoMultimedia(HechoDTO hechoDTO) {
-        return hechoDTO instanceof HechoMultimediaDTO ||
-               (!(hechoDTO instanceof HechoTextualDTO) && hasMultimediaContent(hechoDTO));
-    }
-
-    private boolean hasMultimediaContent(HechoDTO hechoDTO) {
-        try {
-            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
-            Object result = method.invoke(hechoDTO);
-            return result != null && result instanceof java.util.List && !((java.util.List<?>) result).isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private Hecho crearHechoTextualDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
-        String cuerpo = null;
-        try {
-            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getCuerpo");
-            Object result = method.invoke(hechoDTO);
-            cuerpo = (String) result;
-        } catch (Exception e) {
-            // No cuerpo field available
-        }
-
-        return new HechoTextual(
-                hechoDTO.getTitulo(),
-                hechoDTO.getDescripcion(),
-                categoria,
-                hechoDTO.getUbicacion(),
-                hechoDTO.getFechaAcontecimiento(),
-                hechoDTO.getFechaCarga(),
-                origen,
-                convertirEtiquetas(hechoDTO.getEtiquetas()),
-                null,
-                cuerpo
-        );
-    }
-
-    private Hecho crearHechoMultimediaDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
-        java.util.List<String> contenidoMultimedia = new java.util.ArrayList<>();
-        try {
-            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
-            Object result = method.invoke(hechoDTO);
-            if (result instanceof java.util.List) {
-                contenidoMultimedia = (java.util.List<String>) result;
-            }
-        } catch (Exception e) {
-            // No contenidoMultimedia field available
-        }
-
+    private Hecho crearHechoMultimedia(HechoDTO dto, OrigenFuente origen, Categoria categoria) {
         return new HechoMultimedia(
-                hechoDTO.getTitulo(),
-                hechoDTO.getDescripcion(),
+                dto.getTitulo(),
+                dto.getDescripcion(),
                 categoria,
-                hechoDTO.getUbicacion(),
-                hechoDTO.getFechaAcontecimiento(),
-                hechoDTO.getFechaCarga(),
+                dto.getUbicacion(),
+                dto.getFechaAcontecimiento(),
+                dto.getFechaCarga(),
                 origen,
-                convertirEtiquetas(hechoDTO.getEtiquetas()),
+                convertirEtiquetas(dto.getEtiquetas()),
                 null,
-                contenidoMultimedia
+                dto.getContenidoMultimedia()
         );
     }
 
-    private Hecho crearHechoTextualBase(HechoTextualDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
-        Hecho hecho =  new HechoTextual(
-                hechoDTO.getTitulo(),
-                hechoDTO.getDescripcion(),
+    private Hecho crearHechoTextual(HechoDTO dto, OrigenFuente origen, Categoria categoria) {
+        return new HechoTextual(
+                dto.getTitulo(),
+                dto.getDescripcion(),
                 categoria,
-                hechoDTO.getUbicacion(),
-                hechoDTO.getFechaAcontecimiento(),
-                hechoDTO.getFechaCarga(),
+                dto.getUbicacion(),
+                dto.getFechaAcontecimiento(),
+                dto.getFechaCarga(),
                 origen,
-                convertirEtiquetas(hechoDTO.getEtiquetas()),
+                convertirEtiquetas(dto.getEtiquetas()),
                 null,
-                hechoDTO.getCuerpo()
+                dto.getCuerpo()
         );
-        return hecho;
     }
 
-    public Hecho crearHechoMultimediaBase(HechoMultimediaDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
-        Hecho hecho = new HechoMultimedia(
-                hechoDTO.getTitulo(),
-                hechoDTO.getDescripcion(),
-                categoria,
-                hechoDTO.getUbicacion(),
-                hechoDTO.getFechaAcontecimiento(),
-                hechoDTO.getFechaCarga(),
-                origen,
-                convertirEtiquetas(hechoDTO.getEtiquetas()),
-                null,
-                hechoDTO.getContenidoMultimedia()
-        );
-        return hecho;
-    }
+//    private boolean esHechoMultimedia(HechoDTO hechoDTO) {
+//        return hechoDTO instanceof HechoMultimediaDTO ||
+//               (!(hechoDTO instanceof HechoTextualDTO) && hasMultimediaContent(hechoDTO));
+//    }
+//
+//    private boolean hasMultimediaContent(HechoDTO hechoDTO) {
+//        try {
+//            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
+//            Object result = method.invoke(hechoDTO);
+//            return result != null && result instanceof java.util.List && !((java.util.List<?>) result).isEmpty();
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
+
+//    private Hecho crearHechoTextualDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+//        String cuerpo = null;
+//        try {
+//            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getCuerpo");
+//            Object result = method.invoke(hechoDTO);
+//            cuerpo = (String) result;
+//        } catch (Exception e) {
+//            // No cuerpo field available
+//        }
+//
+//        return new HechoTextual(
+//                hechoDTO.getTitulo(),
+//                hechoDTO.getDescripcion(),
+//                categoria,
+//                hechoDTO.getUbicacion(),
+//                hechoDTO.getFechaAcontecimiento(),
+//                hechoDTO.getFechaCarga(),
+//                origen,
+//                convertirEtiquetas(hechoDTO.getEtiquetas()),
+//                null,
+//                cuerpo
+//        );
+//    }
+//
+//    private Hecho crearHechoMultimediaDesdeBase(HechoDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+//        java.util.List<String> contenidoMultimedia = new java.util.ArrayList<>();
+//        try {
+//            java.lang.reflect.Method method = hechoDTO.getClass().getMethod("getContenidoMultimedia");
+//            Object result = method.invoke(hechoDTO);
+//            if (result instanceof java.util.List) {
+//                contenidoMultimedia = (java.util.List<String>) result;
+//            }
+//        } catch (Exception e) {
+//            // No contenidoMultimedia field available
+//        }
+//
+//        return new HechoMultimedia(
+//                hechoDTO.getTitulo(),
+//                hechoDTO.getDescripcion(),
+//                categoria,
+//                hechoDTO.getUbicacion(),
+//                hechoDTO.getFechaAcontecimiento(),
+//                hechoDTO.getFechaCarga(),
+//                origen,
+//                convertirEtiquetas(hechoDTO.getEtiquetas()),
+//                null,
+//                contenidoMultimedia
+//        );
+//    }
+
+//    private Hecho crearHechoTextualBase(HechoTextualDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+//        Hecho hecho =  new HechoTextual(
+//                hechoDTO.getTitulo(),
+//                hechoDTO.getDescripcion(),
+//                categoria,
+//                hechoDTO.getUbicacion(),
+//                hechoDTO.getFechaAcontecimiento(),
+//                hechoDTO.getFechaCarga(),
+//                origen,
+//                convertirEtiquetas(hechoDTO.getEtiquetas()),
+//                null,
+//                hechoDTO.getCuerpo()
+//        );
+//        return hecho;
+//    }
+//
+//    public Hecho crearHechoMultimediaBase(HechoMultimediaDTO hechoDTO, OrigenFuente origen, Categoria categoria) {
+//        Hecho hecho = new HechoMultimedia(
+//                hechoDTO.getTitulo(),
+//                hechoDTO.getDescripcion(),
+//                categoria,
+//                hechoDTO.getUbicacion(),
+//                hechoDTO.getFechaAcontecimiento(),
+//                hechoDTO.getFechaCarga(),
+//                origen,
+//                convertirEtiquetas(hechoDTO.getEtiquetas()),
+//                null,
+//                hechoDTO.getContenidoMultimedia()
+//        );
+//        return hecho;
+//    }
 
     private List<Etiqueta> convertirEtiquetas(List<EtiquetaDTO> etiquetasDTO) {
         if (etiquetasDTO == null) return new ArrayList<>();

@@ -5,6 +5,8 @@ import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Fuente;
 import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.origenFuente.OrigenFuente;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +21,16 @@ import java.util.List;
 @Entity @Table(name="Hecho")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="tipo")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type" // O "tipo", esto agrega un campo extra al JSON
+)
+@JsonSubTypes({
+        // Aquí le dices: "Si es MULTIMEDIA, usa la clase HechoMultimedia y muestra sus campos"
+        @JsonSubTypes.Type(value = HechoMultimedia.class, name = "MULTIMEDIA"),
+        @JsonSubTypes.Type(value = HechoTextual.class, name = "TEXTUAL")
+})
 public abstract class Hecho {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

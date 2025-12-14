@@ -25,5 +25,7 @@ public class HechoDTO {
     private Origen_Fuente_VIEJO origenFuente;
     private List<EtiquetaDTO> etiquetas;
     private ContribuyenteDTO contribuyente;
+    private String cuerpo;
+    private List<String> contenidoMultimedia;
 
 }

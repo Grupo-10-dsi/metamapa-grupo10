@@ -15,7 +15,7 @@ import java.util.List;
 @Entity @DiscriminatorValue("MULTIMEDIA")
 public class HechoMultimedia extends Hecho{
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "hecho_multimedias", joinColumns = @JoinColumn(name = "hecho_id")) @Column(name = "contenido_multimedia")
     private List<String> contenidoMultimedia;
 
