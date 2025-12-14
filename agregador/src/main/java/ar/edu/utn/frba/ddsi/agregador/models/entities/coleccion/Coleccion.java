@@ -25,7 +25,7 @@ public class Coleccion {
     @Enumerated(EnumType.STRING)
     private Algoritmo_Consenso algoritmo_consenso;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "coleccion_fuente",
             joinColumns = @JoinColumn(name = "coleccion_id",
