@@ -301,6 +301,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       AGREGADOR_URL: ${AGREGADOR_URL}
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
     depends_on:
       mysql:
         condition: service_healthy
