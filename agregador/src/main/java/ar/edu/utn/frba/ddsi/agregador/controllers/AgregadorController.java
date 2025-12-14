@@ -61,12 +61,10 @@ public class AgregadorController {
      */
 
     @GetMapping("/colecciones")
-    public List<ColeccionDTO> obtenerColecciones(){
+    public List<Coleccion> obtenerColecciones(){
         logger.info("Se han solicitado las colecciones disponibles.");
-        return this.agregadorService.obtenerColecciones()
-                .stream()
-                .map(coleccionMapper::toColeccionDTO)
-                .collect(Collectors.toList());
+        return this.agregadorService.obtenerColecciones();
+
     }
 
     @GetMapping("/categorias")
@@ -82,9 +80,9 @@ public class AgregadorController {
      * Si no se encuentra la coleccion, devuelve un error 404.
      */
     @GetMapping("/colecciones/{id}")
-    public ColeccionDTO obtenerColeccion(@PathVariable Integer id){
+    public Coleccion obtenerColeccion(@PathVariable Integer id){
         logger.info("Se ha solicitado la coleccion con ID: {}", id);
-        return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
+        return this.agregadorService.obtenerColeccion(id);
     }
 
     /**
@@ -112,17 +110,17 @@ public class AgregadorController {
      //Endpoint para modificar coleccion
 
     @PatchMapping("/colecciones/{id}")
-    public ColeccionDTO modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
+    public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
         logger.info("Se quiere modificar la coleccion: {}", id);
         if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
-            this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso()));
+            this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
         } if (actualizacionColeccion.getUrls_fuente() != null) {
-            this.coleccionMapper.toColeccionDTO(this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente()));
+            this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
         } else {
             logger.error("Se debe proporcionar al menos un campo para actualizar una coleccion.");
             throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
         }
-        return this.coleccionMapper.toColeccionDTO(this.agregadorService.obtenerColeccion(id));
+        return this.agregadorService.obtenerColeccion(id);
     }
 
 
@@ -134,7 +132,7 @@ public class AgregadorController {
     // Navegacion de forma irrestricta -> No se aplica curacion
 
     @GetMapping("/colecciones/{id}/hechos")
-    public List<HechoDTOGraph> obtenerHechosPorColeccion(@PathVariable Integer id,
+    public List<Hecho> obtenerHechosPorColeccion(@PathVariable Integer id,
                 @RequestParam(required = false) String categoria,
                 @RequestParam(required = false) String fecha_reporte_desde,
                 @RequestParam(required = false) String fecha_reporte_hasta,
@@ -160,15 +158,9 @@ public class AgregadorController {
         }
 
         if(tipoNavegacion.equals("irrestricta")) {
-            return this.agregadorService.encontrarHechosPorColeccion(id, filtros)
-                    .stream()
-                    .map(hechoMapper::toHechoDTO)
-                    .collect(Collectors.toList());
+            return this.agregadorService.encontrarHechosPorColeccion(id, filtros);
         } else if (tipoNavegacion.equals("curada")) {
-            return this.agregadorService.obtenerHechosCurados(id, filtros)
-                    .stream()
-                    .map(hechoMapper::toHechoDTO)
-                    .collect(Collectors.toList());
+            return this.agregadorService.obtenerHechosCurados(id, filtros);
         } else {
             throw new IllegalArgumentException("Tipo de navegacion no soportado: " + tipoNavegacion);
         }
