@@ -1,5 +1,6 @@
-package ar.edu.utn.frba.ddsi.agregador.models.entities.hecho;
+package ar.edu.utn.frba.ddsi.agregador.models;
 
+import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,8 @@
-package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
+package ar.edu.utn.frba.ddsi.agregador.models;
 
 import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Algoritmo_Consenso;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.ColeccionDTO;
+import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.CriterioDTO;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

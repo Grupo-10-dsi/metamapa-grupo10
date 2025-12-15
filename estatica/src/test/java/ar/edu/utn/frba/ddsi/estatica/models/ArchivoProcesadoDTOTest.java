@@ -1,5 +1,7 @@
-package ar.edu.utn.frba.ddsi.estatica.models.entities.dtos;
+package ar.edu.utn.frba.ddsi.estatica.models;
 
+import ar.edu.utn.frba.ddsi.estatica.models.entities.dtos.ArchivoProcesadoDTO;
+import ar.edu.utn.frba.ddsi.estatica.models.entities.dtos.HechoDTO;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

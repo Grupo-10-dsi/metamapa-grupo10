@@ -1,5 +1,6 @@
-package ar.edu.utn.frba.ddsi.estatica.models.entities.dtos;
+package ar.edu.utn.frba.ddsi.estatica.models;
 
+import ar.edu.utn.frba.ddsi.estatica.models.entities.dtos.HechoDTO;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Categoria;
 import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Ubicacion;
 import org.junit.jupiter.api.Test;

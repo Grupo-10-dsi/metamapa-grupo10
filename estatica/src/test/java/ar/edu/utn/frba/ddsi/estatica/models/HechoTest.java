@@ -1,5 +1,9 @@
-package ar.edu.utn.frba.ddsi.estatica.models.entities.hecho;
+package ar.edu.utn.frba.ddsi.estatica.models;
 
+import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Categoria;
+import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Hecho;
+import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Origen_Fuente;
+import ar.edu.utn.frba.ddsi.estatica.models.entities.hecho.Ubicacion;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
