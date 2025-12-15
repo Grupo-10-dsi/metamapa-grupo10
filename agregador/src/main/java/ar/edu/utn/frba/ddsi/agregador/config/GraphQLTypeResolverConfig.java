@@ -20,7 +20,9 @@ public class GraphQLTypeResolverConfig {
                     if (src instanceof HechoMultimediaDTOGraph) {
                         return env.getSchema().getObjectType("HechoMultimedia");
                     }
-                    return null;
+                    throw new IllegalStateException(
+                            "Tipo Hecho no soportado: " + src.getClass()
+                    );
                 }));
     }
 }
