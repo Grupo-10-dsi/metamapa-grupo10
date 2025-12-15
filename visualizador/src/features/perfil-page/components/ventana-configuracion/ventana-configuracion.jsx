@@ -62,9 +62,9 @@ export default function VentanaConfiguracion({ show, onClose, onConfirm, fuentes
 
     // Definimos las fuentes hardcodeadas como en tu ejemplo
     const urlsFuentes = {
-        "ESTATICA": `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/estatica/hechos`,
-        "DINAMICA": `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/dinamica/hechos`,
-        "PROXY": `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/proxy/hechos`
+        "ESTATICA": `http://estatica:8081/api/estatica/hechos`,
+        "DINAMICA": `http://dinamica:8082/api/dinamica/hechos`,
+        "PROXY": `http://proxy:8083/api/proxy/hechos`
     }
     const tiposDeFuente = ["ESTATICA", "DINAMICA", "PROXY"];
 
