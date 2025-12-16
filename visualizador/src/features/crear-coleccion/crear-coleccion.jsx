@@ -230,7 +230,7 @@ function CrearColeccion() {
                                         />
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formDescripcion">
-                                        <Form.Label>Descripción</Form.Label>
+                                        <Form.Label>Descripción *</Form.Label>
                                         <Form.Control
                                             as="textarea"
                                             rows={3}
@@ -238,6 +238,7 @@ function CrearColeccion() {
                                             placeholder="Una breve descripción de qué agrupa esta colección."
                                             value={formData.descripcion}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </Form.Group>
 
@@ -269,6 +270,7 @@ function CrearColeccion() {
                                                         id={`check-fuente-${fuente}`}
                                                         label={fuente}
                                                         onChange={() => handleCheckboxListChange('urls_fuente', urlsFuentes[fuente])}
+
                                                     />
                                                 ))}
                                             </Form.Group>
