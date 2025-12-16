@@ -1,267 +1,30 @@
-package ar.edu.utn.frba.ddsi.agregador.controllers;
+package ar.edu.utn.frba.ddsi.agregador.models.entities.dtos;
 
-
-import ar.edu.utn.frba.ddsi.agregador.mappers.CategoriaMapper;
-import ar.edu.utn.frba.ddsi.agregador.mappers.ColeccionMapper;
-import ar.edu.utn.frba.ddsi.agregador.mappers.HechoMapper;
-import ar.edu.utn.frba.ddsi.agregador.mappers.SolicitudMapper;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.dtos.*;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Filtro;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.hecho.Hecho;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.solicitudEliminacion.Estado_Solicitud;
-import ar.edu.utn.frba.ddsi.agregador.services.AgregadorService;
-import ar.edu.utn.frba.ddsi.agregador.models.entities.coleccion.Coleccion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
-
+import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Getter
+public class PageResponse<T> {
+    private List<T> content;
+    private int pageNumber;
+    private int pageSize;
+    private long totalElements;
+    private int totalPages;
+    private boolean first;
+    private boolean last;
 
-@RequestMapping("/agregador")
-@RestController
-public class AgregadorController {
-    private final AgregadorService agregadorService;
-    private static Logger logger = LoggerFactory.getLogger(AgregadorController.class);
-    private final ColeccionMapper coleccionMapper;
-    private final CategoriaMapper categoriaMapper;
-    private final HechoMapper hechoMapper;
-    private final SolicitudMapper solicitudMapper;
-
-    public AgregadorController(AgregadorService agregadorService, ColeccionMapper coleccionMapper, CategoriaMapper categoriaMapper, HechoMapper hechoMapper, SolicitudMapper solicitudMapper) {
-        this.agregadorService = agregadorService;
-        this.coleccionMapper = coleccionMapper;
-        this.categoriaMapper = categoriaMapper;
-        this.hechoMapper = hechoMapper;
-        this.solicitudMapper = solicitudMapper;
+    public PageResponse() {
     }
 
-    // <----------------- OPERACIONES CRUD SOBRE COLECCIONES ----------------->
-    /**
-     * Crea una nueva coleccion en el sistema a partir del DTO que recibe.
-     * Si se crea correctamente, devuelve el ID de la coleccion creada.
-     */
-    @PostMapping("/colecciones")
-    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    public Integer crearColeccion(@RequestBody ColeccionDTO coleccion) {
-        logger.info("Se ha recibido una solicitud para crear una nueva coleccion.");
-        return this.agregadorService.crearColeccion(coleccion);
-    }
-
-    @GetMapping("/hechos/{id}")
-    public Hecho obtenerHechoPorId(@PathVariable Integer id) {
-        return this.agregadorService.obtenerHechoPorId(id);
-    }
-
-    /**
-     * Devuelve una lista de colecciones dependiendo de los parametros enviados en la req.
-     * Si no se envian parametros, devuelve todas las colecciones.
-     */
-
-    @GetMapping("/colecciones")
-    public PageResponse<Coleccion> obtenerColecciones(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
-        logger.info("Se han solicitado las colecciones disponibles. Page: {}, Size: {}", page, size);
-        List<Coleccion> todasColecciones = this.agregadorService.obtenerColecciones();
-        return paginate(todasColecciones, page, size);
-    }
-
-    @GetMapping("/categorias")
-    public List<CategoriaDTO> obtenerCategorias(){
-        return this.agregadorService.obtenerCategorias()
-                .stream()
-                .map(categoriaMapper::toCategoriaDTO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Devuelve una coleccion en particular a partir de su ID.
-     * Si no se encuentra la coleccion, devuelve un error 404.
-     */
-    @GetMapping("/colecciones/{id}")
-    public Coleccion obtenerColeccion(@PathVariable Integer id){
-        logger.info("Se ha solicitado la coleccion con ID: {}", id);
-        return this.agregadorService.obtenerColeccion(id);
-    }
-
-    /**
-     * Elimina una coleccion del sistema a partir de su ID. No devuelve contenido.
-     * Si no se encuentra la coleccion, devuelve un error 404.
-     */
-    @DeleteMapping("/colecciones/{id}")
-    @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
-    public void eliminarColeccion(@PathVariable Integer id) {
-        logger.info("Intentando eliminar la coleccion: {}", id);
-        this.agregadorService.eliminarColeccionPorId(id);
-    }
-
-    /**
-     * Permite modificar una coleccion.
-     * Recibe el ID de la coleccion a modificar y un DTO con los nuevos datos.
-     */
-//    @PutMapping("/colecciones/{id}")
-//    @ResponseStatus(org.springframework.http.HttpStatus.OK)
-//    public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ColeccionDTO coleccionDTO) {
-//        return this.agregadorService.actualizarColeccion(id, coleccionDTO);
-//    }
-
-
-     //Endpoint para modificar coleccion
-
-    @PatchMapping("/colecciones/{id}")
-    public Coleccion modificarColeccion(@PathVariable Integer id, @RequestBody ActualizacionColeccionDTO actualizacionColeccion) {
-        logger.info("Se quiere modificar la coleccion: {}", id);
-        if(actualizacionColeccion.getAlgoritmo_consenso() != null) {
-            this.agregadorService.modificarAlgoritmoConsenso(id, actualizacionColeccion.getAlgoritmo_consenso());
-        } if (actualizacionColeccion.getUrls_fuente() != null) {
-            this.agregadorService.modificarListaDeFuentes(id, actualizacionColeccion.getUrls_fuente());
-        } else {
-            logger.error("Sede debe proporcionar al menos un campo para actualizar una coleccion.");
-            throw new IllegalArgumentException("Debe proporcionar al menos un campo para actualizar");
-        }
-        return this.agregadorService.obtenerColeccion(id);
-    }
-
-
-//    @PatchMapping("/colecciones/{id}")
-//    public Coleccion modificarFuentes(@PathVariable Integer id, @RequestBody List<String> urls_fuente) {
-//        return this.agregadorService.modificarListaDeFuentes(id, urls_fuente);
-//    }
-
-    // Navegacion de forma irrestricta -> No se aplica curacion
-
-    @GetMapping("/colecciones/{id}/hechos")
-    public PageResponse<Hecho> obtenerHechosPorColeccion(@PathVariable Integer id,
-                @RequestParam(required = false) String categoria,
-                @RequestParam(required = false) String fecha_reporte_desde,
-                @RequestParam(required = false) String fecha_reporte_hasta,
-                @RequestParam(required = false) String fecha_acontecimiento_desde,
-                @RequestParam(required = false) String fecha_acontecimiento_hasta,
-                @RequestParam(required = false) Double latitud,
-                @RequestParam(required = false) Double longitud,
-                @RequestParam String tipoNavegacion,
-                @RequestParam(defaultValue = "0") int page,
-                @RequestParam(defaultValue = "10") int size) {
-
-        var filtros = new Filtro(
-                categoria,
-                fecha_reporte_desde,
-                fecha_reporte_hasta,
-                fecha_acontecimiento_desde,
-                fecha_acontecimiento_hasta,
-                latitud,
-                longitud
-        );
-
-        if(tipoNavegacion == null) {
-            logger.error("Sede debe proporcionar un tipo de navegacion para obtener hechos.");
-            throw new IllegalArgumentException("El tipo de navegacion es obligatorio");
-        }
-
-        List<Hecho> hechos;
-        if(tipoNavegacion.equals("irrestricta")) {
-            hechos = this.agregadorService.encontrarHechosPorColeccion(id, filtros);
-        } else if (tipoNavegacion.equals("curada")) {
-            hechos = this.agregadorService.obtenerHechosCurados(id, filtros);
-        } else {
-            throw new IllegalArgumentException("Tipo de navegacion no soportado: " + tipoNavegacion);
-        }
-
-        return paginate(hechos, page, size);
-    }
-
-
-    @GetMapping("/solicitudes")
-    public List<SolicitudDTOE> obtenerSolicitudes() {
-        return agregadorService.encontrarSolicitudes()
-                .stream()
-                .map(solicitudMapper::toSolicitudDTOE)
-                .collect(Collectors.toList());
-    }
-
-    //  ENDPOINT PARA BUSCAR SOLICITUDES PENDIENTES
-
-    @GetMapping("/solicitudes/pendientes")
-    public List<SolicitudDTOE> obtenerSolicitudesPendientes() {
-        return agregadorService.encontrarSolicitudesPendientes()
-                .stream()
-                .map(solicitudMapper::toSolicitudDTOE)
-                .collect(Collectors.toList());
-    }
-
-
-    // Endpoint para generar solicitudes de eliminacion de hechos le pega metamapa
-    @PostMapping("/solicitudes")
-    public Integer generarSolicitudEliminacion(@RequestBody SolicitudDTOE solicitudEliminacion) {
-        return agregadorService.crearSolicitudEliminacion(solicitudEliminacion);
-    }
-
-    // Endpoint para aceptar/rechazar solicitudes de eliminacion
-
-    @PutMapping("/solicitudes/{id}")
-    public SolicitudDTOE modificarSolicitud(@PathVariable Integer id, @RequestBody Estado_Solicitud nuevoEstado) {
-        return this.solicitudMapper.toSolicitudDTOE(agregadorService.modificarEstadoSolicitud(id, nuevoEstado));
-
-    }
-
-
-    @GetMapping("/hechos")
-    public PageResponse<HechoDTOGraph> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
-                                             @RequestParam(required = false) String fecha_reporte_desde,
-                                             @RequestParam(required = false) String fecha_reporte_hasta,
-                                             @RequestParam(required = false) String fecha_acontecimiento_desde,
-                                             @RequestParam(required = false) String fecha_acontecimiento_hasta,
-                                             @RequestParam(required = false) Double latitud,
-                                             @RequestParam(required = false) Double longitud,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size
-                                             ) {
-
-        var filtros = new Filtro(
-                categoria,
-                fecha_reporte_desde,
-                fecha_reporte_hasta,
-                fecha_acontecimiento_desde,
-                fecha_acontecimiento_hasta,
-                latitud,
-                longitud
-        );
-
-        List<Hecho> unosHechos = this.agregadorService.obtenerTodosLosHechos();
-        List<HechoDTOGraph> hechosFiltrados = this.agregadorService.hechosFiltrados(unosHechos, filtros)
-                .stream()
-                .map(hechoMapper::toHechoDTO)
-                .collect(Collectors.toList());
-
-        return paginate(hechosFiltrados, page, size);
-    }
-
-    @GetMapping("/search")
-    public List<HechoSearchDTO> busquedaTextoLibre(@RequestParam(required = false) String texto) {
-        return agregadorService.buscarTextoLibre(texto);
-    }
-
-    /* Ubicaciones para mapa front */
-    @GetMapping("/hechos/ubicaciones")
-    public List<UbicacionParaMapaDTO> obtenerUbicaciones() {
-        return this.agregadorService.obtenerUbicaciones();
-    }
-
-    // Helper method for pagination
-    private <T> PageResponse<T> paginate(List<T> list, int page, int size) {
-        int totalElements = list.size();
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalElements);
-
-        if (fromIndex > totalElements) {
-            return new PageResponse<>(List.of(), page, size, totalElements);
-        }
-
-        List<T> pageContent = list.subList(fromIndex, toIndex);
-        return new PageResponse<>(pageContent, page, size, totalElements);
+    public PageResponse(List<T> content, int pageNumber, int pageSize, long totalElements) {
+        this.content = content;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+        this.totalElements = totalElements;
+        this.totalPages = (int) Math.ceil((double) totalElements / pageSize);
+        this.first = pageNumber == 0;
+        this.last = pageNumber >= totalPages - 1;
     }
 
 }
