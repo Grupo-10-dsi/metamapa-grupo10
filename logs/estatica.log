@@ -1,0 +1,66 @@
+2025-11-24T16:54:58.677-03:00  INFO 21028 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Starting EstaticaApplication using Java 17.0.15 with PID 21028 (C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10\estatica\target\classes started by lucas in C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10)
+2025-11-24T16:54:58.679-03:00  INFO 21028 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-11-24T16:54:59.528-03:00  INFO 21028 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-11-24T16:54:59.539-03:00  INFO 21028 --- [estatica] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-24T16:54:59.540-03:00  INFO 21028 --- [estatica] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-11-24T16:54:59.580-03:00  INFO 21028 --- [estatica] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-24T16:54:59.580-03:00  INFO 21028 --- [estatica] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 868 ms
+2025-11-24T16:55:00.057-03:00  INFO 21028 --- [estatica] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
+2025-11-24T16:55:00.104-03:00  INFO 21028 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-11-24T16:55:00.118-03:00  INFO 21028 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Started EstaticaApplication in 1.925 seconds (process running for 2.42)
+2025-11-24T16:55:00.123-03:00  INFO 21028 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : me pica la poronga
+2025-11-24T16:55:00.658-03:00  INFO 21028 --- [estatica] [RMI TCP Connection(3)-192.168.0.105] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-24T16:55:00.659-03:00  INFO 21028 --- [estatica] [RMI TCP Connection(3)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-24T16:55:00.660-03:00  INFO 21028 --- [estatica] [RMI TCP Connection(3)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-11-24T17:01:48.131-03:00  INFO 21028 --- [estatica] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-24T17:01:48.205-03:00  INFO 21028 --- [estatica] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-11-24T17:01:52.172-03:00  INFO 12828 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Starting EstaticaApplication using Java 17.0.15 with PID 12828 (C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10\estatica\target\classes started by lucas in C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10)
+2025-11-24T17:01:52.174-03:00  INFO 12828 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-11-24T17:01:53.154-03:00  INFO 12828 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-11-24T17:01:53.165-03:00  INFO 12828 --- [estatica] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-24T17:01:53.165-03:00  INFO 12828 --- [estatica] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-11-24T17:01:53.207-03:00  INFO 12828 --- [estatica] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-24T17:01:53.208-03:00  INFO 12828 --- [estatica] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 997 ms
+2025-11-24T17:01:53.696-03:00  INFO 12828 --- [estatica] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
+2025-11-24T17:01:53.745-03:00  INFO 12828 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-11-24T17:01:53.758-03:00  INFO 12828 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Started EstaticaApplication in 2.071 seconds (process running for 2.57)
+2025-11-24T17:01:53.763-03:00 ERROR 12828 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : me pica la poronga
+2025-11-24T17:01:53.928-03:00  INFO 12828 --- [estatica] [RMI TCP Connection(3)-192.168.0.105] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-24T17:01:53.928-03:00  INFO 12828 --- [estatica] [RMI TCP Connection(3)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-24T17:01:53.930-03:00  INFO 12828 --- [estatica] [RMI TCP Connection(3)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-11-24T17:03:02.362-03:00  WARN 12828 --- [estatica] [http-nio-8081-exec-3] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'archivosProcesados' for method parameter type List is not present]
+2025-11-24T17:03:17.931-03:00  INFO 12828 --- [estatica] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-24T17:03:17.997-03:00  INFO 12828 --- [estatica] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-11-24T17:03:22.930-03:00  INFO 13440 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Starting EstaticaApplication using Java 17.0.15 with PID 13440 (C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10\estatica\target\classes started by lucas in C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10)
+2025-11-24T17:03:22.932-03:00  INFO 13440 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-11-24T17:03:23.761-03:00  INFO 13440 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-11-24T17:03:23.771-03:00  INFO 13440 --- [estatica] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-24T17:03:23.771-03:00  INFO 13440 --- [estatica] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-11-24T17:03:23.811-03:00  INFO 13440 --- [estatica] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-24T17:03:23.811-03:00  INFO 13440 --- [estatica] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 845 ms
+2025-11-24T17:03:24.287-03:00  INFO 13440 --- [estatica] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
+2025-11-24T17:03:24.338-03:00  INFO 13440 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-11-24T17:03:24.352-03:00  INFO 13440 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Started EstaticaApplication in 1.872 seconds (process running for 2.356)
+2025-11-24T17:03:24.357-03:00 ERROR 13440 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : me pica la poronga
+2025-11-24T17:03:24.774-03:00  INFO 13440 --- [estatica] [RMI TCP Connection(2)-192.168.0.105] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-24T17:03:24.775-03:00  INFO 13440 --- [estatica] [RMI TCP Connection(2)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-24T17:03:24.776-03:00  INFO 13440 --- [estatica] [RMI TCP Connection(2)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-11-24T17:03:57.318-03:00  INFO 13440 --- [estatica] [http-nio-8081-exec-2] a.e.u.f.d.e.c.EstaticaController         : ME PICA LA VERGA DESDE EL CONTROLLER
+2025-11-24T17:04:24.256-03:00  INFO 13440 --- [estatica] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-24T17:04:24.322-03:00  INFO 13440 --- [estatica] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-11-24T17:04:26.237-03:00  INFO 18640 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Starting EstaticaApplication using Java 17.0.15 with PID 18640 (C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10\estatica\target\classes started by lucas in C:\Users\lucas\OneDrive\Desktop\metamapa-grupo10)
+2025-11-24T17:04:26.239-03:00  INFO 18640 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-11-24T17:04:27.159-03:00  INFO 18640 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-11-24T17:04:27.169-03:00  INFO 18640 --- [estatica] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-24T17:04:27.169-03:00  INFO 18640 --- [estatica] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-11-24T17:04:27.207-03:00  INFO 18640 --- [estatica] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-24T17:04:27.207-03:00  INFO 18640 --- [estatica] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 927 ms
+2025-11-24T17:04:27.689-03:00  INFO 18640 --- [estatica] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
+2025-11-24T17:04:27.740-03:00  INFO 18640 --- [estatica] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-11-24T17:04:27.754-03:00  INFO 18640 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : Started EstaticaApplication in 2.007 seconds (process running for 2.492)
+2025-11-24T17:04:27.761-03:00 ERROR 18640 --- [estatica] [main] a.e.u.f.d.estatica.EstaticaApplication   : me pica la poronga
+2025-11-24T17:04:28.003-03:00  INFO 18640 --- [estatica] [RMI TCP Connection(1)-192.168.0.105] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-24T17:04:28.003-03:00  INFO 18640 --- [estatica] [RMI TCP Connection(1)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-24T17:04:28.004-03:00  INFO 18640 --- [estatica] [RMI TCP Connection(1)-192.168.0.105] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-11-24T17:06:04.404-03:00  INFO 18640 --- [estatica] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-24T17:06:04.471-03:00  INFO 18640 --- [estatica] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete

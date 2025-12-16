@@ -61,9 +61,12 @@ public class AgregadorController {
      */
 
     @GetMapping("/colecciones")
-    public List<Coleccion> obtenerColecciones(){
-        logger.info("Se han solicitado las colecciones disponibles.");
-        return this.agregadorService.obtenerColecciones();
+    public PageResponse<Coleccion> obtenerColecciones(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        logger.info("Se han solicitado las colecciones disponibles. Page: {}, Size: {}", page, size);
+        List<Coleccion> todasColecciones = this.agregadorService.obtenerColecciones();
+        return paginate(todasColecciones, page, size);
     }
 
     @GetMapping("/categorias")
@@ -131,7 +134,7 @@ public class AgregadorController {
     // Navegacion de forma irrestricta -> No se aplica curacion
 
     @GetMapping("/colecciones/{id}/hechos")
-    public List<Hecho> obtenerHechosPorColeccion(@PathVariable Integer id,
+    public PageResponse<Hecho> obtenerHechosPorColeccion(@PathVariable Integer id,
                 @RequestParam(required = false) String categoria,
                 @RequestParam(required = false) String fecha_reporte_desde,
                 @RequestParam(required = false) String fecha_reporte_hasta,
@@ -139,7 +142,9 @@ public class AgregadorController {
                 @RequestParam(required = false) String fecha_acontecimiento_hasta,
                 @RequestParam(required = false) Double latitud,
                 @RequestParam(required = false) Double longitud,
-                @RequestParam String tipoNavegacion) {
+                @RequestParam String tipoNavegacion,
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "10") int size) {
 
         var filtros = new Filtro(
                 categoria,
@@ -156,13 +161,16 @@ public class AgregadorController {
             throw new IllegalArgumentException("El tipo de navegacion es obligatorio");
         }
 
+        List<Hecho> hechos;
         if(tipoNavegacion.equals("irrestricta")) {
-            return this.agregadorService.encontrarHechosPorColeccion(id, filtros);
+            hechos = this.agregadorService.encontrarHechosPorColeccion(id, filtros);
         } else if (tipoNavegacion.equals("curada")) {
-            return this.agregadorService.obtenerHechosCurados(id, filtros);
+            hechos = this.agregadorService.obtenerHechosCurados(id, filtros);
         } else {
             throw new IllegalArgumentException("Tipo de navegacion no soportado: " + tipoNavegacion);
         }
+
+        return paginate(hechos, page, size);
     }
 
 
@@ -201,13 +209,15 @@ public class AgregadorController {
 
 
     @GetMapping("/hechos")
-    public List<HechoDTOGraph> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
+    public PageResponse<HechoDTOGraph> obtenerTodosLosHechos(@RequestParam(required = false) String categoria,
                                              @RequestParam(required = false) String fecha_reporte_desde,
                                              @RequestParam(required = false) String fecha_reporte_hasta,
                                              @RequestParam(required = false) String fecha_acontecimiento_desde,
                                              @RequestParam(required = false) String fecha_acontecimiento_hasta,
                                              @RequestParam(required = false) Double latitud,
-                                             @RequestParam(required = false) Double longitud
+                                             @RequestParam(required = false) Double longitud,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size
                                              ) {
 
         var filtros = new Filtro(
@@ -221,10 +231,12 @@ public class AgregadorController {
         );
 
         List<Hecho> unosHechos = this.agregadorService.obtenerTodosLosHechos();
-        return this.agregadorService.hechosFiltrados(unosHechos, filtros)
+        List<HechoDTOGraph> hechosFiltrados = this.agregadorService.hechosFiltrados(unosHechos, filtros)
                 .stream()
                 .map(hechoMapper::toHechoDTO)
                 .collect(Collectors.toList());
+
+        return paginate(hechosFiltrados, page, size);
     }
 
     @GetMapping("/search")
@@ -236,6 +248,20 @@ public class AgregadorController {
     @GetMapping("/hechos/ubicaciones")
     public List<UbicacionParaMapaDTO> obtenerUbicaciones() {
         return this.agregadorService.obtenerUbicaciones();
+    }
+
+    // Helper method for pagination
+    private <T> PageResponse<T> paginate(List<T> list, int page, int size) {
+        int totalElements = list.size();
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalElements);
+
+        if (fromIndex > totalElements) {
+            return new PageResponse<>(List.of(), page, size, totalElements);
+        }
+
+        List<T> pageContent = list.subList(fromIndex, toIndex);
+        return new PageResponse<>(pageContent, page, size, totalElements);
     }
 
 }

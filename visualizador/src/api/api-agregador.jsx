@@ -37,12 +37,16 @@ class ApiAgregador {
         }
     }
 
-    async obtenerHechos(filtros) {
+    async obtenerHechos(filtros, page = 0, size = 10) {
         try {
 
             const filtrosLimpios = Object.fromEntries(
                 Object.entries(filtros).filter(([key, value]) => value != null && value !== '')
             );
+
+            // Agregar parámetros de paginación
+            filtrosLimpios.page = page;
+            filtrosLimpios.size = size;
 
             const response = await this.axiosInstance.get('/hechos', {
                     params: filtrosLimpios,
@@ -55,9 +59,14 @@ class ApiAgregador {
         }
     }
 
-    async obtenerColecciones() {
+    async obtenerColecciones({ page = 0, size = 10 } = {}) {
         try {
-            const response = await this.axiosInstance.get('/colecciones')
+            const response = await this.axiosInstance.get('/colecciones', {
+                params: {
+                    page: page,
+                    size: size
+                }
+            })
             return response.data
         } catch(error) {
             console.error('Error al buscar colecciones:', error)
@@ -186,7 +195,7 @@ class ApiAgregador {
         }
     }
 
-    async getHechosPorColeccion(id, filtros, consenso) {
+    async getHechosPorColeccion(id, filtros, consenso, page = 0, size = 10) {
 
 
         const cleanFiltros = {};
@@ -201,7 +210,9 @@ class ApiAgregador {
 
         const params = {
             ...cleanFiltros, // <-- Usamos el objeto limpio
-            tipoNavegacion: consenso ? 'curada' : 'irrestricta'
+            tipoNavegacion: consenso ? 'curada' : 'irrestricta',
+            page: page,
+            size: size
         };
 
         console.log("Enviando parámetros a la API:", params);
