@@ -9,6 +9,9 @@ import {
     Spinner
 } from 'react-bootstrap';
 import ApiAgregador from "../../api/api-agregador";
+import { useNavigate } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
+
 
 const algoritmosConsenso = [
     "MULTIPLES_MENCIONES",
@@ -36,6 +39,7 @@ const criteriosDisponibles = [
 //const categorias = ApiAgregador.obtenerCategorias();
 
 function CrearColeccion() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
@@ -51,6 +55,8 @@ function CrearColeccion() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const [showModal, setShowModal] = useState(false);
+    const [nuevaColeccionId, setNuevaColeccionId] = useState(null);
 
     const [categorias, setCategorias] = useState([]);
 
@@ -66,6 +72,30 @@ function CrearColeccion() {
         };
         cargarCategorias();
     }, []);
+
+
+    const handleVolverAHome = () => {
+        setShowModal(false);
+        if (nuevaColeccionId) {
+            navigate(`/home`);
+        }
+    };
+
+    const handleCrearOtra = () => {
+        setShowModal(false);
+        setFormData({
+            titulo: '',
+            descripcion: '',
+            algoritmo_consenso: 'NINGUNO',
+            urls_fuente: [],
+            criterios: [],
+            criterio_categoria: '',
+            criterio_fecha_desde: '',
+            criterio_fecha_hasta: '',
+            criterio_titulo: '',
+            criterio_descripcion: '',
+        });
+    };
 
 
     const handleChange = (e) => {
@@ -160,7 +190,9 @@ function CrearColeccion() {
 
             const response = await ApiAgregador.crearColeccion(payload)
 
-            console.log("Colección creada con éxito:", response);
+            console.log("Colección creada con éxito:");
+            setNuevaColeccionId(response);
+            setShowModal(true);
 
 
         } catch (error) {
@@ -354,6 +386,22 @@ function CrearColeccion() {
                     </Col>
                 </Row>
             </Container>
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Colección creada con éxito</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    La colección se creó correctamente.
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCrearOtra}>
+                        Crear otra colección
+                    </Button>
+                    <Button variant="primary" onClick={handleVolverAHome}>
+                        Volver a Home
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
