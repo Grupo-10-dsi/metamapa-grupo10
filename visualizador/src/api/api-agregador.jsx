@@ -100,17 +100,45 @@ class ApiAgregador {
         }
     }
 
-    async obtenerSolicitudes(){
+    async obtenerSolicitudes({ page = 0, size = 10, estado = null } = {}){
         try {
+            const params = { page, size };
+            if (estado) {
+                params.estado = estado;
+            }
+
             const response = await this.axiosInstance.get('/solicitudes', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${this.tokenAuth}`
                 },
+                params
+            })
+            return response.data?.content ?? []
+        } catch(error) {
+            console.error('Error al traer solicitudes:', error)
+            throw error
+        }
+    }
+
+    // Método que devuelve el PageResponse completo para usar con paginación
+    async obtenerSolicitudesPaged({ page = 0, size = 10, estado = null } = {}){
+        try {
+            const params = { page, size };
+            if (estado) {
+                params.estado = estado;
+            }
+
+            const response = await this.axiosInstance.get('/solicitudes', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.tokenAuth}`
+                },
+                params
             })
             return response.data
         } catch(error) {
-            console.error('Error al trar solicitudes:', error)
+            console.error('Error al traer solicitudes (paged):', error)
             throw error
         }
     }

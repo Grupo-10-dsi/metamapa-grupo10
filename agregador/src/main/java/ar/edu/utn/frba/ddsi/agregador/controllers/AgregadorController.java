@@ -175,21 +175,29 @@ public class AgregadorController {
 
 
     @GetMapping("/solicitudes")
-    public List<SolicitudDTOE> obtenerSolicitudes() {
-        return agregadorService.encontrarSolicitudes()
+    public PageResponse<SolicitudDTOE> obtenerSolicitudes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Estado_Solicitud estado) {
+        List<SolicitudDTOE> solicitudes = agregadorService.encontrarSolicitudes()
                 .stream()
+                .filter(s -> estado == null || s.getEstado().equals(estado))
                 .map(solicitudMapper::toSolicitudDTOE)
                 .collect(Collectors.toList());
+        return paginate(solicitudes, page, size);
     }
 
     //  ENDPOINT PARA BUSCAR SOLICITUDES PENDIENTES
 
     @GetMapping("/solicitudes/pendientes")
-    public List<SolicitudDTOE> obtenerSolicitudesPendientes() {
-        return agregadorService.encontrarSolicitudesPendientes()
+    public PageResponse<SolicitudDTOE> obtenerSolicitudesPendientes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<SolicitudDTOE> pendientes = agregadorService.encontrarSolicitudesPendientes()
                 .stream()
                 .map(solicitudMapper::toSolicitudDTOE)
                 .collect(Collectors.toList());
+        return paginate(pendientes, page, size);
     }
 
 
