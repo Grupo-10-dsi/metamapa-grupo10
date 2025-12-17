@@ -98,7 +98,7 @@ public abstract class Hecho {
 
 
     public boolean consensuado(Double mencionesNecesarias) {
-        return this.cantidadMenciones >= mencionesNecesarias;
+        return this.cantidadMenciones >= mencionesNecesarias.intValue();
     }
 }
 
