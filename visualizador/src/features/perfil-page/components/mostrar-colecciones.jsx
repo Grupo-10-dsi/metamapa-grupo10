@@ -9,6 +9,7 @@ import ApiAgregador from "../../../api/api-agregador";
 const MostrarColecciones = () => {
     const [colecciones, setColecciones] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null);
     const [paginacion, setPaginacion] = useState({
         pageNumber: 0,
         pageSize: 10,
