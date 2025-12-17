@@ -63,33 +63,35 @@ function Mapa({ hechosMapa }) {
                                     lng: unHecho.longitud
                                 }}
                             >
-                                <Popup className="custom-popup">
-                                    <div className="popup-card-content">
-                                        {/* Encabezado con color e ícono */}
-                                        <div className="popup-header">
-                                            <GeoAltFill className="me-2" />
-                                            <strong>Incidente #{unHecho.id}</strong>
-                                        </div>
+                                {unHecho.id && (
+                                    <Popup className="custom-popup">
+                                        <div className="popup-card-content">
+                                            {/* Encabezado con color e ícono */}
+                                            <div className="popup-header">
+                                                <GeoAltFill className="me-2" />
+                                                <strong>Incidente #{unHecho.id}</strong>
+                                            </div>
 
-                                        {/* Cuerpo del popup */}
-                                        <div className="popup-body">
-                                            <h6 className="mb-2">{unHecho.titulo}</h6>
-                                            {/* Puedes agregar fecha o categoría aquí si la tienes */}
-                                            <p className="text-muted small mb-3">
-                                                Haz click para ver el detalle completo.
-                                            </p>
+                                            {/* Cuerpo del popup */}
+                                            <div className="popup-body">
+                                                <h6 className="mb-2">{unHecho.titulo}</h6>
+                                                {/* Puedes agregar fecha o categoría aquí si la tienes */}
+                                                <p className="text-muted small mb-3">
+                                                    Haz click para ver el detalle completo.
+                                                </p>
 
-                                            <Button
-                                                size="sm"
-                                                variant="primary"
-                                                className="w-100 d-flex align-items-center justify-content-center"
-                                                onClick={() => navigateToHecho(unHecho.id)}
-                                            >
-                                                Ver más <ArrowRightCircle className="ms-2"/>
-                                            </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="primary"
+                                                    className="w-100 d-flex align-items-center justify-content-center"
+                                                    onClick={() => navigateToHecho(unHecho.id)}
+                                                >
+                                                    Ver más <ArrowRightCircle className="ms-2"/>
+                                                </Button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Popup>
+                                    </Popup>
+                                )}
                             </CircleMarker>
                         )}
                     </MarkerClusterGroup>
@@ -101,4 +103,3 @@ function Mapa({ hechosMapa }) {
 };
 
 export default Mapa;
-
