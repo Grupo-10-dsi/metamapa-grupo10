@@ -49,7 +49,9 @@ function Estadisticas() {
     useEffect(() => {
         const cargarColecciones = async () => {
             try {
-                const data = await ApiAgregador.obtenerColecciones();
+                const page = 0;
+                const size = 10
+                const data = await ApiAgregador.obtenerColecciones({page, size});
                 setColecciones(data);
             } catch (error) {
                 console.error("Error al cargar colecciones:", error);
