@@ -32,11 +32,6 @@ public class DinamicaController {
         this.dinamicaService = dinamicaService;
     }
 
-    /**
-     * Permite obtener una lista de hechos filtrados por los parametros. Los parametros se pasa
-     * como param en una request GET y son opcionales. Si no se pasa ningun parametro,
-     * se devuelven todos los hechos.
-     **/
     @GetMapping("/hechos")
     public List<Hecho> obtenerHechos(
             @RequestParam(required = false) String ultimaConsulta,
@@ -60,11 +55,7 @@ public class DinamicaController {
         );
     }
 
-    /**
-    * Permite la creacion de hecho pasando como cuerpo un hecho
-    * con todos los campos requeridos (salvo contribuyente, que si es null
-     * se asume como anonimo). Devuelve el ID del hecho creado.
-    **/
+
     @PostMapping("/hechos")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Integer subirHecho(
@@ -83,11 +74,6 @@ public class DinamicaController {
 
     }
 
-    /**
-     * Permite la modificacion de hecho pasando como cuerpo un hecho
-     * con todos los campos requeridos (salvo contribuyente, que si es null
-     * se asume como anonimo). Devuelve el nuevo hecho con la actualizacion.
-     **/
     @PutMapping("/hechos/{id}")
     public Hecho modificarHecho(@PathVariable Integer id, @RequestBody HechoDTO hechoDTO) {
 
@@ -96,10 +82,7 @@ public class DinamicaController {
         return dinamicaService.actualizarHecho(id, hechoDTO);
     }
 
-    /**
-     * Verifica que los campos obligatorios del HechoDTO esten presentes
-     * y lanza una excepcion si alguno falta. Ademas, verifica los campos segun el tipo de hecho.
-     **/
+
     private void verificarCamposHecho(HechoDTO hechoDTO) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());

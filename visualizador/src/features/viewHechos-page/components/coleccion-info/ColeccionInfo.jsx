@@ -4,7 +4,6 @@ import styles from './ColeccionInfo.module.css';
 export default function ColeccionInfo({ coleccion }) {
     if (!coleccion) return null;
 
-    // Determinar la fuente de datos disponible
     const fuentesArray = Array.isArray(coleccion.fuentes) ? coleccion.fuentes : null;
     const urlsArray = !fuentesArray && Array.isArray(coleccion.urls_fuente) ? coleccion.urls_fuente : null;
 

@@ -21,17 +21,13 @@ export default function VentanaConfiguracion({ show, onClose, onConfirm, fuentes
         if (!show) return
         setAlgoritmoSeleccionado(algoritmoActual || null)
 
-        // Normalizamos 'fuentes' a un array de URLs
         const urls = Array.isArray(fuentes)
             ? fuentes.map(f => {
                 if (!f) return null
                 if (typeof f === 'string') return f
-                // Asumimos que si es objeto, puede tener una de estas propiedades
                 return f.url || f.url_fuente || f.nombre || f.nombreFuente || null
-            }).filter(Boolean) // Filtramos nulos o strings vacíos
+            }).filter(Boolean)
             : []
-
-        // Precargamos el estado con las URLs existentes
         setFuentesSeleccionadas({ urls: urls })
 
     }, [show, fuentes, algoritmoActual])

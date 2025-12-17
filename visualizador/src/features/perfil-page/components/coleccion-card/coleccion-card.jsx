@@ -6,8 +6,6 @@ import './coleccion-card.css';
 import VentanaConfiguracion from "../../components/ventana-configuracion/ventana-configuracion.jsx";
 import { Gear, Trash } from 'react-bootstrap-icons';
 
-// --- 👇 PROPS ACTUALIZADAS ---
-// Recibimos las nuevas funciones del 'abuelo'
 const ColeccionCard = ({ coleccion, coleccionId, onColeccionActualizada, onColeccionEliminada }) => {
 
     const [showEliminarColeccion, setShowEliminarColeccion] = useState(false);
@@ -30,19 +28,13 @@ const ColeccionCard = ({ coleccion, coleccionId, onColeccionActualizada, onColec
 
     const handleConfirmConfig = async ({ algoritmo, fuentesSeleccionadas }) => {
         try {
-            // 1. Llamamos a la API (esto no cambia)
             await api.actualizarColeccion(coleccionId, fuentesSeleccionadas, algoritmo);
 
             console.log("fuentes seleccionadas:", fuentesSeleccionadas);
-            // --- 👇 CAMBIO IMPORTANTE ---
-            // 2. Notificamos al 'abuelo' para que actualice la UI
+
             onColeccionActualizada(coleccionId, { algoritmo, fuentesSeleccionadas });
 
-            // 3. Cerramos el modal
             setShowConfig(false);
-
-            // 4. ELIMINAMOS LA RECARGA DE PÁGINA
-            // window.location.reload(); // <--- ¡ADIÓS!
 
         } catch (error) {
             console.error("Error al actualizar colección:", error);
@@ -54,7 +46,6 @@ const ColeccionCard = ({ coleccion, coleccionId, onColeccionActualizada, onColec
         <>
             <Card className="coleccion-card shadow-sm">
                 <Card.Body>
-                    {/* ... (Todo tu JSX de info y acciones se mantiene igual) ... */}
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="coleccion-info">
                             <Card.Title className="coleccion-titulo mb-1">
@@ -91,11 +82,10 @@ const ColeccionCard = ({ coleccion, coleccionId, onColeccionActualizada, onColec
                 </Card.Body>
             </Card>
 
-            {/* --- VENTANAS EMERGENTES --- */}
             {showEliminarColeccion && (
                 <VentanaEmergente
                     mensaje="¿Estás seguro de que deseas eliminar la coleccion?"
-                    onConfirm={eliminarColeccion} // <--- Llama a la función de arriba
+                    onConfirm={eliminarColeccion}
                     onCancel={() => setShowEliminarColeccion(false)}
                 />
             )}
@@ -103,7 +93,7 @@ const ColeccionCard = ({ coleccion, coleccionId, onColeccionActualizada, onColec
                 <VentanaConfiguracion
                     show={showConfig}
                     onClose={() => setShowConfig(false)}
-                    onConfirm={handleConfirmConfig} // <--- Llama a la función de arriba
+                    onConfirm={handleConfirmConfig}
                     fuentes={coleccion.fuentes || []}
                     algoritmoActual={coleccion.algoritmo_consenso || null}
                 />

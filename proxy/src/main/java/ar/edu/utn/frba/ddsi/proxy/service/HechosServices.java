@@ -78,7 +78,6 @@ public class HechosServices {
     }
 
     public SolicitudEliminacion crearSolicitudDeEliminacion(UUID idHecho, String justificacion) {
-        // Faltaria logica para distinguir entre las instancias de MetaMapa
         return this.instanciasMetaMapa.get(0).crearSolicitudDeEliminacion(idHecho, justificacion);
     }
 }

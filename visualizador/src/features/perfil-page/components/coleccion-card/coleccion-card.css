@@ -1,72 +1,49 @@
-/* 1. La Tarjeta (Contenedor principal)
-  - Fondo blanco limpio, no gris.
-  - El borde izquierdo usa el color primario de tu tema MetaMapa.
-  - Transición suave y una sombra que se levanta al pasar el mouse.
-*/
+
 .coleccion-card {
     width: 100%;
     max-width: 900px;
-    background-color: #ffffff; /* Fondo blanco */
-    border: 1px solid #e9ecef; /* Borde sutil (Bootstrap 'card-border-color') */
-    border-left: 5px solid #DA9B3C; /* <-- ACENTO DE TU TEMA */
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-left: 5px solid #DA9B3C;
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
 }
 
-/* Efecto hover sutil para interactividad */
 .coleccion-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important; /* Sombra más pronunciada */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     border-color: #DA9B3C;
 }
 
-/* 2. Título (Ajusta el Card.Title de Bootstrap)
-  - Controlamos el tamaño de fuente.
-*/
 .coleccion-titulo {
     font-weight: 600;
     font-size: 1.2rem;
     color: #212529;
 }
 
-/* 3. Descripción (Ajusta el Card.Text de Bootstrap)
-  - La hacemos un poco más pequeña y nos aseguramos de que no tenga margen inferior.
-*/
 .coleccion-descripcion {
     font-size: 0.9rem;
     margin-bottom: 0;
 }
 
-/* 4. Contenedor de Acciones (Botones)
-  - 'flex-shrink: 0' evita que los botones se "aplasten" o pasen a la línea de abajo.
-  - 'margin-left' da espacio entre el texto y los botones.
-*/
 .coleccion-acciones {
     flex-shrink: 0;
     margin-left: 1rem;
 }
 
-/* 5. Ajuste de botones
-  - Centra verticalmente el icono y el texto (si está visible).
-*/
 .coleccion-acciones .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
-/* 6. Contenedor Padre (fondo-gris)
-  - ¡IMPORTANTE! Le quitamos el fondo gris para que herede el fondo de la
-    página de perfil (que ya es blanco o amarillo pálido).
-  - Solo lo usamos para apilar las tarjetas con un espacio (gap).
-*/
 .fondo-gris {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 1rem; /* Espacio entre tarjetas */
+    gap: 1rem;
     width: 100%;
-    padding: 0; /* El 'perfil-content' ya tiene padding */
-    background-color: transparent; /* <-- CLAVE: sin fondo */
+    padding: 0;
+    background-color: transparent;
 }

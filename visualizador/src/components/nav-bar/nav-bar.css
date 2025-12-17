@@ -7,9 +7,9 @@
     --bs-body-bg: #FFF7BB;
 
     --bs-navbar-bg: var(--bs-body-bg);
-    --bs-navbar-color: #DA9B3C;            /* Color de links */
-    --bs-navbar-hover-color: #a5742c;       /* Links al pasar el mouse */
-    --bs-navbar-brand-color: #000000;     /* Color de "MetaMapa" */
+    --bs-navbar-color: #DA9B3C;
+    --bs-navbar-hover-color: #a5742c;
+    --bs-navbar-brand-color: #000000;
     --bs-navbar-brand-hover-color: #000000;
     --bs-btn-outline-primary-color: var(--bs-primary);
     --bs-btn-outline-primary-border-color: var(--bs-primary);

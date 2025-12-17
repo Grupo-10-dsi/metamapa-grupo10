@@ -1,26 +1,22 @@
-/* Agrega esto a tu filtros-modal.css */
-
 .filtros-modal-btn-clear {
-    background-color: #ff9800; /* Naranja para diferenciar, o usa #6c757d para gris */
+    background-color: #ff9800;
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 4px;
     font-weight: 600;
     cursor: pointer;
-    margin-right: auto; /* Esto ayuda si no usas el div espaciador */
+    margin-right: auto;
 }
 
 .filtros-modal-btn-clear:hover {
     background-color: #e68900;
 }
 
-/* Asegúrate de que tu fila de botones permita alinear elementos */
 .filtros-modal-btn-row {
     display: flex;
     gap: 10px;
     margin-top: 20px;
-    /* justify-content: flex-end; <--- Si tienes esto, cámbialo a space-between o usa el div espaciador */
 }
 
 .filtros-modal-bg {

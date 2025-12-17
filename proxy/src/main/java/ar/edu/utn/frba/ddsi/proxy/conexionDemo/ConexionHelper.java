@@ -12,10 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ConexionHelper {
-    // Instancia única (singleton)
     private static final ConexionHelper instancia = new ConexionHelper();
 
-    // Constructor privado
     private ConexionHelper() {
     }
 

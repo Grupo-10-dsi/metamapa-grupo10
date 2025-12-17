@@ -110,12 +110,12 @@ function AppRouter() {
 }
 
 
-// Opciones de init pensadas para HTTP y sin tanto "magia" de iframes
+
 const keycloakInitOptions = {
-    onLoad: "check-sso",       // ni bien entra, fuerza login
-    checkLoginIframe: false,        // desactiva iframe de sesión (molesta en HTTP)
-    silentCheckSsoFallback: false,  // no intentes check-sso silencioso
-    pkceMethod: "S256",             // suele ser el default, lo explicitamos igual
+    onLoad: "check-sso",
+    checkLoginIframe: false,
+    silentCheckSsoFallback: false,
+    pkceMethod: "S256",
 };
 
 function App() {
@@ -123,11 +123,9 @@ function App() {
         <ReactKeycloakProvider
             authClient={kc}
             initOptions={keycloakInitOptions}
-            // Para ver si kc.init falla por algo (lo verías en la consola del navegador)
             onInitError={(error) => {
                 console.error("Keycloak init error:", error);
                 try {
-                    // último recurso: forzá un login manual
                     kc.login();
                 } catch (e) {
                     console.error("Keycloak manual login error:", e);

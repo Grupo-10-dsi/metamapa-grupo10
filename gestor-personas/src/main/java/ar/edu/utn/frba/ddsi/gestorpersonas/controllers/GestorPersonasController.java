@@ -17,10 +17,9 @@ public class GestorPersonasController {
         this.usuarioService = usuarioService;
     }
 
-    // Los otros servicios llamarán a este endpoint
     @PostMapping("/find-or-create")
     public UsuarioDTO findOrCreate(@RequestBody KeycloakUserDTO keycloakUser) {
         Usuario usuario = usuarioService.findOrCreateUsuario(keycloakUser);
-        return usuario.toDTO(); // Retorna un DTO con el id (int)
+        return usuario.toDTO(); // devuelve un DTO con el id
     }
 }

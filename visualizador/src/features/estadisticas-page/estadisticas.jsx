@@ -206,22 +206,17 @@ function Estadisticas() {
 
             if (!apiCall) throw new Error("No hay endpoint para este ID.");
 
-            // Hacemos la misma llamada, pero pidiendo CSV
             const response = await apiCall.call(ApiEstadistica, params);
 
-            // Si el backend devuelve un blob, ya se descarga directo.
-            // Pero si devuelve texto CSV, lo transformamos:
             const blob =
                 response instanceof Blob
                     ? response
                     : new Blob([response], { type: "text/csv" });
 
-            // Crear enlace de descarga
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
 
-            // Nombre de archivo según tipo
             const nombres = {
                 1: "provincia_por_coleccion.csv",
                 2: "categoria_max_hechos.csv",
@@ -343,14 +338,12 @@ function Estadisticas() {
                                                 <Card.Body>
 
                                                     {seleccionada === 5 ? (
-                                                        // 🚨 RENDERIZADO PARA CASO SINGULAR (ID 5)
                                                         <ListGroup variant="flush">
                                                             <ListGroup.Item className="px-3 py-2">
                                                                 <strong>Cantidad de solicitudes spam: </strong>{resultados}
                                                             </ListGroup.Item>
                                                         </ListGroup>
                                                     ) : (
-                                                        // 🚀 RENDERIZADO PARA CASOS MÚLTIPLES (ID 1, 2, 3, 4)
                                                         <ListGroup variant="flush">
                                                             {resultados.map((resultado, index) => (
                                                                 <ListGroup.Item key={index} className="px-3 py-2">
@@ -359,7 +352,6 @@ function Estadisticas() {
                                                                             {index + 1}. <strong>Categoría:</strong> {resultado.detalle}
                                                                         </>
                                                                     ) : seleccionada === 1 || seleccionada === 3 ? (
-                                                                        // Para estadística 1 y 3 (provincias)
                                                                         <>
                                                                             {index + 1}. <strong>Provincia:</strong> {resultado.provincia || resultado}
                                                                         </>
@@ -368,7 +360,6 @@ function Estadisticas() {
                                                                             {index + 1}. <strong>Hora: </strong>{resultado.split(":")[0]}:00
                                                                         </>
                                                                     ) : (
-                                                                        // Fallback para objetos o strings en otros casos
                                                                         typeof resultado === "object" ? (
                                                                             <div>
                                                                                 {index + 1}.{" "}

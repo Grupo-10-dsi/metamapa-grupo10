@@ -27,7 +27,6 @@ const MostrarColecciones = () => {
 
             const response = await ApiAgregador.obtenerColecciones({ page, size });
 
-            // Extraer datos de la respuesta paginada
             setColecciones(response.content);
             setPaginacion({
                 pageNumber: response.pageNumber,

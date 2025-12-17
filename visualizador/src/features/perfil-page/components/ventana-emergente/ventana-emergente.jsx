@@ -22,7 +22,6 @@ const VentanaEmergente = ({ mensaje, onConfirm, onCancel, setMotivo }) => {
                     */}
                 </div>
 
-                {/* --- MODIFICACIÓN AQUÍ --- */}
                 <div className="ventana-botones-confirmacion">
                     <button className="boton-confirmar-reserva" onClick={onConfirm}>
                         CONFIRMAR
@@ -32,7 +31,6 @@ const VentanaEmergente = ({ mensaje, onConfirm, onCancel, setMotivo }) => {
                         CANCELAR
                     </button>
                 </div>
-                {/* --- FIN DE LA MODIFICACIÓN --- */}
 
             </div>
         </div>

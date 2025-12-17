@@ -11,14 +11,12 @@ public class RateLimiterConfig {
 
     @Bean
     public KeyResolver ipKeyResolver() {
-        // Resuelve la IP del cliente para usarla como clave del límite
         return exchange -> Mono.just(
                 Objects.requireNonNull(exchange.getRequest().getRemoteAddress())
                         .getAddress().getHostAddress()
         );
     }
 
-    // OPCIONAL: Limitar por usuario logueado (JWT)
     // @Bean
     // public KeyResolver userKeyResolver() {
     //     return exchange -> ReactiveSecurityContextHolder.getContext()

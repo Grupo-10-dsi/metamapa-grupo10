@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import {
     Container,
     Row,
@@ -8,17 +8,16 @@ import {
 
 import './perfil.css';
 
-import MostrarSolicitudes from './components/mostrar-solicitudes.jsx'; // Ajusta la ruta si es necesario
-import MostrarColecciones from "./components/mostrar-colecciones.jsx" //Ajusta la ruta si es necesario
+import MostrarSolicitudes from './components/mostrar-solicitudes.jsx';
+import MostrarColecciones from "./components/mostrar-colecciones.jsx"
 
 function PerfilPage() {
-    const [activeView, setActiveView] = useState('solicitudes'); // 'solicitudes' o 'colecciones'
+    const [activeView, setActiveView] = useState('solicitudes');
 
 
     return (
         <Container fluid="lg" className="mt-4 perfil-container">
             <Row>
-                {/* --- COLUMNA IZQUIERDA (Menú) --- */}
                 <Col md={3}>
                     <Nav
                         className="flex-column perfil-nav"
@@ -34,14 +33,8 @@ function PerfilPage() {
                     </Nav>
                 </Col>
 
-                {/* --- COLUMNA DERECHA (Contenido) --- */}
                 <Col md={9}>
                     <div className="perfil-content">
-                        {/* Aquí está la magia.
-                          Simplemente renderizamos un componente o el otro.
-                          Cada uno de ellos mostrará su propio spinner
-                          y manejará sus propios datos.
-                        */}
                         {activeView === 'solicitudes' && <MostrarSolicitudes />}
                         {activeView === 'colecciones' && <MostrarColecciones />}
                     </div>

@@ -1,99 +1,83 @@
 .ventana-flotante-confirmacion-overlay {
-    position: fixed; /* Se fija en la pantalla */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.55); /* Fondo negro semi-transparente */
+    background-color: rgba(0, 0, 0, 0.55);
 
-    /* Centrado con Flexbox */
     display: flex;
     justify-content: center;
     align-items: center;
 
-    /* Asegura que esté por encima de todo */
     z-index: 1050;
 
-    /* Animación de aparición */
     opacity: 0;
     animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* --- 2. La Ventana (Modal) --- */
 .ventana-flotante-confirmacion {
-    /* --- TUS CAMBIOS AQUÍ --- */
-    background-color: #ffffff; /* Fondo blanco */
-    border: 2px solid #fffacd; /* Borde con el color amarillo pálido anterior */
-    /* --- FIN DE TUS CAMBIOS --- */
+    background-color: #ffffff;
+    border: 2px solid #fffacd;
 
     padding: 2rem;
-    border-radius: 12px; /* Bordes redondeados */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Sombra suave */
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 
-    /* Tamaño y centrado de texto */
     width: 90%;
     max-width: 450px;
     text-align: center;
 
-    /* Animación de "pop" */
     transform: scale(0.9);
     opacity: 0;
     animation: popIn 0.3s 0.1s ease-out forwards;
 }
 
-/* --- 3. Título (Mensaje) --- */
 .ventana-flotante-confirmacion h2 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #a5742c; /* Dorado oscuro de tu tema */
+    color: #a5742c;
     margin-top: 0;
     margin-bottom: 1rem;
 }
 
-/* --- 4. Contenedor de Botones (Clase nueva) --- */
-/* (Te recomiendo añadir esta clase en tu JSX para alinear los botones) */
 .ventana-botones-confirmacion {
     display: flex;
-    justify-content: center; /* Centra los botones */
-    gap: 1rem; /* Espacio entre botones */
+    justify-content: center;
+    gap: 1rem;
     margin-top: 1.5rem;
-    flex-wrap: wrap; /* Para que se apilen en pantallas pequeñas */
+    flex-wrap: wrap;
 }
 
-/* --- 5. Estilo Base de Botones --- */
 .ventana-flotante-confirmacion button {
-    /* Estilos de tu tema */
     border-radius: 20px;
     font-weight: 600;
     padding: 0.5rem 1.5rem;
     font-size: 0.9rem;
 
-    /* Estilos genéricos */
     border: 2px solid transparent;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.2s ease-in-out;
 }
 
-/* --- 6. Botón Confirmar (Estilo Primario) --- */
 .boton-confirmar-reserva {
-    background-color: #DA9B3C; /* Dorado primario */
+    background-color: #DA9B3C;
     color: #ffffff;
     border-color: #DA9B3C;
 }
 
 .boton-confirmar-reserva:hover {
-    background-color: #c48a36; /* Dorado más oscuro */
+    background-color: #c48a36;
     border-color: #c48a36;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* --- 7. Botón Cancelar (Estilo Outline) --- */
 .boton-cerrar-ventana {
     background-color: transparent;
-    color: #DA9B3C; /* Texto dorado */
-    border-color: #DA9B3C; /* Borde dorado */
+    color: #DA9B3C;
+    border-color: #DA9B3C;
 }
 
 .boton-cerrar-ventana:hover {
@@ -103,8 +87,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-/* --- Animaciones --- */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

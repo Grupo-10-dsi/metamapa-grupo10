@@ -59,26 +59,10 @@ public class DinamicaService {
     }
 
 
-//    @PostConstruct
-//    private void inicializarContribuyente() {
-//        Contribuyente anonimoExistente = contribuyenteRepository.findById(1).orElse(null);
-//
-//        if (anonimoExistente == null) {
-//            // Crear e insertar el anónimo con ID manual
-//            Anonimo anonimo = Anonimo.getInstance();
-//            contribuyenteRepository.saveAndFlush(anonimo);
-//        }
-//    }
 
 
     private Contribuyente determinarContribuyente(ContribuyenteDTO contribuyenteDTO) {
-//        if (hechoDTO.getRegistrado() == null) {
-//            return contribuyenteRepository.findById(1).orElse(null);
-//        } else {
-//            Contribuyente nuevoRegistrado = new Registrado(hechoDTO.getRegistrado().getNombre());
-//            contribuyenteRepository.saveAndFlush(nuevoRegistrado);
-//            return nuevoRegistrado;
-//        }
+
         if(contribuyenteDTO == null) {
             return new Contribuyente(0, "Anonimo");
         } else {

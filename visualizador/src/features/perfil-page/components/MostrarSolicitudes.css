@@ -1,32 +1,29 @@
-/* Estilo para el contenedor del menú de filtros */
+
 .solicitud-filtro-menu {
     display: flex;
-    gap: 0.8rem; /* Espacio entre las palabras y los separadores */
+    gap: 0.8rem;
     align-items: center;
-    font-size: 1.75rem; /* Tamaño grande como en tu dibujo */
-    font-weight: 300; /* Fuente más ligera para las opciones inactivas */
-}
-
-/* Estilo para el separador '|' */
-.filtro-separador {
-    color: #ccc; /* Gris claro */
+    font-size: 1.75rem;
     font-weight: 300;
 }
 
-/* Estilo para cada opción (Aceptadas, Pendientes, etc.) */
+.filtro-separador {
+    color: #ccc;
+    font-weight: 300;
+}
+
 .filtro-opcion {
-    color: #888; /* Color gris para opciones inactivas */
+    color: #888;
     cursor: pointer;
     transition: color 0.2s ease-in-out;
 }
 
-/* Estilo para la opción cuando pasas el mouse */
+
 .filtro-opcion:hover {
-    color: #555; /* Un gris más oscuro al pasar el mouse */
+    color: #555;
 }
 
-/* Estilo para la opción que está SELECCIONADA */
 .filtro-opcion.activo {
-    color: #000; /* Color negro */
-    font-weight: 600; /* Más grueso (bold) */
+    color: #000;
+    font-weight: 600;
 }

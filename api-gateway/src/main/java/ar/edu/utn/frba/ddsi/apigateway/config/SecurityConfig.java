@@ -48,23 +48,16 @@ public class SecurityConfig {
      */
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
-        // Construir decoder con la URI de JWK Set
         NimbusReactiveJwtDecoder decoder = NimbusReactiveJwtDecoder
                 .withJwkSetUri(keycloakJwkSetUri)
                 .build();
 
-        // --- INICIO DE LA CORRECCIÓN ---
-
-        // Parsear los issuers válidos desde la variable de entorno (separados por coma)
         List<String> validIssuers = Arrays.stream(keycloakValidIssuers.split(","))
                 .map(String::trim)
                 .toList();
 
-        // Un validador de 'timestamp' (expiración)
         OAuth2TokenValidator<Jwt> timestampValidator = new JwtTimestampValidator();
 
-        // Un validador customizado para el 'issuer' (iss)
-        // Valida si el 'iss' del token ESTÁ EN la lista de 'validIssuers'
         OAuth2TokenValidator<Jwt> issuerValidator = new JwtClaimValidator<String>(JwtClaimNames.ISS, issuer -> {
             if (issuer == null) {
                 return false;
@@ -72,13 +65,10 @@ public class SecurityConfig {
             return validIssuers.contains(issuer);
         });
 
-        // Combinar ambos validadores (el delegador SÍ funciona bien aquí)
         OAuth2TokenValidator<Jwt> combinedValidator = new DelegatingOAuth2TokenValidator<>(
                 timestampValidator,
                 issuerValidator
         );
-
-        // --- FIN DE LA CORRECCIÓN ---
 
         decoder.setJwtValidator(combinedValidator);
         return decoder;
@@ -100,7 +90,6 @@ public class SecurityConfig {
                 source.registerCorsConfiguration("/**", config);
                 cors.configurationSource(source);
             })
-            // 2. Definir las reglas de autorizacion (BASADO EN TU CONTROLLER)
             .authorizeExchange(exchanges ->
                     exchanges
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
@@ -138,14 +127,12 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/api/estadisticas/categoria/hora").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/estadisticas/solicitudes/spam").hasRole("ADMIN")
 
-                        // --- REGLAS DE USUARIO AUTENTICADO (authenticated) ---
                         .pathMatchers(HttpMethod.POST, "/agregador/solicitudes").authenticated() // Un usuario logueado crea una solicitud
                         .pathMatchers("/perfil/**").authenticated()
 
-                        // --- REGLA FINAL (Catch-All) ---
                         .anyExchange().authenticated()
             )
-            .csrf(ServerHttpSecurity.CsrfSpec::disable); // Deshabilitar CSRF para APIs
+            .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         return http.build();
     }

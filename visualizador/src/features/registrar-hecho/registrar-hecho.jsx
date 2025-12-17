@@ -98,10 +98,9 @@ function RegistrarHecho() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 1. Solo esperar a que Keycloak esté inicializado
         if (isSubmitting || !initialized) {
             console.error("Keycloak no está listo.");
-            // Opcional: mostrar un error al usuario
+
             return;
         }
 
@@ -116,18 +115,17 @@ function RegistrarHecho() {
             cat => cat.id.toString() === formData.categoria
         );
 
-        // 2. Determinar el 'detalle' (string) de la categoría
         const categoriaDetalle = formData.categoria === 'OTRA'
             ? formData.categoria_nueva
-            : (selectedCategory ? selectedCategory.detalle : ''); // <-- Usamos el 'detalle' encontrado
+            : (selectedCategory ? selectedCategory.detalle : '');
 
-        // 2. Construir el objeto base del hecho
+
         const hechoData = {
             tipo: tipo,
             titulo: formData.titulo,
             descripcion: formData.descripcion,
             categoria: {
-                // Asumiendo que 'categoria_nueva' es 'detalle'
+
                 detalle: categoriaDetalle
             },
             ubicacion: {
@@ -139,12 +137,9 @@ function RegistrarHecho() {
             cuerpo: formData.cuerpo,
             contenidoMultimedia: [],
 
-            // 3. Asignar 'contribuyente' por defecto como null (anónimo)
             contribuyente: null
         };
 
-        // 4. Si el usuario SÍ está autenticado, poblar los datos
-        //    (Tu Axios debe estar configurado para enviar el token también)
         if (keycloak.authenticated && keycloak.tokenParsed) {
             if(!anonimo) {
                 hechoData.contribuyente = {
@@ -159,9 +154,6 @@ function RegistrarHecho() {
         console.log("Datos del hecho a enviar:", hechoData);
 
         try {
-            // --- PASO 1: Enviar el hecho ---
-            // Asumimos que 'crearHecho' devuelve la respuesta de axios
-            // y que la respuesta contiene el hecho creado con su ID
             const response = await apiDinamica.crearHecho(hechoData);
 
             console.log(response);
@@ -171,11 +163,10 @@ function RegistrarHecho() {
             console.log("Hecho registrado con éxito. ID:", idHechoCreado);
             setShowModal(true);
 
-            // --- PASO 2: Subir las imágenes (si existen) ---
             if (formData.contenidoMultimedia.length > 0) {
                 console.log(`Paso 2: Subiendo ${formData.contenidoMultimedia.length} archivos...`);
 
-                // Creamos un array de promesas para todas las subidas
+
                 const promesasDeSubida = [];
 
                 for (let i = 0; i < formData.contenidoMultimedia.length; i++) {
@@ -187,20 +178,16 @@ function RegistrarHecho() {
                     );
                 }
 
-                // Esperamos a que TODAS las imágenes se suban en paralelo
                 await Promise.all(promesasDeSubida);
 
                 console.log("Todas las imágenes se subieron correctamente.");
             }
 
-            // Aquí podrías redirigir al usuario o limpiar el formulario
-            // Renderizar una Toast que diga hecho creado con exito
 
 
 
         } catch (error) {
             console.error("Error en el proceso de registro:", error);
-            // ... (tu manejo de errores de Axios) ...
         } finally {
             setIsSubmitting(false);
         }
@@ -220,7 +207,6 @@ function RegistrarHecho() {
 
                                 <Form onSubmit={handleSubmit}>
 
-                                    {/* --- 1. Información Principal --- */}
                                     <h5 className="mb-3">Información Principal</h5>
 
                                     <Row>
@@ -239,7 +225,6 @@ function RegistrarHecho() {
                                         </Col>
                                     </Row>
 
-                                    {/* Campo condicional de Descripción */}
                                     {activeTab === 'cuerpo' && (
                                         <Form.Group className="mb-3" controlId="formDescripcionBreve">
                                             <Form.Label>Descripción Breve *</Form.Label>
@@ -287,7 +272,6 @@ function RegistrarHecho() {
 
                                     <hr className="my-4" />
 
-                                    {/* --- 2. ¿Cuándo y Dónde? --- */}
                                     <h5 className="mb-3">¿Cuándo y Dónde?</h5>
                                     <Form.Group className="mb-3" controlId="formFecha">
                                         <Form.Label>Fecha y Hora del Acontecimiento *</Form.Label>
@@ -313,7 +297,7 @@ function RegistrarHecho() {
                                                             type="number"
                                                             name="latitud"
                                                             placeholder="-34.5811"
-                                                            value={formData.latitud} // Controlado por el estado
+                                                            value={formData.latitud}
                                                             onChange={handleChange}
                                                             required
                                                         />
@@ -326,7 +310,7 @@ function RegistrarHecho() {
                                                             type="number"
                                                             name="longitud"
                                                             placeholder="-58.4377"
-                                                            value={formData.longitud} // Controlado por el estado
+                                                            value={formData.longitud}
                                                             onChange={handleChange}
                                                             required
                                                         />
@@ -348,7 +332,6 @@ function RegistrarHecho() {
 
                                     <hr className="my-4" />
 
-                                    {/* --- 3. Contenido del Reporte (Tabs) --- */}
                                     <h5 className="mb-3">Contenido del Reporte</h5>
 
                                     <Tabs
@@ -400,7 +383,6 @@ function RegistrarHecho() {
 
                                     <hr className="my-4" />
 
-                                    {/* --- 4. Detalles Adicionales --- */}
                                     <h5 className="mb-3">Detalles Adicionales</h5>
                                     <Form.Group className="mb-3" controlId="formEtiquetas">
                                         <Form.Label>Etiquetas</Form.Label>
@@ -430,7 +412,6 @@ function RegistrarHecho() {
                                         </Form.Group>
                                     )}
 
-                                    {/* --- 5. Botón de Envío --- */}
                                     <div className="d-grid mt-5">
                                         <Button
                                             variant="warning"

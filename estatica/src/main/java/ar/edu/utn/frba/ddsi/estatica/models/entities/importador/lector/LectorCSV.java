@@ -68,7 +68,6 @@ public class LectorCSV implements Lector {
 
         for (Hecho hecho : hechos) {
             if (hecho.getTitulo().equals(hechoImportado.getTitulo())) {
-                // Actualizar el hecho existente con los nuevos datos
                 hecho.setDescripcion(hechoImportado.getDescripcion());
                 hecho.setCategoria(hechoImportado.getCategoria());
                 hecho.setUbicacion(hechoImportado.getUbicacion());
@@ -78,7 +77,6 @@ public class LectorCSV implements Lector {
             }
         }
 
-        // Si no se encontró, añadir el nuevo hecho
         if (!encontrado) {
             hechos.add(hechoImportado);
         }
@@ -97,10 +95,10 @@ public class LectorCSV implements Lector {
 
             while ((campos = reader.readNext()) != null) {
                 if (primeraLinea) {
-                    primeraLinea = false; // saltar encabezado
+                    primeraLinea = false;
                     continue;
                 }
-                filas.add(campos); // cada campos es un String[]
+                filas.add(campos);
             }
         }
 

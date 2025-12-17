@@ -110,18 +110,15 @@ function CrearColeccion() {
         setFormData(prevData => {
             const currentList = prevData[listName];
             let updatedList;
-            let updatedCategoria = prevData.criterio_categoria; // Mantiene el valor actual por defecto
+            let updatedCategoria = prevData.criterio_categoria;
 
             if (currentList.includes(value)) {
-                // --- Se está desmarcando un checkbox ---
                 updatedList = currentList.filter(item => item !== value);
 
-                // Si se desmarca 'Categoria', limpiamos su valor
                 if (value === 'Categoria') {
                     updatedCategoria = '';
                 }
             } else {
-                // --- Se está marcando un checkbox ---
                 updatedList = [...currentList, value];
 
 
@@ -134,7 +131,7 @@ function CrearColeccion() {
             return {
                 ...prevData,
                 [listName]: updatedList,
-                criterio_categoria: updatedCategoria // Actualiza el estado de la categoría
+                criterio_categoria: updatedCategoria
             };
         });
     };
@@ -152,18 +149,13 @@ function CrearColeccion() {
             "Titulo":      { tipo: "titulo",      valorKey: "criterio_titulo" }
         };
 
-        // 2. Construye el array de criterios en el formato {tipo, valor}
-        //    Itera sobre los criterios que el usuario SELECCIONÓ (ej: ["Categoria", "Titulo"])
         const criteriosParaRequest = formData.criterios
             .map(criterioNombre => {
-                // Busca la configuración para ese criterio (ej: {tipo: "titulo", valorKey: "criterio_titulo"})
                 const config = criterioMap[criterioNombre];
                 if (!config) return null;
 
-                // Obtiene el valor correspondiente del estado (ej: formData["criterio_titulo"])
                 const valor = formData[config.valorKey];
 
-                // Si el valor no está vacío, crea el objeto
                 if (valor) {
                     return {
                         tipo: config.tipo,
@@ -172,17 +164,15 @@ function CrearColeccion() {
                 }
                 return null;
             })
-            .filter(Boolean); // Limpia cualquier 'null' (criterios seleccionados pero vacíos)
+            .filter(Boolean);
 
 
-        // 3. Crea el 'payload' final para la API
-        //    Esto evita enviar los campos 'criterio_...' sueltos
         const payload = {
             titulo: formData.titulo,
             descripcion: formData.descripcion,
             algoritmo_consenso: formData.algoritmo_consenso,
             urls_fuente: formData.urls_fuente,
-            criterios: criteriosParaRequest // Aquí va tu lista formateada
+            criterios: criteriosParaRequest
         };
 
         try {

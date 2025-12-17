@@ -18,21 +18,21 @@ public class MetaMapaClient {
 
     public MetaMapaClient(String baseUrl) {
         this.webClient = WebClient.builder()
-                .baseUrl(baseUrl) // Cambialo por la URL real
+                .baseUrl(baseUrl)
                 .build();
     }
 
     public List<Hecho> obtenerHechos(FiltroRequest filtro) {
 
         String uri = filtro.aplicarFiltroARequest(UriComponentsBuilder
-                .fromPath("/hechos")); //Por ejemplo, podría agregar parámetros como ?tipo=evento&fecha=2025.
+                .fromPath("/hechos"));
 
-        List<HechoDto> hechosMetaMapa = webClient.get()                // Inicia construcción de un GET
-                                        .uri(uri)                      // Usa la URI construida con filtros
-                                        .retrieve()                    // Realiza la solicitud (envía el GET)
-                                        .bodyToFlux(HechoDto.class)    // Convierte la respuesta JSON en un flujo de objetos `Hecho`
-                                        .collectList()                 // Junta el flujo en una lista
-                                        .block();                      // Bloquea y espera la respuesta (estilo imperativo)
+        List<HechoDto> hechosMetaMapa = webClient.get()
+                                        .uri(uri)
+                                        .retrieve()
+                                        .bodyToFlux(HechoDto.class)
+                                        .collectList()
+                                        .block();
         return hechosMetaMapa.stream().map(this::hechoFromDto).toList();
     }
 
@@ -78,7 +78,7 @@ public class MetaMapaClient {
         Hecho hechoReferenciado = webClient.get()
                 .uri("/hechos/"+ idHecho)
                 .retrieve()
-                .bodyToMono(Hecho.class) // convierte el cuerpo en un mono 🐒
+                .bodyToMono(Hecho.class)
                 .block();
         if (hechoReferenciado == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro el hecho con ID: " + idHecho);

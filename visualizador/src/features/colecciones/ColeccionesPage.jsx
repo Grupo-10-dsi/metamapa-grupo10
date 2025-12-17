@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ApiAgregador from "../../api/api-agregador.jsx";
 
-// Estilo para el ícono (reemplaza tu "Image cap")
+
 const cardIconStyle = {
-    textAlign: 'center', // Centra el ícono
-    paddingTop: '1.5rem', // Espacio superior
-    paddingBottom: '1rem', // Espacio inferior
-    backgroundColor: '#f8f9fa', // Un fondo gris claro
-    color: '#6e2a34', // Color del ícono (tu marrón/rojo)
-    fontSize: '3rem' // Tamaño del ícono
+    textAlign: 'center',
+    paddingTop: '1.5rem',
+    paddingBottom: '1rem',
+    backgroundColor: '#f8f9fa',
+    color: '#6e2a34',
+    fontSize: '3rem'
 };
 
 function ColeccionesPage() {
@@ -32,12 +32,10 @@ function ColeccionesPage() {
         last: false
     });
 
-    // Función que se llama al hacer clic en el botón
     const handleVerHechos = (coleccionId) => {
         navigate(`/colecciones/${coleccionId}/hechos`);
     };
 
-    // Función para cargar colecciones con paginación
     const fetchColecciones = async (page = 0, size = 10) => {
         try {
             setLoading(true);
@@ -64,12 +62,10 @@ function ColeccionesPage() {
         }
     };
 
-    // Función para cambiar de página
     const handlePageChange = (newPage) => {
         fetchColecciones(newPage, paginacion.pageSize);
     };
 
-    // Función para cambiar el tamaño de página
     const handlePageSizeChange = (newSize) => {
         fetchColecciones(0, parseInt(newSize));
     };
@@ -80,7 +76,7 @@ function ColeccionesPage() {
 
 
     return (
-        // Usamos el fondo verde pálido de tu imagen
+
         <div style={{ backgroundColor: '#f0fdf4', minHeight: '100vh', padding: '2rem 0' }}>
             <Container>
                 <h1 className="text-center mb-5">Colecciones de MetaMapa</h1>
@@ -107,14 +103,12 @@ function ColeccionesPage() {
                     </div>
                 </div>
 
-                {/* Mostrar error si existe */}
                 {error && (
                     <div className="alert alert-danger" role="alert">
                         Error al cargar las colecciones. Por favor, intenta nuevamente.
                     </div>
                 )}
 
-                {/* Mostrar spinner mientras carga */}
                 {loading ? (
                     <div className="text-center py-5">
                         <Spinner animation="border" role="status" variant="primary">
@@ -124,12 +118,10 @@ function ColeccionesPage() {
                     </div>
                 ) : (
                     <>
-                        {/* 4. Grilla responsiva. Se ajustará a 2 columnas en pantallas medianas */}
                         <Row xs={1} md={2} className="g-4">
                             {colecciones.map((coleccion) => (
                                 <Col key={coleccion.id}>
                                     <Card className="shadow-sm h-100">
-                                        {/* 5. El ícono reemplaza a la imagen */}
                                         <div style={cardIconStyle}>
                                             <FaLayerGroup />
                                         </div>
@@ -140,7 +132,6 @@ function ColeccionesPage() {
                                                 {coleccion.descripcion}
                                             </Card.Text>
 
-                                            {/* 6. El botón llama a la función de navegación */}
                                             <Button
                                                 variant="warning"
                                                 className="mt-auto" // Empuja el botón al final de la card
@@ -154,37 +145,31 @@ function ColeccionesPage() {
                             ))}
                         </Row>
 
-                        {/* Mensaje si no hay colecciones */}
                         {colecciones.length === 0 && !loading && (
                             <div className="text-center py-5">
                                 <p className="text-muted">No hay colecciones disponibles.</p>
                             </div>
                         )}
 
-                        {/* Controles de paginación */}
                         {paginacion.totalPages > 1 && (
                             <div className="d-flex justify-content-center mt-5">
                                 <Pagination>
-                                    {/* Botón Primera página */}
                                     <Pagination.First
                                         onClick={() => handlePageChange(0)}
                                         disabled={paginacion.first}
                                     />
 
-                                    {/* Botón Anterior */}
                                     <Pagination.Prev
                                         onClick={() => handlePageChange(paginacion.pageNumber - 1)}
                                         disabled={paginacion.first}
                                     />
 
-                                    {/* Números de página */}
                                     {[...Array(paginacion.totalPages)].map((_, index) => {
-                                        // Mostrar solo algunas páginas alrededor de la actual
                                         const currentPage = paginacion.pageNumber;
                                         const showPage =
-                                            index === 0 || // Primera página
-                                            index === paginacion.totalPages - 1 || // Última página
-                                            (index >= currentPage - 2 && index <= currentPage + 2); // Páginas cercanas
+                                            index === 0 ||
+                                            index === paginacion.totalPages - 1 ||
+                                            (index >= currentPage - 2 && index <= currentPage + 2);
 
                                         if (!showPage) {
                                             // Mostrar ellipsis
@@ -205,7 +190,6 @@ function ColeccionesPage() {
                                         );
                                     })}
 
-                                    {/* Botón Siguiente */}
                                     <Pagination.Next
                                         onClick={() => handlePageChange(paginacion.pageNumber + 1)}
                                         disabled={paginacion.last}
@@ -220,7 +204,6 @@ function ColeccionesPage() {
                             </div>
                         )}
 
-                        {/* Información adicional de paginación */}
                         <div className="text-center mt-3">
                             <small className="text-muted">
                                 Página {paginacion.pageNumber + 1} de {paginacion.totalPages}

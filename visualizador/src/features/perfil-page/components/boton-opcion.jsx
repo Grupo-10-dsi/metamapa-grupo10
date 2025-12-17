@@ -12,8 +12,7 @@ function BotonesGrupo({ mostrarEnPantalla }) {
         setActivo(nombreBoton)
         navigate(`/perfil/${nombreBoton}`)
     }
-    // const { user } = useAuthContext()
-    // const tipoUsuario = user?.tipo
+
 
     const path = window.location.pathname.split('/').pop()
 

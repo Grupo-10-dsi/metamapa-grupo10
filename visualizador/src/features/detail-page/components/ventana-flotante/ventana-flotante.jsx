@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 
-// Este modal recibe 4 props:
-// 1. show: (true/false) para mostrarse u ocultarse.
-// 2. handleClose: La función del padre para cerrarse.
-// 3. hecho: El objeto "hecho" del cual queremos solicitar la eliminación.
-// 4. onSubmit: La función que se ejecutará al enviar el formulario.
 function VentanaFlotante({ show, handleClose, hecho, onSubmit }) {
     const [motivo, setMotivo] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,22 +13,19 @@ function VentanaFlotante({ show, handleClose, hecho, onSubmit }) {
 
         setIsSubmitting(true);
 
-        // Llamamos a la función onSubmit que nos pasó el padre
-        // y le pasamos el id del hecho y el motivo.
         await onSubmit({ idHecho: hecho?.id, justificacion: motivo });
 
         setIsSubmitting(false);
-        setMotivo(""); // Limpiamos el campo
-        handleClose(); // Cerramos el modal
+        setMotivo("");
+        handleClose();
     };
 
     const handleModalClose = () => {
-        setMotivo(""); // Limpiamos el campo al cerrar
+        setMotivo("");
         handleClose();
     };
 
     return (
-        // Usamos onHide para que se cierre al hacer clic fuera
         <Modal show={show} onHide={handleModalClose} centered>
             <Modal.Header closeButton>
                 <Modal.Title>Solicitar Eliminación</Modal.Title>

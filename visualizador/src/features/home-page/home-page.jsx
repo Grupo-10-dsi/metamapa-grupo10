@@ -7,15 +7,13 @@ import ApiAgregador from "../../api/api-agregador";
 import { FaDatabase, FaUsers, FaNetworkWired } from "react-icons/fa";
 
 function HomePage() {
-    // --- Estados de animación eliminados (scale, mapOpacity, sourceScrollOffset) ---
-    // --- Ref de scroll eliminada (sourcesSectionRef) ---
+
 
     const overlayColor = 'rgba(217,210,181,0.45)';
 
     const [hechosMapa, setHechosMapa] = useState([])
     const [loadingHechos, setLoadingHechos] = useState(true)
 
-    // Hook para cargar los datos del mapa (se mantiene)
     useEffect(() => {
         ApiAgregador.obtenerUbicaciones()
             .then((data) => {
@@ -27,15 +25,12 @@ function HomePage() {
         })
     }, [])
 
-    // Hook para ir al inicio de la página al cargar (se mantiene)
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    // --- useEffect de handleScroll eliminado completamente ---
 
 
-    // TODO: Reemplazar con datos de fuentes
     const sourceData = [
         {
             // Aumenta el 'size' y añade 'color'
@@ -123,7 +118,6 @@ function HomePage() {
                         padding: '20px 40px',
                         borderRadius: '10px',
                         backdropFilter: 'blur(3px)',
-                        // --- Estilos de animación eliminados (transform, transition, transformOrigin) ---
                     }}
                 >
                     <h1 style={{ color: '#F5F5DC', fontWeight: 'bold' }}>
@@ -135,20 +129,15 @@ function HomePage() {
                 </div>
             </div>
 
-            {/* --- SECCIÓN 2: MAPA --- */}
-            {/* Estilos de animación eliminados (opacity, transition) */}
             <Container>
                 {loadingHechos ?
                     <div className="text-center mt-5">
                         <Spinner animation="border" role="status" />
                         <p className="mt-3">Cargando hechos...</p>
                     </div>
-                    // Renderiza el mapa directamente cuando loadingHechos es false
                     : <Mapa hechosMapa={hechosMapa} />}
             </Container>
 
-            {/* --- SECCIÓN 3: FUENTES --- */}
-            {/* Ref eliminada del div */}
             <div style={{ backgroundColor: 'white', padding: '60px 0' }}>
                 <h2 className="text-center mb-5" style={{ color: '#9d3b48', fontWeight: 'bold' }}>
                     ¿De que fuentes obtenemos los hechos?
@@ -160,9 +149,9 @@ function HomePage() {
                                 key={index}
                                 text={data.text}
                                 alignRight={data.alignRight}
-                                delay={data.delay} // El 'delay' de SourceCard (si es de CSS) puede seguir funcionando
+                                delay={data.delay}
                                 icon={data.icon}
-                                // --- Prop 'scrollOffset' eliminada ---
+
                             />
                         ))}
                     </div>

@@ -14,11 +14,7 @@ public class UsuarioService {
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
-    /**
-     * Lógica central: Busca un usuario por su UUID (sub) de Keycloak.
-     * Si no existe, lo crea en la base de datos.
-     * Es @Transactional para asegurar atomicidad.
-     */
+
     @Transactional
     public Usuario findOrCreateUsuario(KeycloakUserDTO requestDto) {
         // 1. Intenta buscar al usuario por su UUID de Keycloak

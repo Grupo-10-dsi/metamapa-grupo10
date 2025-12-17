@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Autoincremental (int/long)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "keycloak_sub", unique = true, nullable = false, length = 36)

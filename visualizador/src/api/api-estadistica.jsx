@@ -12,8 +12,6 @@ class ApiEstadistica {
             baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/estadisticas`,
         });
 
-        // --- 2. AÑADE EL INTERCEPTOR DE PETICIONES ---
-        // Esto se ejecutará ANTES de cada petición (get, post, etc.)
         this.axiosInstance.interceptors.request.use(
             (config) => {
                 // Si el token existe, lo adjunta a la cabecera
@@ -29,12 +27,6 @@ class ApiEstadistica {
         );
     }
 
-    /**
-     * --- 3. AÑADE ESTE MÉTODO ---
-     * Un método público para que tu componente de React (Estadisticas.js)
-     * pueda inyectar el token de Keycloak en esta instancia.
-     * @param {string} token El token JWT
-     */
     setToken(token) {
         this.tokenAuth = token;
     }

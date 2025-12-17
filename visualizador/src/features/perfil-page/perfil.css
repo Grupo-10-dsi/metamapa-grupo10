@@ -1,22 +1,19 @@
-/* Contenedor principal del perfil */
+
 .perfil-container {
-    /* Fondo redondeado como en tu imagen */
-    background-color: #FFFBEB; /* Un amarillo muy pálido, similar al de tu imagen */
+    background-color: #FFFBEB;
     border-radius: 16px;
     padding: 2rem;
     min-height: 80vh;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Estilo para los "botones" de navegación de la izquierda */
 .perfil-nav-link {
-    /* Apariencia de botón */
     background-color: #ffffff;
-    border: 1px solid rgba(218, 155, 60, 0.5); /* Borde dorado sutil */
-    color: #a5742c; /* Texto dorado oscuro */
+    border: 1px solid rgba(218, 155, 60, 0.5);
+    color: #a5742c;
 
     border-radius: 8px;
-    margin-bottom: 0.5rem; /* Espacio entre botones */
+    margin-bottom: 0.5rem;
     font-weight: 600;
     padding: 0.75rem 1rem;
     text-align: center;
@@ -24,25 +21,24 @@
     transition: all 0.2s ease-in-out;
 }
 
-/* Efecto al pasar el mouse */
 .perfil-nav-link:hover {
-    background-color: #fefcf0; /* Amarillo muy pálido */
+    background-color: #fefcf0;
     color: #a5742c;
     border-color: #DA9B3C;
     transform: translateY(-2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* --- ¡Este es el estilo del botón ACTIVO! --- */
+
 .perfil-nav-link.active {
-    background-color: #DA9B3C; /* Color primario (dorado) */
-    color: #ffffff; /* Texto blanco */
+    background-color: #DA9B3C;
+    color: #ffffff;
     border-color: #DA9B3C;
     font-weight: 700;
     box-shadow: 0 4px 8px rgba(218, 155, 60, 0.3);
 }
 
-/* Contenedor del contenido derecho */
+
 .perfil-content {
     background-color: #ffffff;
     border-radius: 12px;
@@ -51,7 +47,7 @@
     min-height: 50vh;
 }
 
-/* Asegura que los headers tengan el color correcto */
+
 .perfil-content h3 {
     color: #333;
     border-bottom: 2px solid #f0f0f0;

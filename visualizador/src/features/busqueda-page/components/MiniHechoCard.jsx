@@ -13,14 +13,12 @@ export default function MiniHechoCard({ hecho }) {
             <div style={{ flex: 1 }}>
                 <div className="hecho-card-title-row">
 
-                    {/* --- CORRECCIÓN 2: Usa Link para ir al detalle del hecho --- */}
                     <Link to={`/hecho/${hecho.id}`} className="hecho-card-title">
                         {hecho.titulo}
                     </Link>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
 
-                        {/* --- CORRECCIÓN 3: Accede a la propiedad del objeto --- */}
                         {hecho.contribuyente && (
                             <span className="hecho-card-autor">
                 por {hecho.contribuyente.contribuyente_nombre || 'Anónimo'}

@@ -29,9 +29,4 @@ public class EstaticaController {
         log.info("Listando hechos para los archivos: {}", archivosProcesados);
         return hechosServices.obtenerHechos(archivosProcesados);
     }
-
-    // get /hechos/desastre1&desastre2&desastre3
-
-
-
 }

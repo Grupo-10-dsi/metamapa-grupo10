@@ -29,7 +29,7 @@ export default function ColeccionHechosPage() {
         longitud: ''
     });
 
-    // Estado para la paginación
+
     const [paginacion, setPaginacion] = useState({
         pageNumber: 0,
         pageSize: 10,
@@ -39,7 +39,7 @@ export default function ColeccionHechosPage() {
         last: false
     });
 
-    // Función para buscar hechos con paginación
+
     const buscarHechos = async (page = 0, size = 10, filtrosActuales = filtros, consenso = mostrarConsensuados) => {
         try {
             setLoading(true);
@@ -50,7 +50,7 @@ export default function ColeccionHechosPage() {
             if (isModoColeccion) {
                 response = await api.getHechosPorColeccion(id, filtrosActuales, consenso, page, size);
             } else {
-                // --- MODO GENERAL ---
+
                 const paramsGenerales = {
                     ...filtrosActuales,
                     tipoNavegacion: consenso ? 'curada' : 'irrestricta'
@@ -58,10 +58,9 @@ export default function ColeccionHechosPage() {
                 response = await api.obtenerHechos(paramsGenerales, page, size);
             }
 
-            // Extraer datos de la respuesta paginada
             setHechos(response.content || response);
             
-            // Si la respuesta tiene metadata de paginación, usarla
+
             if (response.content) {
                 setPaginacion({
                     pageNumber: response.pageNumber,
@@ -72,7 +71,7 @@ export default function ColeccionHechosPage() {
                     last: response.last
                 });
             } else {
-                // Si no hay paginación (retrocompatibilidad), establecer valores por defecto
+
                 setPaginacion({
                     pageNumber: 0,
                     pageSize: response.length,
@@ -91,12 +90,12 @@ export default function ColeccionHechosPage() {
         }
     };
 
-    // --- Handlers ---
+
 
     const handleApplyFiltros = (nuevosFiltros) => {
         setFiltros(nuevosFiltros);
         setModalAbierto(false);
-        // Volver a la primera página al aplicar filtros
+
         buscarHechos(0, paginacion.pageSize, nuevosFiltros, mostrarConsensuados);
     };
 
@@ -106,12 +105,12 @@ export default function ColeccionHechosPage() {
         buscarHechos(0, paginacion.pageSize, filtros, valor);
     };
 
-    // Función para cambiar de página
+
     const handlePageChange = (newPage) => {
         buscarHechos(newPage, paginacion.pageSize, filtros, mostrarConsensuados);
     };
 
-    // Función para cambiar el tamaño de página
+
     const handlePageSizeChange = (newSize) => {
         buscarHechos(0, parseInt(newSize), filtros, mostrarConsensuados);
     };
@@ -162,7 +161,6 @@ export default function ColeccionHechosPage() {
                     />
                 )}
 
-                {/* Información de paginación y controles */}
                 <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
                     <div>
                         <span className="text-muted" style={{ fontSize: '0.9rem' }}>
@@ -184,14 +182,12 @@ export default function ColeccionHechosPage() {
                     </div>
                 </div>
 
-                {/* Mostrar error si existe */}
                 {error && (
                     <div className="alert alert-danger" role="alert">
                         Error al cargar los hechos. Por favor, intenta nuevamente.
                     </div>
                 )}
 
-                {/* Mostrar spinner mientras carga */}
                 {loading ? (
                     <div className="text-center py-5">
                         <Spinner animation="border" role="status" variant="primary">
@@ -201,36 +197,34 @@ export default function ColeccionHechosPage() {
                     </div>
                 ) : (
                     <>
-                        {/* Lista de hechos */}
+
                         {hechos.map(hecho => (
                             <HechoCard key={hecho.id} hecho={hecho} coleccion={isModoColeccion ? coleccion : null} />
                         ))}
 
-                        {/* Mensaje si no hay hechos */}
+
                         {hechos.length === 0 && !loading && (
                             <div className="text-center py-5">
                                 <p className="text-muted">No hay hechos disponibles con los filtros seleccionados.</p>
                             </div>
                         )}
 
-                        {/* Controles de paginación */}
                         {paginacion.totalPages > 1 && (
                             <>
                                 <div className="d-flex justify-content-center mt-4">
                                     <Pagination>
-                                        {/* Botón Primera página */}
+
                                         <Pagination.First
                                             onClick={() => handlePageChange(0)}
                                             disabled={paginacion.first}
                                         />
 
-                                        {/* Botón Anterior */}
+
                                         <Pagination.Prev
                                             onClick={() => handlePageChange(paginacion.pageNumber - 1)}
                                             disabled={paginacion.first}
                                         />
 
-                                        {/* Números de página */}
                                         {[...Array(paginacion.totalPages)].map((_, index) => {
                                             const currentPage = paginacion.pageNumber;
                                             const showPage =
@@ -256,13 +250,11 @@ export default function ColeccionHechosPage() {
                                             );
                                         })}
 
-                                        {/* Botón Siguiente */}
                                         <Pagination.Next
                                             onClick={() => handlePageChange(paginacion.pageNumber + 1)}
                                             disabled={paginacion.last}
                                         />
 
-                                        {/* Botón Última página */}
                                         <Pagination.Last
                                             onClick={() => handlePageChange(paginacion.totalPages - 1)}
                                             disabled={paginacion.last}
@@ -270,7 +262,6 @@ export default function ColeccionHechosPage() {
                                     </Pagination>
                                 </div>
 
-                                {/* Información adicional de paginación */}
                                 <div className="text-center mt-2 mb-3">
                                     <small className="text-muted">
                                         Página {paginacion.pageNumber + 1} de {paginacion.totalPages}

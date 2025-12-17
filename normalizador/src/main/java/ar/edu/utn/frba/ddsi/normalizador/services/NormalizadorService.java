@@ -17,7 +17,7 @@ public class NormalizadorService {
     }
 
     public HechoDTO normalizar(HechoDTO hechoCrudo) {
-        return normalizador.normalizar(hechoCrudo); // Retorna el hecho normalizado (aquí solo retorna el mismo hecho para el ejemplo)
+        return normalizador.normalizar(hechoCrudo);
     }
 
 }

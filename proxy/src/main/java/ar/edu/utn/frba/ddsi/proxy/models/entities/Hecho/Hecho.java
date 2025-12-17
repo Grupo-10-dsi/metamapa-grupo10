@@ -48,7 +48,6 @@ public abstract class Hecho {
     }
 
     public boolean esEditable() {
-        //return !this.esAnonimo && (ChronoUnit.DAYS.between(this.fechaCarga, LocalDateTime.now()) < 7 );
         return ChronoUnit.DAYS.between(this.fechaCarga, LocalDateTime.now()) < 7;
     }
 }

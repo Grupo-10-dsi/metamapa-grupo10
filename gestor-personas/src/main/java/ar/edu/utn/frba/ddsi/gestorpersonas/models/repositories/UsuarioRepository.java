@@ -8,10 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-
-    /**
-     * Busca un usuario por su ID de Keycloak (el UUID 'sub').
-     * Spring Data JPA crea la consulta automáticamente.
-     */
     Optional<Usuario> findByKeycloakSub(String keycloakSub);
 }

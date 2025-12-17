@@ -7,7 +7,7 @@
     overflow: hidden;
 }
 
-/* Elemento decorativo animado */
+
 .fondo-busqueda::before,
 .fondo-busqueda::after,
 .fondo-busqueda .circle-1,
@@ -21,7 +21,6 @@
     z-index: 0;
 }
 
-/* Variaciones de tamaño, posición y animación */
 .fondo-busqueda::before,
 .fondo-busqueda::after,
 .fondo-busqueda .circle-1,
@@ -34,7 +33,6 @@
     z-index: 0;
 }
 
-/* Distintas posiciones y tamaños */
 .fondo-busqueda::before {
     content: "";
     width: 180px;

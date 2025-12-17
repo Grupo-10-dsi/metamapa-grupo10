@@ -35,16 +35,11 @@ public class EquivalenciasRepository {
     @PostConstruct
     public void cargarEquivalencias() {
         try {
-            // Cargar el archivo desde resources
             Resource resource = new ClassPathResource("equivalencias.json");
 
-            // Leer el JSON como un mapa de String a String
             Map<String, String> mapaJson = objectMapper.readValue(resource.getInputStream(), // TODO: DESNEGRIZAR
                     new TypeReference<Map<String, String>>() {});
 
-            // Inicializar el mapa de equivalencias
-            //System.out.println("DICCIONARIO LEVANTADO DEL JSON \n "+mapaJson);
-            // Convertir las entradas del JSON a objetos Categoria
             mapaJson.forEach((clave, valor) -> {
                 Categoria categoria = new Categoria(valor);
                 this.agregarAMapaDeEquivalencias(clave,categoria);

@@ -25,7 +25,6 @@ public class Importador {
     private List<String> archivosProcesados;
     private Logger log = LoggerFactory.getLogger(Importador.class);
     public Importador() {
-        // TODO decidir cuando / donde instanciar los lectores
         this.lectorCSV = new LectorCSV();
         lectores.put("csv", lectorCSV);
         // En el futuro aca agregariamos mas importadores segun el tipo de archivo
@@ -36,9 +35,6 @@ public class Importador {
     public List<ArchivoProcesado> importarHechos() {
         List<ArchivoProcesado> nuevosArchivosProcesados = new ArrayList<>();
 
-//        for(Resource r : recursos) {
-//            System.out.println("Recurso encontrado: " + r.getFilename());
-//        }
 
         // Filtrar los archivos que no estan en archivosProcesados
         List<Resource> archivosNuevos = this.filtrarArchivosNuevos();
@@ -62,7 +58,7 @@ public class Importador {
 
         return nuevosArchivosProcesados;
 
-    } // archivoProcesadoDTO importarHechos(List<String> nombresArchivosProcesados)
+    }
 
     public List<Resource> filtrarArchivosNuevos() {
         Resource[] archivosAlmacenados;
@@ -73,12 +69,6 @@ public class Importador {
         }
 
         List<Resource> archivosNuevos;
-        /*
-           for (Resource archivo : archivosAlmacenados) {
-            if (!this.archivosProcesados.contains(archivo)) {
-                archivosNuevos.add(archivo);
-            }
-        }*/
 
         archivosNuevos = Arrays.stream(archivosAlmacenados).filter(this::noProcesado).toList();
 
@@ -86,7 +76,6 @@ public class Importador {
     }
 
     private boolean noProcesado(Resource recurso) {
-        //System.out.println(recurso.getFilename());
         return !this.archivosProcesados.contains(recurso.getFilename());
     }
 
@@ -104,29 +93,3 @@ public class Importador {
         this.archivosProcesados = nombreArchivosProcesados;
     }
 }
-
-    /*
-    * public void setArchivosProcesados(List<String> nombreArchivosProcesados) {
-        List<Resource> archivosProcesados;
-        archivosProcesados = nombreArchivosProcesados.stream()
-                .map(nombre -> {
-                    try {
-                        return resolver.getResource("classpath:archivos/" + nombre);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toList();
-        this.archivosProcesados = archivosProcesados;
-    }
-    private List<Hecho> importarSegunArchivo(Resource recurso) throws Exception {
-        String extensionArchivo = recurso.getFilename().substring(recurso.getFilename().lastIndexOf(".") + 1).toLowerCase();
-        switch (extensionArchivo) {
-            case "csv":
-                return importadorCSV.importarCSV(recurso.getFilename());
-            default:
-                throw new Exception("Formato de archivo no soportado: " + extensionArchivo);
-        }
-
-    }
-*/

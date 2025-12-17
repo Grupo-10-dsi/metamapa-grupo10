@@ -10,9 +10,6 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
-/**
- * Componente interno para manejar los eventos del mapa (clic y centrado)
- */
 function MapEvents({ onMapClick, position }) {
     const map = useMap();
 
@@ -25,19 +22,17 @@ function MapEvents({ onMapClick, position }) {
     // 1. Evento de clic en el mapa
     useMapEvents({
         click(e) {
-            // Llama a la función 'onMapClick' del padre con las nuevas coordenadas
             onMapClick(e.latlng);
         },
     });
 
-    // 2. Centrar el mapa si la 'position' (del formulario) cambia
     useEffect(() => {
         if (position.lat && position.lng) {
-            map.setView(position, 15); // Centra el mapa en la posición
+            map.setView(position, 15);
         }
     }, [position, map]);
 
-    return null; // Este componente no renderiza nada
+    return null;
 }
 
 function MapaInteractivo({ value, onChange }) {
@@ -79,8 +74,6 @@ function MapaInteractivo({ value, onChange }) {
                     url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
-
-                {/* Componente para los clics y centra el mapa */}
                 <MapEvents onMapClick={handleMapClick} position={position} />
 
                 {position.lat && position.lng && (

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// 1. Importamos Button
 import { Spinner, Carousel, Row, Col, Badge, Button } from 'react-bootstrap';
 import { hechomockeado } from "./hechomockeado";
 import VentanaFlotante from './components/ventana-flotante/ventana-flotante.jsx';
@@ -32,7 +31,6 @@ function DetailPage() {
         fetchHecho();
     }, [hechoId]);
 
-    //Esto pega a una API de maps que te trae la ciudad y provincia segun la latitud y longitud
     const { provincia, ciudad } = useUbicacionFromCoords(
         hecho?.ubicacion?.latitud ?? null,
         hecho?.ubicacion?.longitud ?? null

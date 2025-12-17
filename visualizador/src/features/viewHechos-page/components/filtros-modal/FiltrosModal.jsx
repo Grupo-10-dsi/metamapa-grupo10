@@ -11,7 +11,6 @@ export default function FiltrosModal({ filtros, onClose, onApply }) {
         setFiltrosLocales(f => ({ ...f, [name]: value }));
     };
 
-    // --- NUEVA FUNCIÓN: Resetea el estado local a vacío ---
     const handleLimpiar = () => {
         setFiltrosLocales({
             categoria: '',
@@ -19,7 +18,7 @@ export default function FiltrosModal({ filtros, onClose, onApply }) {
             fecha_reporte_hasta: '',
             fecha_acontecimiento_desde: '',
             fecha_acontecimiento_hasta: '',
-            latitud: '', // Al vaciar esto, el MapaSelector debería quitar el marcador
+            latitud: '',
             longitud: ''
         });
     };
@@ -29,8 +28,6 @@ export default function FiltrosModal({ filtros, onClose, onApply }) {
             <div className="filtros-modal-box">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h3 className="filtros-modal-title">Filtros</h3>
-                    {/* Opción A: Un enlace pequeño arriba */}
-                    {/* <button type="button" onClick={handleLimpiar} style={{background:'none', border:'none', color:'#007bff', cursor:'pointer'}}>Limpiar todo</button> */}
                 </div>
 
                 <form className="filtros-modal-form" onSubmit={e => { e.preventDefault(); onApply(filtrosLocales); }}>
@@ -44,7 +41,6 @@ export default function FiltrosModal({ filtros, onClose, onApply }) {
                         className="filtros-modal-input"
                     />
 
-                    {/* ... (El resto de tus inputs de fecha siguen igual) ... */}
                     <div className="filtros-modal-row">
                         <div style={{ flex: 1 }}>
                             <label className="filtros-modal-label">Fecha reporte desde</label>
@@ -98,18 +94,17 @@ export default function FiltrosModal({ filtros, onClose, onApply }) {
                         setFiltros={setFiltrosLocales}
                     />
 
-                    {/* --- BOTONERA --- */}
                     <div className="filtros-modal-btn-row">
-                        {/* Opción B: Botón dedicado en la fila de botones */}
+
                         <button
                             type="button"
                             onClick={handleLimpiar}
-                            className="filtros-modal-btn-clear" // <--- Clase nueva
+                            className="filtros-modal-btn-clear"
                         >
                             Limpiar
                         </button>
 
-                        <div style={{ flex: 1 }}></div> {/* Espaciador para empujar los otros a la derecha */}
+                        <div style={{ flex: 1 }}></div>
 
                         <button type="button" onClick={onClose} className="filtros-modal-btn-cancel">Cancelar</button>
                         <button type="submit" className="filtros-modal-btn-apply">Aplicar</button>

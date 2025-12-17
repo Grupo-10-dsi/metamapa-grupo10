@@ -13,7 +13,6 @@ const MostrarSolicitudes = () => {
 
     const [filtroActivo, setFiltroActivo] = useState('PENDIENTE')
 
-    // Estado de paginación (similar a ColeccionesPage)
     const [paginacion, setPaginacion] = useState({
         pageNumber: 0,
         pageSize: 10,
@@ -27,9 +26,7 @@ const MostrarSolicitudes = () => {
         try {
             setLoading(true)
             setError(false)
-            // Pedimos página paginada del backend con filtro de estado
             const response = await api.obtenerSolicitudesPaged({ page, size, estado })
-            // Guardamos contenido y metadata
             setSolicitudes(response?.content ?? [])
             setPaginacion({
                 pageNumber: response?.pageNumber ?? 0,
@@ -53,11 +50,9 @@ const MostrarSolicitudes = () => {
     }, [filtroActivo])
 
     const handleEliminarSolicitud = async () => {
-        // Refrescar la página actual con el filtro activo
         fetchSolicitudes(paginacion.pageNumber, paginacion.pageSize, filtroActivo)
     }
 
-    // Ya no necesitamos filtrar localmente - el backend lo hace
     const solicitudesFiltradas = solicitudes
 
     // Mensaje dinámico para cuando no hay solicitudes
@@ -84,8 +79,6 @@ const MostrarSolicitudes = () => {
             <div className="d-flex justify-content-between align-items-center">
                 <h2>Solicitudes de eliminacion</h2>
             </div>
-
-            {/* Menú de filtros */}
             <div className="solicitud-filtro-menu mb-4">
                 <span
                     className={`filtro-opcion ${filtroActivo === 'ACEPTADA' ? 'activo' : ''}`}
@@ -109,7 +102,6 @@ const MostrarSolicitudes = () => {
                 </span>
             </div>
 
-            {/* Controles superiores: cantidad y tamaño de página */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <span className="text-muted">
@@ -131,7 +123,6 @@ const MostrarSolicitudes = () => {
                 </div>
             </div>
 
-            {/* Mostrar error si existe */}
             {error && (
                 <div className="alert alert-danger" role="alert">
                     Error al cargar las solicitudes. Por favor, intenta nuevamente.
@@ -164,7 +155,6 @@ const MostrarSolicitudes = () => {
                         </div>
                     )}
 
-                    {/* --- 6. MENSAJE DE "VACÍO" DINÁMICO --- */}
                     {solicitudesFiltradas.length === 0 && (
                         <div
                             className="text-center p-4 p-md-5 text-secondary"
@@ -180,7 +170,6 @@ const MostrarSolicitudes = () => {
                         </div>
                     )}
 
-                    {/* Controles de paginación */}
                     {paginacion.totalPages > 1 && (
                         <div className="d-flex justify-content-center mt-5">
                             <Pagination>
@@ -232,7 +221,6 @@ const MostrarSolicitudes = () => {
                         </div>
                     )}
 
-                    {/* Info de página actual */}
                     <div className="text-center mt-3">
                         <small className="text-muted">
                             Página {paginacion.pageNumber + 1} de {paginacion.totalPages}
