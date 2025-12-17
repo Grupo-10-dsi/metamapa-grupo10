@@ -97,6 +97,7 @@ const MostrarSolicitudes = () => {
                                     solicitudId={result.id}
                                     solicitudEstado={result.estado}
                                     justificacion={result.justificacion}
+                                    idHecho={result.idHecho}
                                     handleEliminarSolicitud={handleEliminarSolicitud}
 
                                     vistaActual={filtroActivo}
