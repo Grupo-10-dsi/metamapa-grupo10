@@ -7,7 +7,7 @@ class ApiAgregador {
     constructor() {
         this.tokenAuth = null
         this.axiosInstance = axios.create({
-            baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/api/agregador`,
+            baseURL: `${process.env.REACT_APP_API_GATEWAY_URL_BASE}/agregador`,
         })
     }
 
