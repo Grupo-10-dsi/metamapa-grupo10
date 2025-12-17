@@ -5,8 +5,6 @@ import api from "../../../../api/api-agregador";
 import './solicitud-card.css';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle, Eye } from 'react-bootstrap-icons';
-// 1. Importa los iconos
-import { CheckCircle, XCircle } from 'react-bootstrap-icons';
 
 const SolicitudCard = ({
                            solicitud,
