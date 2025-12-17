@@ -37,7 +37,7 @@ public class HechosServices {
     }
 
     private HechoDTO toHechoDTO(Hecho hecho) {
-        return new HechoDTO(hecho.getTitulo(), hecho.getDescripcion(), hecho.getCategoria(), hecho.getUbicacion(), hecho.getFechaAcontecimiento(), hecho.getFechaCarga(), null, null);
+        return new HechoDTO(hecho.getId(), hecho.getTitulo(), hecho.getDescripcion(), hecho.getCategoria(), hecho.getUbicacion(), hecho.getFechaAcontecimiento(), hecho.getFechaCarga(), null, null);
     }
 
     private ArchivoProcesado fromDTO(ArchivoProcesadoDTO dto) {
