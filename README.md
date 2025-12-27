@@ -15,6 +15,8 @@ La informacion es obtenida de diferentes fuentes de datos:
 - Integracion con otras organizaciones dispuestas a ofrecer datos relevantes para el sitio
 - Hechos reportados directamente por usuarios a traves del sitio web
 
+<p>Para mas informacion sobre la arquitectura utilizada ingresar a la <a href=https://drive.google.com/drive/folders/1NGHmyN9-gsV16knxnLY5uJKrNReFTrPV?hl=es_419>documentacion</a>.</p>
+
 ## Features Principales
 ### Crear hechos
 Como usuario, puedo crear un nuevo hecho para ser visualizado en el sistema. A traves de un formulario en la pagina, se debe agregar la informacion correspondiente (categoria, fecha, lugar del acontecimiento, etc) y, dependiendo el formato elegido, un texto explicando el hecho o bien contenido multimedia que lo respalde.
